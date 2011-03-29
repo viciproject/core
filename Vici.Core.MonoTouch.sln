@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vici.Core.MonoTouch", "Library\Vici.Core.MonoTouch.csproj", "{386480EC-69CB-4B70-AF25-C0D7D39CF708}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Debug|iPhone.Build.0 = Debug|iPhone
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Release|iPhone.ActiveCfg = Release|iPhone
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Release|iPhone.Build.0 = Release|iPhone
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{386480EC-69CB-4B70-AF25-C0D7D39CF708}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Library\Vici.Core.MonoTouch.csproj
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = .
+	EndGlobalSection
+EndGlobal
