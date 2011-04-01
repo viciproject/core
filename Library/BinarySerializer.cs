@@ -35,7 +35,7 @@ namespace Vici.Core
     {
         public static byte[] Serialize(object obj)
         {
-            using (MemoryStream memStream = new MemoryStream())
+            using (var memStream = new MemoryStream())
             {
                 new BinaryFormatter().Serialize(memStream, obj);
 
@@ -45,7 +45,7 @@ namespace Vici.Core
 
         public static T Deserialize<T>(byte [] bytes)
         {
-            using (MemoryStream memStream = new MemoryStream(bytes))
+            using (var memStream = new MemoryStream(bytes))
             {
                 return (T)new BinaryFormatter().Deserialize(memStream);
             }

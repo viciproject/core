@@ -23,9 +23,9 @@ namespace Vici.Core.Scheduling
 
         public abstract bool ShouldRun();
 
-        protected Scheduler(string schedulerID)
+        protected Scheduler(string schedulerId)
         {
-            _schedulerId = schedulerID ?? Guid.NewGuid().ToString("N");
+            _schedulerId = schedulerId ?? Guid.NewGuid().ToString("N");
         }
 
         public DateTime LastRun
