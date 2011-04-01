@@ -1,0 +1,7 @@
+bin
+obj
+Bin
+Obj
+*.user
+*.suo
+*.bak
