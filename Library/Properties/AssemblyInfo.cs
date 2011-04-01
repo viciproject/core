@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Vici Core")]
-[assembly: AssemblyCopyright("Copyright © 2008-2010 Philippe Leybaert")]
+[assembly: AssemblyCopyright("Copyright © 2008-2011 Philippe Leybaert")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
