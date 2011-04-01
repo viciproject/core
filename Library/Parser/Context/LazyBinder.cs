@@ -87,7 +87,7 @@ namespace Vici.Core.Parser
             Type.DefaultBinder.ReorderArgumentArray(ref args, state);
         }
 
-        private bool ParametersMatch(Type[] inputParameters, ParameterInfo[] expectedParameters)
+        private static bool ParametersMatch(Type[] inputParameters, ParameterInfo[] expectedParameters)
         {
             if (inputParameters.Length != expectedParameters.Length)
                 return false;

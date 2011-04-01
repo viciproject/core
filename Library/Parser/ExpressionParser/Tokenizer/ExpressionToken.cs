@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Linq;
 
 namespace Vici.Core.Parser
 {
@@ -133,8 +134,7 @@ namespace Vici.Core.Parser
             get
             {
                 if (Alternates != null)
-                    foreach (ExpressionToken token in Alternates)
-                        return token;
+                    return (ExpressionToken) Alternates.FirstOrDefault();
 
                 return null;
             }

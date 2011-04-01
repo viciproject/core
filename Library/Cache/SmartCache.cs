@@ -291,7 +291,7 @@ namespace Vici.Core.Cache
             {
                 LinkedListNode<CachedItem> node;
 
-                CachedItem cachedItem = new CachedItem(key, item, slidingExpiration, absoluteExpiration, _time);
+                var cachedItem = new CachedItem(key, item, slidingExpiration, absoluteExpiration, _time);
 
                 if (_dic.TryGetValue(key, out node))
                 {

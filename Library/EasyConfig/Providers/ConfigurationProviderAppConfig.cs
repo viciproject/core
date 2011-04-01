@@ -29,8 +29,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Configuration;
 
-//using ConfigurationManager = System.Configuration.ConfigurationManager.AppSettings;
-
 namespace Vici.Core.Config
 {
 #if !MONOTOUCH && !WINDOWS_PHONE

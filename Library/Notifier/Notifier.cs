@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 #if WINDOWS_PHONE || SILVERLIGHT
@@ -122,8 +123,7 @@ namespace Vici.Core.Notifications
 
             public new IEnumerable<Notification<T>> GetNotifications()
             {
-                foreach (var notification in base.GetNotifications())
-                    yield return (Notification<T>) notification;
+                return base.GetNotifications().Cast<Notification<T>>();
             }
         }
 
