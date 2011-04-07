@@ -75,7 +75,7 @@ namespace Vici.Core.Parser
                     return new ValueExpression(TokenPosition, value,type);
             }
 
-    		MemberInfo[] members = targetType.GetMember(_member);
+		    MemberInfo[] members = FindMemberInHierarchy(targetType, _member);// targetType.GetMember(_member);
 
     		if (members.Length == 0)
     		{
@@ -125,6 +125,23 @@ namespace Vici.Core.Parser
 
     		throw new ExpressionEvaluationException(_member + " is not a field or property", this);
     	}
+
+        private static MemberInfo[] FindMemberInHierarchy(Type type, string name)
+        {
+            Type t = type;
+
+            while (t != null)
+            {
+                MemberInfo[] members = t.GetMember(name);
+
+                if (members.Length > 0)
+                    return members;
+
+                t = t.BaseType;
+            }
+
+            return new MemberInfo[0];
+        }
 
     	public override string ToString()
         {

@@ -58,7 +58,25 @@ namespace Vici.Core.Parser
 
         public MethodInfo GetMethodInfo(Type[] parameterTypes, Binder binder)
         {
-            return _methodInfo ?? _type.GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, binder ?? LazyBinder.Default, parameterTypes, null);
+            if (_methodInfo != null)
+                return _methodInfo;
+
+            Type t = _type;
+
+            while (t != null)
+            {
+                MethodInfo methodInfo = t.GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, binder ?? LazyBinder.Default, parameterTypes, null);
+
+                if (methodInfo != null)
+                    return methodInfo;
+
+                t = t.BaseType;
+            }
+
+            return null;
+
+
+            //return _methodInfo ?? _type.GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, binder ?? LazyBinder.Default, parameterTypes, null);
         }
 
         public abstract object Invoke(Type[] types, object[] parameters, out Type returnType, Binder binder);
