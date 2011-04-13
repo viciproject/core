@@ -138,10 +138,10 @@ namespace Vici.Core.Config
             {
                 bindingFlags |= BindingFlags.Static;
             }
+
+            FieldOrPropertyInfo[] members = type.GetFieldsAndProperties(bindingFlags);
             
-            FieldInfo[] fields = type.GetFields(bindingFlags);
-            
-            foreach (FieldInfo field in fields)
+            foreach (FieldOrPropertyInfo field in members)
             {
                 ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) field.GetCustomAttributes(typeof (ConfigKeyAttribute), false);
 
@@ -150,7 +150,9 @@ namespace Vici.Core.Config
                 if (attributes.Length > 0 && !string.IsNullOrEmpty(attributes[0].BaseKey))
                     key = attributes[0].BaseKey;
 
-                bool follow = (attributes.Length > 0 && attributes[0] is ConfigObjectAttribute) || typeof (IConfigObject).IsAssignableFrom(field.FieldType);
+                Type fieldType = field.FieldType;
+
+                bool follow = (attributes.Length > 0 && attributes[0] is ConfigObjectAttribute) || typeof (IConfigObject).IsAssignableFrom(fieldType);
                 bool ignore = field.IsDefined(typeof (ConfigIgnoreAttribute), false);
                 
                 key = baseKey + key;
@@ -160,11 +162,12 @@ namespace Vici.Core.Config
 
                 if (follow)
                 {
+
                     object configObject = field.GetValue(obj);
 
                     if (configObject == null)
                     {
-                        configObject = Activator.CreateInstance(field.FieldType);
+                        configObject = Activator.CreateInstance(fieldType);
 
                         field.SetValue(obj, configObject);
                     }
@@ -175,7 +178,7 @@ namespace Vici.Core.Config
                 {
                     if (typeof(IDictionary).IsAssignableFrom(field.FieldType))
                     {
-                        Type dicInterface = field.FieldType.GetInterfaces().Where(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>)).FirstOrDefault();
+                        Type dicInterface = fieldType.GetInterfaces().Where(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>)).FirstOrDefault();
 
                         Type targetType = typeof (object);
 

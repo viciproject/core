@@ -36,7 +36,7 @@ namespace Vici.Core.Test
     {
         class StaticConfig
         {
-            public static string Test1;
+            public static string Test1 { get; set; }
             public static ConfigurableClass1 SubObject1;
             public static Dictionary<string, string> StringValues;
             public static Dictionary<string, int> IntValues;
