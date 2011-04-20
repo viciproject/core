@@ -56,6 +56,8 @@
     <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigObjectAttribute.cs" />
     <Compile Include="EasyConfig\ConfigManager.cs" />
+    <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
+    <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
     <Compile Include="EasyConfig\IConfigObject.cs" />
     <Compile Include="EasyConfig\IConfigurationProvider.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderAppConfig.cs" />
