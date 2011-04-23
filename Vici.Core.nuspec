@@ -2,6 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>vici.core</id>
+    <title>Vici Core</title>
     <version>1.0.0</version>
     <authors>Philippe Leybaert</authors>
 	<owners>Philippe Leybaert</owners>
@@ -9,7 +10,8 @@
     <language>en-US</language>
     <projectUrl>http://viciproject.com/</projectUrl>
     <licenseUrl>http://viciproject.com/license</licenseUrl>
-	<iconUrl>http://dstyler.com/vici/32x32/im-_IconPlain100-w32-h32.png</iconUrl>
+    <iconUrl>http://dstyler.com/vici/32x32/im-_IconPlain100-w32-h32.png</iconUrl>
+    <tags>vici core expressions parser configuration conversion</tags>
   </metadata>
 </package>
 
