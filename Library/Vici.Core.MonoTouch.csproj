@@ -264,6 +264,8 @@
     <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
     <Compile Include="CompatibilityLayer.cs" />
     <Compile Include="CoreExtensions.cs" />
+    <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
+    <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
