@@ -39,6 +39,7 @@ namespace Vici.Core.Parser.Config
             AddTokenMatcher(TemplateTokenType.MacroCall, new WrappedExpressionMatcher("<!--{{", "call", "}}-->"));
             AddTokenMatcher(TemplateTokenType.Statement, new WrappedExpressionMatcher(false, "<!--{{", "}}-->"));
             AddTokenMatcher(TemplateTokenType.Expression, new WrappedExpressionMatcher(false, "{{", "}}"));
+            AddTokenMatcher(TemplateTokenType.Comment, new WrappedExpressionMatcher("<!--{#", "#}-->"), true);
 
             AddTokenMatcher(TemplateTokenType.EndBlock, new WrappedExpressionMatcher(false, "<!--$[", "endfor", "]-->"));
             AddTokenMatcher(TemplateTokenType.EndBlock, new WrappedExpressionMatcher(false, "<!--$[", "endif", "]-->"));
@@ -50,6 +51,7 @@ namespace Vici.Core.Parser.Config
             AddTokenMatcher(TemplateTokenType.MacroCall, new WrappedExpressionMatcher("<!--$[", "call", "]-->"));
             AddTokenMatcher(TemplateTokenType.Statement, new WrappedExpressionMatcher(false, "<!--$[", "]-->"));
             AddTokenMatcher(TemplateTokenType.Expression, new WrappedExpressionMatcher(false, "$[", "]"));
+            AddTokenMatcher(TemplateTokenType.Comment, new WrappedExpressionMatcher("<!--[#", "#]-->"), true);
         }
     }
 }

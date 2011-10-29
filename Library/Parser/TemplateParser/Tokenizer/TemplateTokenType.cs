@@ -30,6 +30,7 @@ namespace Vici.Core.Parser
 {
     public enum TemplateTokenType
     {
+        Comment,
         Expression,
         Statement,
         ForEach,

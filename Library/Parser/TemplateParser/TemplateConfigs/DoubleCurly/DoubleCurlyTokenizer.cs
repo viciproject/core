@@ -59,6 +59,7 @@ namespace Vici.Core.Parser.Config
             AddTokenMatcher(TemplateTokenType.ElseIf, new WrappedExpressionMatcher("{{", "elseif", "}}"), true);
             AddTokenMatcher(TemplateTokenType.Else, new WrappedExpressionMatcher("{{", "else", "}}"),true);
             AddTokenMatcher(TemplateTokenType.Expression, new WrappedExpressionMatcher("{{", "}}"));
+            AddTokenMatcher(TemplateTokenType.Comment, new WrappedExpressionMatcher("{#", "#}"), true);
         }
     }
 }
