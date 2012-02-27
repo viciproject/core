@@ -220,7 +220,7 @@ namespace Vici.Core
             {
                 DateTime dateTime;
 
-                if (!DateTime.TryParseExact(stringValue, dateFormats ?? _dateFormats, null, DateTimeStyles.NoCurrentDateDefault, out dateTime))
+                if (!DateTime.TryParseExact(stringValue, dateFormats ?? _dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.NoCurrentDateDefault, out dateTime))
                     returnValue = null;
                 else
                     returnValue = dateTime;
