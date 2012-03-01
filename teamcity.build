@@ -31,17 +31,20 @@
 	<target name="package">
 		<mkdir dir="_zip" />
 
-		<zip zipfile="_zip/${Product}.${build.number}.src.zip">
-			<fileset basedir="_source">
-				<include name="**/*" />
-				<exclude name="*.build" />
-				<exclude name="*.nuspec" />
-			</fileset>
-		</zip>
-
 		<zip zipfile="_zip/${Product}.${build.number}.bin.zip">
 			<fileset basedir="_build">
 				<include name="*.dll" />
+			</fileset>
+		</zip>
+        
+		<zip zipfile="_zip/${Product}.${build.number}.src.zip">
+			<fileset>
+				<include name="**/*" />
+                                <exclude name="_*/**" />
+				<exclude name="*.build" />
+				<exclude name="*.nuspec" />
+                                <exclude name="*.tmp" />
+                                <exclude name="*.gitignore" />
 			</fileset>
 		</zip>
 
