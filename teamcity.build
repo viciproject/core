@@ -1,0 +1,60 @@
+<project>
+	<target name="updateVersion">
+		<loadfile 
+			file="${VersionInfoFile}"
+			property="VersionInfo" 
+		/>
+
+		<regex input="${VersionInfo}" 
+			pattern="AssemblyVersion(Attribute)?\D+(?'RootVersion'(\d+\.){2}\d+)" 
+		/>
+
+		<property 
+			name="FileVersion" 
+			value="${RootVersion}.${build.number}" 
+		/>
+
+		<echo message="##teamcity[buildNumber '${FileVersion}']" />
+
+		<asminfo output="${VersionInfoFile}" language="CSharp">
+			<imports>
+				<import namespace="System" />
+				<import namespace="System.Reflection" />
+			</imports>
+			<attributes>
+				<attribute type="AssemblyVersionAttribute" value="${FileVersion}" />
+				<attribute type="AssemblyFileVersionAttribute" value="${FileVersion}" />
+			</attributes>
+		</asminfo>
+	</target>
+
+	<target name="package">
+		<mkdir dir="_zip" />
+
+		<zip zipfile="_zip/${Product}.${build.number}.src.zip">
+			<fileset basedir="_source">
+				<include name="**/*" />
+				<exclude name="*.build" />
+				<exclude name="*.nuspec" />
+			</fileset>
+		</zip>
+
+		<zip zipfile="_zip/${Product}.${build.number}.bin.zip">
+			<fileset basedir="_build">
+				<include name="*.dll" />
+			</fileset>
+		</zip>
+
+	</target>
+
+	<target name="publishToSite">
+
+		<copy todir="${PublishPath}" flatten="true">
+			<fileset basedir="_zip">
+				<include name="*.zip"/>
+			</fileset>
+		</copy>
+
+	</target>
+
+</project>
