@@ -22,6 +22,7 @@ namespace Vici.Core.Json
     {
         private readonly StringBuilder _output = new StringBuilder();
         private readonly JsonDateFormat _dateFormat;
+        private readonly HashSet<object> _serializedObjects = new HashSet<object>();
 
         public JsonSerializer()
         {
@@ -107,6 +108,14 @@ namespace Vici.Core.Json
 
         private void WriteObject(object obj)
         {
+            if (_serializedObjects.Contains(obj))
+            {
+                WriteValue(null);
+                return;
+            }
+
+            _serializedObjects.Add(obj);
+
             _output.Append('{');
 
             bool pendingSeparator = false;
