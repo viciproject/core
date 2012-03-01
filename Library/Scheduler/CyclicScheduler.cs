@@ -6,8 +6,7 @@ namespace Vici.Core.Scheduling
     {
         public TimeSpan Interval { get; set; }
 
-        public CyclicScheduler(string scheduleId, TimeSpan interval)
-            : base(scheduleId)
+        public CyclicScheduler(string scheduleId, TimeSpan interval) : base(scheduleId)
         {
             Interval = interval;
         }

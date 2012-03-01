@@ -141,5 +141,42 @@ namespace Vici.Core.Test
             Assert.AreEqual("{\"Field1\":\"abc\",\"Field2\":[1,2,3]}", JsonSerializer.ToJson(new TestClass2()));
         }
 
+        [Test]
+        public void TestCircularReferences()
+        {
+            json_ParentClass obj1 = new json_ParentClass();
+            json_ParentClass obj2 = new json_ParentClass();
+
+            obj1.Id = "A";
+            obj2.Id = "B";
+
+            obj1.Children = new List<json_ChildClass>()
+                                  {
+                                      new json_ChildClass
+                                          {
+                                              Id = "A1",
+                                              Parent = obj1,
+                                              Others = new List<json_ParentClass>() { obj1,obj2 }
+                                          }
+                                  };
+
+            string json = JsonSerializer.ToJson(obj1);
+
+            Assert.AreEqual("{\"Id\":\"A\",\"Children\":[{\"Id\":\"A1\",\"Parent\":null,\"Others\":[null,{\"Id\":\"B\",\"Children\":null}]}]}",json);
+
+        }
+
+        private class json_ParentClass
+        {
+            public string Id;
+            public List<json_ChildClass> Children;
+        }
+
+        private class json_ChildClass
+        {
+            public string Id;
+            public json_ParentClass Parent;
+            public List<json_ParentClass> Others;
+        }
     }
 }
