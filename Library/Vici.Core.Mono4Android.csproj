@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FD6AF977-EFB0-49B3-B402-F3546918BF97}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vici.Core.Mono4Android</RootNamespace>
+    <AssemblyName>Vici.Core.M4A</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidSupportedAbis>armeabi</AndroidSupportedAbis>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MONO4ANDROID</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;MONO4ANDROID</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base64Serializer.cs" />
+    <Compile Include="BinaryHelper.cs" />
+    <Compile Include="BinarySerializer.cs" />
+    <Compile Include="Cache\SmartCache.cs" />
+    <Compile Include="CompatibilityLayer.cs" />
+    <Compile Include="CoreExtensions.cs" />
+    <Compile Include="EasyConfig\Attributes\ConfigIgnoreAttribute.cs" />
+    <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />
+    <Compile Include="EasyConfig\Attributes\ConfigObjectAttribute.cs" />
+    <Compile Include="EasyConfig\ConfigManager.cs" />
+    <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
+    <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
+    <Compile Include="EasyConfig\IConfigObject.cs" />
+    <Compile Include="EasyConfig\IConfigurationProvider.cs" />
+    <Compile Include="EasyConfig\Providers\ConfigurationProviderAppConfig.cs" />
+    <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
+    <Compile Include="FastReflection\FastPropertyInfo.cs" />
+    <Compile Include="Json\Json.cs" />
+    <Compile Include="Json\JSONParser.cs" />
+    <Compile Include="Json\JsonSerializer.cs" />
+    <Compile Include="Json\Tokenizer\JSONTokenizer.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\ArrayEndTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\ArrayStartTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\ColonTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\CommaTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\FalseTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\FloatTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\IntegerTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\JSONStringTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\NullTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\ObjectEndTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\ObjectStartTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\TrueTokenMatcher.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\LoggingProvider.cs" />
+    <Compile Include="Logger\LogLevel.cs" />
+    <Compile Include="Logger\Providers\LoggingProviderConsole.cs" />
+    <Compile Include="Logger\Providers\LoggingProviderFile.cs" />
+    <Compile Include="Mocking\ITimeProvider.cs" />
+    <Compile Include="Mocking\RealTimeProvider.cs" />
+    <Compile Include="Notifier\ISubscription.cs" />
+    <Compile Include="Notifier\Notification.cs" />
+    <Compile Include="Notifier\Notifier.cs" />
+    <Compile Include="Parser\Context\ContextFactory.cs" />
+    <Compile Include="Parser\Context\DynamicObject.cs" />
+    <Compile Include="Parser\Context\IDynamicObject.cs" />
+    <Compile Include="Parser\Context\IParserContext.cs" />
+    <Compile Include="Parser\Context\LazyBinder.cs" />
+    <Compile Include="Parser\Context\ParserContext.cs" />
+    <Compile Include="Parser\Context\ParserContextBehavior.cs" />
+    <Compile Include="Parser\Context\PropertyHelper.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\BadArgumentException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\ExpressionEvaluationException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\IllegalAssignmentException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\IllegalOperandsException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\LexerException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\LiteralException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\ParserException.cs" />
+    <Compile Include="Parser\ExpressionParser\Exceptions\UnknownPropertyException.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Abstract\Expression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Abstract\ExpressionWithContext.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\AddExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\AndAlsoExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\AsExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\AssignmentExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\BinaryArithmicExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\BinaryExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\BitwiseComplementExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\CallExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\CoalesceExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ConditionalExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ConstructorExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\ClassName.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\InstanceMethod.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\MethodDefinition.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\StaticMethod.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\DefaultValueExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\DivideExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ExpressionHelper\BinaryExpressionHelper.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\FieldExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\IndexExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Interfaces\IExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Interfaces\IExpressionWithContext.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\IsExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\MultiplyExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\NegationExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\OrElseExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\RangeExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\SubtractExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\TypeCastExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\TypeOfExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\UnaryMinusExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ValueExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\VariableExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\ExpressionParser.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\IValueWithType.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\OperatorAssociativity.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\RPNExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\TokenEvaluator.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\TokenType.cs" />
+    <Compile Include="Parser\ExpressionParser\Parser\ValueWithType.cs" />
+    <Compile Include="Parser\ExpressionParser\Tokenizer\ExpressionToken.cs" />
+    <Compile Include="Parser\ExpressionParser\Tokenizer\ExpressionTokenizer.cs" />
+    <Compile Include="Parser\ExpressionParser\Tokenizer\ExpressionTokenMatcher.cs" />
+    <Compile Include="Parser\ExpressionParser\Tokenizer\FunctionCallToken.cs" />
+    <Compile Include="Parser\FieldOrProperty.cs" />
+    <Compile Include="Parser\Parsers\CSharp\CSharpContext.cs" />
+    <Compile Include="Parser\Parsers\CSharp\FlexContext.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Parser\CSharpEvaluator.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Parser\CSharpParser.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\CSharpTokenizer.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\CharLiteralMatcher.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\DecimalLiteralMatcher.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\IntegerLiteralMatcher.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\StringLiteralMatcher.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\TypeCastMatcher.cs" />
+    <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\VariableMatcher.cs" />
+    <Compile Include="Parser\TemplateParser\CompiledTemplate.cs" />
+    <Compile Include="Parser\TemplateParser\Exceptions\TemplateParserException.cs" />
+    <Compile Include="Parser\TemplateParser\Exceptions\TemplateParsingException.cs" />
+    <Compile Include="Parser\TemplateParser\Exceptions\TemplateRenderingException.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ExpressionNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ForEachNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\IfNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\IncludeFileNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\MacroCallNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\MacroDefinitionNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\Node.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ParseFileNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\TextNode.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\DollarExpressionMatcher.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\DoubleCurly\DoubleCurly.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\DoubleCurly\DoubleCurlyTokenizer.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\ProMesh\ProMesh.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\ProMesh\ProMeshTokenizer.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\SmartExpressionMatcher.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\Velocity\Velocity.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\Velocity\VelocityTokenizer.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\WrappedExpressionMatcher.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\Xml\Xml.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateConfigs\Xml\XmlTokenizer.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateParser.cs" />
+    <Compile Include="Parser\TemplateParser\TemplateParserConfig.cs" />
+    <Compile Include="Parser\TemplateParser\Tokenizer\ForeachTemplateToken.cs" />
+    <Compile Include="Parser\TemplateParser\Tokenizer\TemplateToken.cs" />
+    <Compile Include="Parser\TemplateParser\Tokenizer\TemplateTokenizer.cs" />
+    <Compile Include="Parser\TemplateParser\Tokenizer\TemplateTokenMatcher.cs" />
+    <Compile Include="Parser\TemplateParser\Tokenizer\TemplateTokenType.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\AnyCharMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\AnyOfMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\AnyOfStringMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\CharMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\CompositeMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\RegexMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\SequenceOfAnyCharMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\SequenceOfCharRangeMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\StartsAndEndsWithMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\StringMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\WhiteSpaceMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\BaseMatchers\WhiteSpacePaddedMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\CharHelper.cs" />
+    <Compile Include="Parser\Tokenizer\Exceptions\TokenizerException.cs" />
+    <Compile Include="Parser\Tokenizer\Exceptions\UnknownTokenException.cs" />
+    <Compile Include="Parser\Tokenizer\ITokenMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\ITokenProcessor.cs" />
+    <Compile Include="Parser\Tokenizer\Token.cs" />
+    <Compile Include="Parser\Tokenizer\Tokenizer.cs" />
+    <Compile Include="Parser\Tokenizer\TokenizerState.cs" />
+    <Compile Include="Parser\Tokenizer\TokenMatcher.cs" />
+    <Compile Include="Parser\Tokenizer\TokenPosition.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <Compile Include="Scheduler\CyclicScheduler.cs" />
+    <Compile Include="Scheduler\MonthlyScheduler.cs" />
+    <Compile Include="Scheduler\ScheduleHistory\DefaultHistoryStore.cs" />
+    <Compile Include="Scheduler\ScheduleHistory\FileHistoryStore.cs" />
+    <Compile Include="Scheduler\ScheduleHistory\IScheduleHistoryStore.cs" />
+    <Compile Include="Scheduler\Scheduler.cs" />
+    <Compile Include="Scheduler\ScheduleWeekDays.cs" />
+    <Compile Include="Scheduler\TimeOfDayScheduler.cs" />
+    <Compile Include="SmartConverter\EnumConverter.cs" />
+    <Compile Include="SmartConverter\IStringConverter.cs" />
+    <Compile Include="SmartConverter\ObjectConverter.cs" />
+    <Compile Include="SmartConverter\StringConverter.cs" />
+    <Compile Include="StringHelper.cs" />
+    <Compile Include="Tuple.cs" />
+    <Compile Include="TypeHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
