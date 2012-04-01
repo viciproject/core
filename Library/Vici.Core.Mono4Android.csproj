@@ -10,9 +10,12 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vici.Core.Mono4Android</RootNamespace>
-    <AssemblyName>Vici.Core.Mono4Android</AssemblyName>
+    <AssemblyName>Vici.Core.M4A</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidSupportedAbis>armeabi</AndroidSupportedAbis>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -211,6 +214,7 @@
     <Compile Include="Parser\Tokenizer\TokenMatcher.cs" />
     <Compile Include="Parser\Tokenizer\TokenPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="Scheduler\CyclicScheduler.cs" />
     <Compile Include="Scheduler\MonthlyScheduler.cs" />
     <Compile Include="Scheduler\ScheduleHistory\DefaultHistoryStore.cs" />
