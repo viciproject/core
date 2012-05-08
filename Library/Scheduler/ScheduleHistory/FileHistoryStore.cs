@@ -22,16 +22,15 @@ namespace Vici.Core.Scheduling
                     byte[] bytes = File.ReadAllBytes(fileName);
 
                     _lastRunTimes = BinarySerializer.Deserialize<Dictionary<string, DateTime>>(bytes);
+
+                    return;
                 }
-                catch
+                catch // Some error when deserializing. Let's assume the data is invalid
                 {
-                    _lastRunTimes = new Dictionary<string, DateTime>();
                 }
             }
-            else
-            {
-                _lastRunTimes = new Dictionary<string, DateTime>();
-            }
+            
+            _lastRunTimes = new Dictionary<string, DateTime>();
         }
 
         public DateTime LastRun(string taskId)

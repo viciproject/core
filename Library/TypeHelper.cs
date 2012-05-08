@@ -2,7 +2,7 @@
 //=============================================================================
 // Vici Core - Productivity Library for .NET 3.5 
 //
-// Copyright (c) 2008-2011 Philippe Leybaert
+// Copyright (c) 2008-2012 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -26,31 +26,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Vici.Core
 {
-    public static class AttributeHelper
-    {
-        public static bool HasAttribute<T>(this MemberInfo type, bool inherit) where T : Attribute
-        {
-            return type.IsDefined(typeof(T), inherit);
-        }
-
-        public static T GetAttribute<T>(this MemberInfo type, bool inherit) where T : Attribute
-        {
-            T[] attributes = (T[])type.GetCustomAttributes(typeof(T), inherit);
-
-            return attributes.Length > 0 ? attributes[0] : null;
-        }
-
-        public static T[] GetAttributes<T>(this MemberInfo type, bool inherit) where T : Attribute
-        {
-            return (T[])type.GetCustomAttributes(typeof(T), inherit);
-        }
-        
-    }
-
     public static class TypeHelper
     {
         public static bool IsNullable(this Type type)
@@ -106,15 +86,7 @@ namespace Vici.Core
         #endregion
         public static Type[] FindCompatibleTypes(this Assembly assembly, Type baseType)
         {
-            List<Type> types = new List<Type>();
-
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (type != baseType && baseType.IsAssignableFrom(type))
-                    types.Add(type);
-            }
-            
-            return types.ToArray();
+            return assembly.GetTypes().Where(type => type != baseType && baseType.IsAssignableFrom(type)).ToArray();
         }
 
         #region Method description

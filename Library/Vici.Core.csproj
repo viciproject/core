@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeHelper.cs" />
     <Compile Include="Base64Serializer.cs" />
     <Compile Include="BinaryHelper.cs" />
     <Compile Include="BinarySerializer.cs" />

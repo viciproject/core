@@ -2,7 +2,7 @@
 //=============================================================================
 // Vici Core - Productivity Library for .NET 3.5 
 //
-// Copyright (c) 2008-2011 Philippe Leybaert
+// Copyright (c) 2008-2012 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -225,14 +225,12 @@ namespace Vici.Core.Parser
                     int numTerms = token.NumTerms;
 
 					if (token.IsFunction)
-						numTerms++;
+						numTerms++; // include the function name as the first parameter
 
                     Expression[] parameters = new Expression[numTerms];
 
                     for (int i = numTerms-1; i >= 0; i--)
                         parameters[i] = tempStack.Pop();
-
-                    //Array.Reverse(parameters);
 
                     currentExpression = evaluator(token.Text, token.TokenPosition, parameters);
 

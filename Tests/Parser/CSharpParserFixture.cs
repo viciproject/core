@@ -1,7 +1,7 @@
 //=============================================================================
 // Vici Core - Productivity Library for .NET 3.5 
 //
-// Copyright (c) 2008-2011 Philippe Leybaert
+// Copyright (c) 2008-2012 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
