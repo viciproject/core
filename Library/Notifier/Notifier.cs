@@ -60,7 +60,6 @@ namespace Vici.Core.Notifications
                 Method = method;
             }
 
-
             public void Unsubscribe()
             {
                 _notifier.Unsubscribe(this);
@@ -97,7 +96,7 @@ namespace Vici.Core.Notifications
                 }
             }
 
-            public void EnqueueNotification(string name, Notification notification)
+            public void EnqueueNotification(Notification notification)
             {
                 if (_queuedNotificications == null)
                     _queuedNotificications = new List<Notification>();
@@ -157,7 +156,7 @@ namespace Vici.Core.Notifications
                     var method = subscription.Method;
 
                     if (method == null)
-                        subscription.EnqueueNotification(name, notification);
+                        subscription.EnqueueNotification(notification);
                     else
                         method(notification);
                 }
@@ -166,7 +165,7 @@ namespace Vici.Core.Notifications
 
         public void Post<T>(string name, T payload, object sender)
         {
-            Notification<T> notification = new Notification<T>(null,name,payload);
+            Notification<T> notification = new Notification<T>(sender,name,payload);
 
             foreach (Subscription subscription in _subscriptions)
             {
@@ -175,7 +174,7 @@ namespace Vici.Core.Notifications
                     var method = ((Subscription<T>) subscription).Method;
 
                     if (method == null)
-                        subscription.EnqueueNotification(name, notification);
+                        subscription.EnqueueNotification(notification);
                     else
                         method(notification);
                 }

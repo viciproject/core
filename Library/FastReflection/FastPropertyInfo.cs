@@ -147,10 +147,8 @@ namespace Vici.Core
 
         private Assembly EmitAssembly()
         {
-            AssemblyName assemblyName = new AssemblyName();
-            
-            assemblyName.Name = "PropertyAccessorAssembly";
-            
+            AssemblyName assemblyName = new AssemblyName { Name = "PropertyAccessorAssembly" };
+
             AssemblyBuilder newAssembly = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder newModule = newAssembly.DefineDynamicModule("Module");
             TypeBuilder myType = newModule.DefineType("PropertyAccessor", TypeAttributes.Public);

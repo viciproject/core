@@ -42,11 +42,6 @@ namespace Vici.Core.Json
         private Token[] _tokens;
         private int _currentToken;
 
-        static JsonParser()
-        {
-            
-        }
-
         public T Parse<T>(string json) where T:class, new()
         {
             Tokenize(json);
@@ -76,19 +71,27 @@ namespace Vici.Core.Json
             _tokens = tokens.ToArray();
         }
 
-        private Token CurrentToken
+        private Token CurrentToken()
         {
-            get { return _tokens[_currentToken]; }
+            return _currentToken < _tokens.Length ? _tokens[_currentToken] : null;
+        }
+
+        private void NextToken()
+        {
+            _currentToken++;
         }
 
         private object ParseObject(Type objectType)
         {
-            if (CurrentToken.TokenMatcher is NullTokenMatcher)
+            if (CurrentToken().TokenMatcher is NullTokenMatcher)
             {
-                _currentToken++;
+                NextToken();
 
                 return null;
             }
+
+            if (!(CurrentToken().TokenMatcher is ObjectStartTokenMatcher))
+                throw new Exception("Expected {");
 
             object obj;
             bool isDictionary = false;
@@ -102,24 +105,21 @@ namespace Vici.Core.Json
             else
                 obj = Activator.CreateInstance(objectType);
 
-            if (!(CurrentToken.TokenMatcher is ObjectStartTokenMatcher))
-                throw new Exception("Expected {");
-
-            _currentToken++;
+            NextToken();
 
             for (; ; )
             {
-                if (!(CurrentToken.TokenMatcher is StringTokenMatcher))
+                if (!(CurrentToken().TokenMatcher is StringTokenMatcher))
                     throw new Exception("Expected property name");
 
-                string propName = CurrentToken.Text.Substring(1, CurrentToken.Text.Length - 2);
+                string propName = CurrentToken().Text.Substring(1, CurrentToken().Text.Length - 2);
 
-                _currentToken++;
+                NextToken();
 
-                if (!(CurrentToken.TokenMatcher is ColonTokenMatcher))
+                if (!(CurrentToken().TokenMatcher is ColonTokenMatcher))
                     throw new Exception("Expected colon");
 
-                _currentToken++;
+                NextToken();
 
                 if (!isDictionary)
                 {
@@ -147,16 +147,16 @@ namespace Vici.Core.Json
                     ((Dictionary<string, object>) obj)[propName] = ParseValue(typeof (object));
                 }
 
-                if (!(CurrentToken.TokenMatcher is CommaTokenMatcher))
+                if (!(CurrentToken().TokenMatcher is CommaTokenMatcher))
                     break;
 
-                _currentToken++;
+                NextToken();
             }
 
-            if (!(CurrentToken.TokenMatcher is ObjectEndTokenMatcher))
+            if (!(CurrentToken().TokenMatcher is ObjectEndTokenMatcher))
                 throw new Exception("Expected }");
 
-            _currentToken++;
+            NextToken();
 
             return obj;
         }
@@ -179,46 +179,48 @@ namespace Vici.Core.Json
         {
             if (type == typeof(object))
             {
-                if (CurrentToken.TokenMatcher is StringTokenMatcher)
+                if (CurrentToken().TokenMatcher is StringTokenMatcher)
                     type = typeof(string);
-                else if (CurrentToken.TokenMatcher is IntegerTokenMatcher)
+                else if (CurrentToken().TokenMatcher is IntegerTokenMatcher)
                     type = typeof(Int64);
-                else if (CurrentToken.TokenMatcher is FloatTokenMatcher)
+                else if (CurrentToken().TokenMatcher is FloatTokenMatcher)
                     type = typeof(double);
-                else if (CurrentToken.TokenMatcher is TrueTokenMatcher || CurrentToken.TokenMatcher is FalseTokenMatcher)
+                else if (CurrentToken().TokenMatcher is TrueTokenMatcher || CurrentToken().TokenMatcher is FalseTokenMatcher)
                     type = typeof(bool);
-                else if (CurrentToken.TokenMatcher is ArrayStartTokenMatcher)
+                else if (CurrentToken().TokenMatcher is ArrayStartTokenMatcher)
                     type = typeof(object[]);
-                else if (CurrentToken.TokenMatcher is ObjectStartTokenMatcher || CurrentToken.TokenMatcher is NullTokenMatcher)
+                else if (CurrentToken().TokenMatcher is ObjectStartTokenMatcher || CurrentToken().TokenMatcher is NullTokenMatcher)
                     type = typeof (object);
                 else 
-                    throw new Exception("Unexpected token " + CurrentToken);
+                    throw new Exception("Unexpected token " + CurrentToken());
             }
 
             if (type == typeof(string))
                 return ParseString();
-            else if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
+            
+            if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
                 return ParseNumber(type);
-            else if (IsArray(type))
+            
+            if (IsArray(type))
                 return ParseArray(type);
-            else
-                return ParseObject(type);
+            
+            return ParseObject(type);
         }
 
         private object ParseNumber(Type type)
         {
-            if (!(CurrentToken.TokenMatcher is IntegerTokenMatcher) && !(CurrentToken.TokenMatcher is FloatTokenMatcher))
+            if (!(CurrentToken().TokenMatcher is IntegerTokenMatcher) && !(CurrentToken().TokenMatcher is FloatTokenMatcher))
                 throw new Exception("Number expected");
 
             object n;
 
-            if (CurrentToken.TokenMatcher is IntegerTokenMatcher)
+            if (CurrentToken().TokenMatcher is IntegerTokenMatcher)
             {
-                n = Int64.Parse(CurrentToken.Text, NumberFormatInfo.InvariantInfo);
+                n = Int64.Parse(CurrentToken().Text, NumberFormatInfo.InvariantInfo);
             }
             else
             {
-                n = Double.Parse(CurrentToken.Text, NumberFormatInfo.InvariantInfo);
+                n = Double.Parse(CurrentToken().Text, NumberFormatInfo.InvariantInfo);
             }
 
             _currentToken++;
@@ -230,10 +232,10 @@ namespace Vici.Core.Json
 
         private object ParseString()
         {
-            if (!(CurrentToken.TokenMatcher is StringTokenMatcher))
+            if (!(CurrentToken().TokenMatcher is StringTokenMatcher))
                 throw new Exception("Expected string");
 
-            string s = CurrentToken.Text.Substring(1,CurrentToken.Text.Length-2);
+            string s = CurrentToken().Text.Substring(1,CurrentToken().Text.Length-2);
 
             //TODO: parse dates
 
@@ -251,7 +253,7 @@ namespace Vici.Core.Json
                 elementType = type.GetElementType();
             }
             
-            if (!(CurrentToken.TokenMatcher is ArrayStartTokenMatcher))
+            if (!(CurrentToken().TokenMatcher is ArrayStartTokenMatcher))
                 throw new Exception("Expected [");
 
             _currentToken++;
@@ -260,18 +262,18 @@ namespace Vici.Core.Json
 
             for(;;)
             {
-                if (CurrentToken.TokenMatcher is ArrayEndTokenMatcher)
+                if (CurrentToken().TokenMatcher is ArrayEndTokenMatcher)
                     break;
 
                 list.Add(ParseValue(elementType));
 
-                if (!(CurrentToken.TokenMatcher is CommaTokenMatcher))
+                if (!(CurrentToken().TokenMatcher is CommaTokenMatcher))
                     break;
 
                 _currentToken++;
             }
 
-            if (!(CurrentToken.TokenMatcher is ArrayEndTokenMatcher))
+            if (!(CurrentToken().TokenMatcher is ArrayEndTokenMatcher))
                 throw new Exception("Expected ]");
 
             _currentToken++;

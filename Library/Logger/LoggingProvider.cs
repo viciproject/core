@@ -33,7 +33,7 @@ namespace Vici.Core.Logging
         private LogLevel _logLevelMask = LogLevel.All;
         private LogLevel _minimumLogLevel = LogLevel.Information;
 
-        public LoggingProvider()
+        protected LoggingProvider()
         {
             TimeFormatString = "yyyy.MM.dd HH:mm:ss.ff";
         }

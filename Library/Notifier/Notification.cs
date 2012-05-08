@@ -45,7 +45,7 @@ namespace Vici.Core.Notifications
 
     public class Notification<T> : Notification
     {
-        public Notification(object sender, string name, T payload): base(sender, name, payload)
+        public Notification(object sender, string name, T payload) : base(sender, name, payload)
         {
             Payload = payload;
         }

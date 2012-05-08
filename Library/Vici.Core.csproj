@@ -77,6 +77,7 @@
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
+    <Compile Include="TypedWeakReference.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
     <Compile Include="Parser\ExpressionParser\Expression\DefaultValueExpression.cs" />

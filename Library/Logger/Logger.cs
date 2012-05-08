@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Vici.Core.Logging
 {
@@ -70,12 +71,9 @@ namespace Vici.Core.Logging
 
             lock (_instanceLock)
             {
-                foreach (LoggingProvider provider in _loggingProviders)
+                foreach (var provider in _loggingProviders.Where(provider => (level & provider.LogLevelMask) != 0 && level >= provider.MinimumLogLevel))
                 {
-                    if ((level & provider.LogLevelMask) != 0 && level >= provider.MinimumLogLevel)
-                    {
-                        provider.LogException(now, level, e);
-                    }
+                    provider.LogException(now, level, e);
                 }
             }
         }
@@ -88,12 +86,9 @@ namespace Vici.Core.Logging
 
             lock (_instanceLock)
             {
-                foreach (LoggingProvider provider in _loggingProviders)
+                foreach (var provider in _loggingProviders.Where(provider => (level & provider.LogLevelMask) != 0 && level >= provider.MinimumLogLevel))
                 {
-                    if ((level & provider.LogLevelMask) != 0 && level >= provider.MinimumLogLevel)
-                    {
-                        provider.LogText(now, level, fmt);
-                    }
+                    provider.LogText(now, level, fmt);
                 }
             }
         }
