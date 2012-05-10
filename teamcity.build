@@ -33,7 +33,13 @@
 
 		<zip zipfile="_zip/${Product}.${build.number}.bin.zip">
 			<fileset basedir="_build">
-				<include name="*.dll" />
+				<include name="${Product}.dll" />
+			</fileset>
+		</zip>
+
+		<zip zipfile="_zip/${Product}.${build.number}.WP7.bin.zip">
+			<fileset basedir="_build">
+				<include name="*WP7.dll" />
 			</fileset>
 		</zip>
 
