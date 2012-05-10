@@ -31,7 +31,7 @@
 	<target name="package">
 		<mkdir dir="_zip" />
 
-		<zip zipfile="_zip/${Product}.${build.number}.bin.zip">
+		<zip zipfile="_zip/${Product}.${build.number}.NET.bin.zip">
 			<fileset basedir="_build">
 				<include name="${Product}.dll" />
 			</fileset>
