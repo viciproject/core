@@ -31,25 +31,25 @@
 	<target name="package">
 		<mkdir dir="_zip" />
 
-		<zip zipfile="_zip/${Product}.${build.number}.NET.bin.zip">
+		<zip zipfile="_zip/${Product}.NET.${build.number}.bin.zip">
 			<fileset basedir="_build">
 				<include name="${Product}.dll" />
 			</fileset>
 		</zip>
 
-		<zip zipfile="_zip/${Product}.${build.number}.WP7.bin.zip">
+		<zip zipfile="_zip/${Product}.WP7.${build.number}.bin.zip">
 			<fileset basedir="_build">
 				<include name="*WP7.dll" />
 			</fileset>
 		</zip>
 
-		<zip zipfile="_zip/${Product}.${build.number}.MT.bin.zip">
+		<zip zipfile="_zip/${Product}.MT.${build.number}.bin.zip">
 			<fileset basedir="_build">
 				<include name="*MT.dll" />
 			</fileset>
 		</zip>
 
-		<zip zipfile="_zip/${Product}.${build.number}.M4A.bin.zip">
+		<zip zipfile="_zip/${Product}.M4A.${build.number}.bin.zip">
 			<fileset basedir="_build">
 				<include name="*.M4A.dll" />
 			</fileset>
