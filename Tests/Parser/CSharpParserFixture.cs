@@ -88,6 +88,8 @@ namespace Vici.Core.Test
             _context.Set("MyArray", new int[] { 1, 2, 4, 8, 16 });
             _context.Set("MyArray2", new int[,] { { 1, 2 }, { 2, 4 }, { 4, 8 }, { 8, 16 }, { 16, 32 } });
 
+            _context.Set("f", new Func<int,int>(i => i*2));
+
             _parser.DefaultContext = _context;
         }
 

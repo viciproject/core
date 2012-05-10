@@ -36,7 +36,19 @@
 				<include name="*.dll" />
 			</fileset>
 		</zip>
-        
+
+		<zip zipfile="_zip/${Product}.${build.number}.MT.bin.zip">
+			<fileset basedir="_build">
+				<include name="*MT.dll" />
+			</fileset>
+		</zip>
+
+		<zip zipfile="_zip/${Product}.${build.number}.M4A.bin.zip">
+			<fileset basedir="_build">
+				<include name="*.M4A.dll" />
+			</fileset>
+		</zip>
+
 		<zip zipfile="_zip/${Product}.${build.number}.src.zip">
 			<fileset>
 				<include name="**/*" />

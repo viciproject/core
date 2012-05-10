@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeHelper.cs" />
     <Compile Include="Base64Serializer.cs" />
     <Compile Include="BinaryHelper.cs" />
     <Compile Include="BinarySerializer.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="SmartConverter\StringConverter.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="Tuple.cs" />
+    <Compile Include="TypedWeakReference.cs" />
     <Compile Include="TypeHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
