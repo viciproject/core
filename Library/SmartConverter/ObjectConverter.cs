@@ -39,12 +39,12 @@ namespace Vici.Core
         public static object Convert(this object value, Type targetType)
         {
             if (value == null)
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
 
             if (value is string)
                 return StringConverter.Convert((string) value, targetType);
 
-            Type type = targetType.GetRealType();
+            Type type = targetType.Inspector().RealType;
 
             if (value.GetType() == type)
                 return value;
@@ -55,7 +55,7 @@ namespace Vici.Core
             if (type == typeof (byte[]) && value is Guid)
                 return ((Guid) value).ToByteArray();
 
-            if (type.IsEnum)
+            if (type.Inspector().IsEnum)
             {
                 try
                 {
@@ -65,16 +65,16 @@ namespace Vici.Core
                 }
                 catch
                 {
-                    return targetType.DefaultValue();
+                    return targetType.Inspector().DefaultValue();
                 }
 
                 return Enum.IsDefined(type, value) ? 
                             value 
                             : 
-                            targetType.DefaultValue();
+                            targetType.Inspector().DefaultValue();
             }
 
-            if (type.IsAssignableFrom(value.GetType()))
+            if (type.Inspector().IsAssignableFrom(value.GetType()))
                 return value;
 
             if (type == typeof (string))
@@ -86,7 +86,7 @@ namespace Vici.Core
             }
             catch
             {
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
             }
         }
 

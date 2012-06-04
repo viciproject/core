@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace Vici.Core.Parser
@@ -57,11 +58,7 @@ namespace Vici.Core.Parser
             if (matchingMethod != null)
                 return matchingMethod;
 
-            foreach (MethodBase method in match)
-                if (ParametersMatch(types, method.GetParameters()))
-                    return method;
-
-            return null;
+            return match.FirstOrDefault(method => ParametersMatch(types, method.GetParameters()));
         }
 
         public override PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers)

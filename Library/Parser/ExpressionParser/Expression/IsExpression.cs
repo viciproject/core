@@ -49,7 +49,7 @@ namespace Vici.Core.Parser
             if (objectValue.Value == null)
                 return Exp.Value(TokenPosition, false);
 
-            objectType = Nullable.GetUnderlyingType(objectType) ?? objectType;
+            objectType = objectType.Inspector().RealType;
 
             if (className == null)
                 throw new ExpressionEvaluationException("is operator requires a type. " + _typeExpression + " is not a type", this);
@@ -57,7 +57,7 @@ namespace Vici.Core.Parser
             Type checkType = className.Type;
 
             if (!objectType.IsValueType)
-                return Exp.Value(TokenPosition, checkType.IsAssignableFrom(objectType));
+                return Exp.Value(TokenPosition, checkType.Inspector().IsAssignableFrom(objectType));
 
             checkType = Nullable.GetUnderlyingType(checkType) ?? checkType;
 

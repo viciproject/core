@@ -161,17 +161,17 @@ namespace Vici.Core
         public static object Convert(this string stringValue, Type targetType, params string[] dateFormats)
         {
             if (stringValue == null)
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
 
             if (targetType == typeof (string))
                 return stringValue;
 
             object returnValue = null;
 
-            Type type = targetType.GetRealType();
+            Type type = targetType.Inspector().RealType;
 
             if (stringValue.Trim().Length == 0)
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
 
             if (_stringConverters != null)
                 foreach (IStringConverter converter in _stringConverters)
@@ -236,7 +236,7 @@ namespace Vici.Core
                 else
                     returnValue = null;
             }
-            else if (type.IsEnum)
+            else if (type.Inspector().IsEnum)
             {
                 if (char.IsNumber(stringValue,0))
                 {
@@ -256,11 +256,11 @@ namespace Vici.Core
                         return Enum.Parse(type, stringValue, true);
                 }
 
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
             }
 
             if (returnValue == null)
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
 
             try
             {
@@ -268,7 +268,7 @@ namespace Vici.Core
             }
             catch
             {
-                return targetType.DefaultValue();
+                return targetType.Inspector().DefaultValue();
             }
         }
     }

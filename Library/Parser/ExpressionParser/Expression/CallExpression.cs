@@ -53,7 +53,7 @@ namespace Vici.Core.Parser
 			{
 				Type returnType;
 
-                return Exp.Value(TokenPosition, ((MethodDefinition)methodObject).Invoke(parameterTypes, parameterValues, out returnType, new LazyBinder()), returnType);
+                return Exp.Value(TokenPosition, ((MethodDefinition)methodObject).Invoke(parameterTypes, parameterValues, out returnType, LazyBinder.Default), returnType);
 			}
 
 			if (methodObject is ConstructorInfo[])
@@ -67,7 +67,7 @@ namespace Vici.Core.Parser
 
 				object value = ((ConstructorInfo)method).Invoke(parameterValues);
 
-                return Exp.Value(TokenPosition, value, method.ReflectedType);
+                return Exp.Value(TokenPosition, value, method.Inspector().ReflectedType);
 			}
 
 			if (methodObject is Delegate[])
@@ -88,10 +88,15 @@ namespace Vici.Core.Parser
             if (methodObject is Delegate)
             {
                 Delegate method = (Delegate) methodObject;
+#if NETFX_CORE
+                MethodInfo methodInfo = method.GetMethodInfo();
+#else
+                MethodInfo methodInfo = method.Method;
+#endif
 
-                object value = method.Method.Invoke(method.Target, parameterValues);
+                object value = methodInfo.Invoke(method.Target, parameterValues);
 
-                return new ValueExpression(TokenPosition, value, method.Method.ReturnType);
+                return new ValueExpression(TokenPosition, value, methodInfo.ReturnType);
             }
 
             throw new ExpressionEvaluationException(_methodExpression + " is not a function", this);

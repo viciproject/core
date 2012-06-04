@@ -47,7 +47,7 @@ namespace Vici.Core.Parser
             if (className == null)
                 throw new TypeInitializationException(_className.VarName,null);
 
-            return Exp.Value(TokenPosition, className.Type.GetConstructors());
+            return Exp.Value(TokenPosition, className.Type.Inspector().GetConstructors());
         }
 
         public override string ToString()

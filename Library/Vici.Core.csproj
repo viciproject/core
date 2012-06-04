@@ -74,6 +74,7 @@
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\Json.cs" />
+    <Compile Include="MethodInspector.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
@@ -252,6 +253,7 @@
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="SmartConverter\StringConverter.cs" />
+    <Compile Include="TypeInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -79,7 +79,7 @@ namespace Vici.Core.Parser
 
     		if (members.Length == 0)
     		{
-                PropertyInfo indexerPropInfo = targetType.GetProperty("Item", new[] { typeof(string) });
+                PropertyInfo indexerPropInfo = targetType.Inspector().GetIndexer(new[] { typeof(string) });
 
                 if (indexerPropInfo != null)
                 {
@@ -132,12 +132,12 @@ namespace Vici.Core.Parser
 
             while (t != null)
             {
-                MemberInfo[] members = t.GetMember(name);
+                MemberInfo[] members = t.Inspector().GetMember(name);
 
                 if (members.Length > 0)
                     return members;
 
-                t = t.BaseType;
+                t = t.Inspector().BaseType;
             }
 
             return new MemberInfo[0];

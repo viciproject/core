@@ -54,9 +54,9 @@ namespace Vici.Core.Parser
             if (objectValue.Value == null)
                 return Exp.Value(TokenPosition, null, checkType);
 
-            objectType = Nullable.GetUnderlyingType(objectType) ?? objectType;
+            objectType = objectType.Inspector().RealType;
 
-            if (!objectType.IsValueType)
+            if (!objectType.Inspector().IsValueType)
                 return Exp.Value(TokenPosition, objectValue.Value, checkType);
 
             if ((Nullable.GetUnderlyingType(checkType) ?? checkType) == objectType)

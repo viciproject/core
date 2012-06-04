@@ -102,7 +102,7 @@ namespace Vici.Core.Parser
 
         private static MemberInfo GetMember(Type type, string propertyName)
         {
-            MemberInfo[] members = type.GetMember(propertyName);
+            MemberInfo[] members = type.Inspector().GetMember(propertyName);
 
             if (members.Length == 0)
                 return null;

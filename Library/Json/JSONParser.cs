@@ -123,8 +123,8 @@ namespace Vici.Core.Json
 
                 if (!isDictionary)
                 {
-                    PropertyInfo property = objectType.GetProperty(propName);
-                    FieldInfo field = objectType.GetField(propName);
+                    PropertyInfo property = objectType.Inspector().GetProperty(propName);
+                    FieldInfo field = objectType.Inspector().GetField(propName);
 
                     if (property != null || field != null)
                     {
@@ -163,16 +163,9 @@ namespace Vici.Core.Json
 
         private static bool IsArray(Type type)
         {
-            if (typeof(IList).IsAssignableFrom(type))
-                return true;
-
-            
-            Type[] interfaces = type.FindInterfaces(
-                (t, criteria) => (t.IsGenericType && t.GetGenericTypeDefinition() == typeof (IList<>))
-                , 
-                null);
-
-            return interfaces.Length > 0;
+            return type.Inspector().ImplementsOrInherits<IList>() 
+                    ||
+                   type.Inspector().ImplementsOrInherits(typeof (IList<>));
         }
 
         private object ParseValue(Type type)

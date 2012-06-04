@@ -109,7 +109,7 @@ namespace Vici.Core.Test
                 Assert.IsInstanceOfType(t, o.Convert(t));
 
             foreach (Type t in types)
-                Assert.AreEqual(t.DefaultValue(), ObjectConverter.Convert(null,t));
+                Assert.AreEqual(t.Inspector().DefaultValue(), ObjectConverter.Convert(null,t));
         }
 
         [Test]

@@ -248,11 +248,11 @@ namespace Vici.Core.Parser
             Type type1 = values[0].Type;
             Type type2 = values[1].Type;
 
-            bool nullable1 = type1.IsGenericType && type1.GetGenericTypeDefinition() == typeof(Nullable<>);
-            bool nullable2 = type2.IsGenericType && type2.GetGenericTypeDefinition() == typeof(Nullable<>);
+            bool nullable1 = type1.Inspector().IsNullable;
+            bool nullable2 = type2.Inspector().IsNullable;
 
-            type1 = Nullable.GetUnderlyingType(type1) ?? type1;
-            type2 = Nullable.GetUnderlyingType(type2) ?? type2;
+            type1 = type1.Inspector().RealType;
+            type2 = type2.Inspector().RealType;
 
             bool isNullable = (nullable1 || nullable2);
 
@@ -276,7 +276,7 @@ namespace Vici.Core.Parser
                     promotionType = typeof(long);
                 else if (type1 == typeof(uint) || type2 == typeof(uint))
                     promotionType = typeof(uint);
-                else if (type1.IsPrimitive && type2.IsPrimitive && type1 != typeof(bool) && type2 != typeof(bool))
+                else if (type1.Inspector().IsPrimitive && type2.Inspector().IsPrimitive && type1 != typeof(bool) && type2 != typeof(bool))
                     promotionType = typeof(int);
 
                 if (promotionType != null)
@@ -290,7 +290,7 @@ namespace Vici.Core.Parser
 
             if (operatorMethod == null)
             {
-                MethodInfo customOperatorMethod = type1.GetMethod(_operatorOverloadNames[_operator], new[] { type1, type2 });
+                MethodInfo customOperatorMethod = type1.Inspector().GetMethod(_operatorOverloadNames[_operator], new[] { type1, type2 });
 
                 if (customOperatorMethod != null)
                 {
@@ -330,8 +330,8 @@ namespace Vici.Core.Parser
                 bool sameType1 = type1 == operatorMethod.Type1;
                 bool sameType2 = type2 == operatorMethod.Type2;
 
-                bool canConvert1 = operatorMethod.Type1.IsAssignableFrom(type1);
-                bool canConvert2 = operatorMethod.Type2.IsAssignableFrom(type2);
+                bool canConvert1 = operatorMethod.Type1.Inspector().IsAssignableFrom(type1);
+                bool canConvert2 = operatorMethod.Type2.Inspector().IsAssignableFrom(type2);
 
                 if ((sameType1 || canConvert1) && (sameType2 || canConvert2))
                 {

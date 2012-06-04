@@ -65,12 +65,12 @@ namespace Vici.Core.Parser
 
             while (t != null)
             {
-                MethodInfo methodInfo = t.GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, binder ?? LazyBinder.Default, parameterTypes, null);
+                MethodInfo methodInfo = t.Inspector().GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, binder ?? LazyBinder.Default, parameterTypes, null);
 
                 if (methodInfo != null)
                     return methodInfo;
 
-                t = t.BaseType;
+                t = t.Inspector().BaseType;
             }
 
             return null;

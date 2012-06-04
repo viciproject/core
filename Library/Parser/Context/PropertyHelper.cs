@@ -47,11 +47,11 @@ namespace Vici.Core.Parser
 
             Type targetType = obj.GetType();
 
-            MemberInfo[] members = targetType.GetMember(propertyName);
+            MemberInfo[] members = targetType.Inspector().GetMember(propertyName);
 
             if (members.Length == 0)
             {
-                PropertyInfo indexerPropInfo = targetType.GetProperty("Item", new[] { typeof(string) });
+                PropertyInfo indexerPropInfo = targetType.Inspector().GetIndexer(new[] { typeof(string) });
 
                 if (indexerPropInfo != null)
                 {

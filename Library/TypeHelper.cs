@@ -33,48 +33,6 @@ namespace Vici.Core
 {
     public static class TypeHelper
     {
-        public static bool IsNullable(this Type type)
-        {
-            return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>));
-        }
-
-        public static bool CanBeNull(this Type type)
-        {
-            return !type.IsValueType || type.IsNullable();
-        }
-
-        public static Type GetRealType(this Type type)
-        {
-            if (IsNullable(type))
-                return type.GetGenericArguments()[0];
-
-            return type;
-        }
-
-        public static object DefaultValue(this Type type)
-        {
-            if (type.CanBeNull())
-                return null;
-
-            return Activator.CreateInstance(type);
-        }
-
-        public static bool HasAttribute<T>(this Type type, bool inherit) where T:Attribute
-        {
-            return type.IsDefined(typeof (T), inherit);
-        }
-
-        public static T GetAttribute<T>(this Type type, bool inherit) where T:Attribute
-        {
-            T[] attributes = (T[]) type.GetCustomAttributes(typeof (T), inherit);
-
-            return attributes.Length > 0 ? attributes[0] : null;
-        }
-
-        public static T[] GetAttributes<T>(this Type type, bool inherit) where T : Attribute
-        {
-            return (T[])type.GetCustomAttributes(typeof(T), inherit);
-        }
 
         #region Method description
         /// <summary>

@@ -68,7 +68,7 @@ namespace Vici.Core.Parser
                         throw new BadArgumentException(t.GetType().Name + " is not a valid type for array indexers", this);
                 }
 
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !NETFX_CORE
                 if (useLong)
                 {
                     long[] indexes = new long[parameters.Length];
@@ -91,9 +91,9 @@ namespace Vici.Core.Parser
             }
             else
             {
-                DefaultMemberAttribute[] att = (DefaultMemberAttribute[]) targetType.GetCustomAttributes(typeof(DefaultMemberAttribute), true);
+                DefaultMemberAttribute[] att = (DefaultMemberAttribute[]) targetType.Inspector().GetCustomAttributes(typeof(DefaultMemberAttribute), true);
 
-                MethodInfo methodInfo = targetType.GetMethod("get_" + att[0].MemberName, parameterTypes);
+                MethodInfo methodInfo = targetType.Inspector().GetPropertyGetter(att[0].MemberName, parameterTypes);
 
                 object value = methodInfo.Invoke(targetObject, parameterValues);
 
