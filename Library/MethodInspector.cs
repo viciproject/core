@@ -17,7 +17,11 @@ namespace Vici.Core
 
         public object Invoke(object o, object[] parameters)
         {
+#if NETFX_CORE
+            return _m.Invoke(o, parameters);
+#else
             return _m.Invoke(o, BindingFlags.Default, LazyBinder.Default, parameters, null);
+#endif
         }
     }
 
@@ -26,6 +30,14 @@ namespace Vici.Core
         public static MethodInspector Inspector(this MethodBase method)
         {
             return new MethodInspector(method);
+        }
+    }
+
+    public class MissingMethodException : Exception
+    {
+        public MissingMethodException(string name)
+        {
+            
         }
     }
 

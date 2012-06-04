@@ -161,9 +161,11 @@ namespace Vici.Core
 
         public PropertyInfo GetIndexer(Type[] types)
         {
-            
-
+#if NETFX_CORE
+            return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.ParametersMatch(types, pi.GetIndexParameters())));
+#else            
             return _t.GetProperty("Item", new[] { typeof(string) });
+#endif
         }
 
         public object[] GetCustomAttributes(Type type, bool inherit)
@@ -202,7 +204,12 @@ namespace Vici.Core
         {
             if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetTypeInfo().IsInterface)
             {
-                return _t.FindInterfaces((t, criteria) => (IsGenericType && _t.GetTypeInfo().GetGenericTypeDefinition() == type), null).Any();
+#if NETFX_CORE
+                return _t.GetTypeInfo().ImplementedInterfaces.Any(t => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type));
+#else
+                return _t.FindInterfaces((t, criteria) => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type), null).Any();
+#endif
+
             }
 
             return type.GetTypeInfo().IsAssignableFrom(_t.GetTypeInfo());
@@ -215,7 +222,11 @@ namespace Vici.Core
 
         public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes, ParameterModifier[] modifiers)
         {
+#if NETFX_CORE
+            return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredMethods(methodName).FirstOrDefault(mi => LazyBinder.ParametersMatch(parameterTypes, mi.GetParameters())));
+#else
             return _t.GetMethod(methodName, bindingFlags, LazyBinder.Default, parameterTypes, modifiers);
+#endif
         }
 
         public Type[] GetGenericArguments()
@@ -227,14 +238,52 @@ namespace Vici.Core
 #endif
         }
 
+#if NETFX_CORE
+        private bool MatchBindingFlags(FieldInfo fieldInfo, BindingFlags flags)
+        {
+            if ((flags & BindingFlags.Static) == 0 && fieldInfo.IsStatic)
+                return false;
+
+            if ((flags & BindingFlags.Instance) == 0 && !fieldInfo.IsStatic)
+                return false;
+
+            return true;
+        }
+
+        private bool MatchBindingFlags(PropertyInfo propertyInfo, BindingFlags flags)
+        {
+            if ((flags & BindingFlags.Static) == 0 && propertyInfo.GetMethod.IsStatic)
+                return false;
+
+            if ((flags & BindingFlags.Instance) == 0 && !propertyInfo.GetMethod.IsStatic)
+                return false;
+
+            return true;
+        }
+#endif
+
         public FieldInfo[] GetFields(BindingFlags bindingFlags)
         {
+#if NETFX_CORE
+            if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
+                return _t.GetTypeInfo().DeclaredFields.Where(fi => MatchBindingFlags(fi, bindingFlags)).ToArray();
+            else
+                return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => MatchBindingFlags(fi, bindingFlags)));
+#else
             return _t.GetFields(bindingFlags);
+#endif
         }
 
         public PropertyInfo[] GetProperties(BindingFlags bindingFlags)
         {
+#if NETFX_CORE
+            if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
+                return _t.GetTypeInfo().DeclaredProperties.Where(pi => MatchBindingFlags(pi, bindingFlags)).ToArray();
+            else
+                return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredProperties.Where(pi => MatchBindingFlags(pi, bindingFlags)));
+#else
             return _t.GetProperties(bindingFlags);
+#endif
         }
 
         public Type[] GetInterfaces()

@@ -70,6 +70,7 @@ namespace Vici.Core.Parser
     		get { return _config; }
     	}
 
+#if !NETFX_CORE
         public CompiledTemplate ParseFile(string fileName)
         {
             CompiledTemplate template = Parse(CompatibilityLayer.File.ReadAllText(fileName));
@@ -78,7 +79,7 @@ namespace Vici.Core.Parser
 
             return template;
         }
-
+#endif
     	public CompiledTemplate Parse(string inputString)
         {
             try
@@ -243,10 +244,12 @@ namespace Vici.Core.Parser
     		return text;
     	}
 
+#if !NETFX_CORE
         public string RenderFile(string fileName, IParserContext context)
         {
             return Render(ParseFile(fileName), context);
         }
+#endif
 
     	public string Render(CompiledTemplate compiledTemplate, IParserContext context)
         {
@@ -258,7 +261,7 @@ namespace Vici.Core.Parser
 
                 StringBuilder outputBuffer = new StringBuilder();
 
-                Dictionary<string,Node> macros = new Dictionary<string, Node>(compiledTemplate.Macros, StringComparer.InvariantCultureIgnoreCase);
+                Dictionary<string,Node> macros = new Dictionary<string, Node>(compiledTemplate.Macros, StringComparer.OrdinalIgnoreCase);
 
                 BuildOutput(compiledTemplate, macros, compiledTemplate.Tree, outputBuffer, context);
 

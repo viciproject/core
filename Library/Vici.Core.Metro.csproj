@@ -105,7 +105,6 @@
   <ItemGroup>
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="BinaryHelper.cs" />
-    <Compile Include="CompatibilityLayer.cs" />
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
     <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />

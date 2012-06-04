@@ -50,6 +50,7 @@ namespace Vici.Core.Parser
 #endif
         }
 
+#if !NETFX_CORE
         public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state)
         {
             return DefaultTypeBinder.BindToMethod(bindingAttr, match, ref args, modifiers, culture, names, out state);
@@ -58,16 +59,6 @@ namespace Vici.Core.Parser
         public override FieldInfo BindToField(BindingFlags bindingAttr, FieldInfo[] match, object value, CultureInfo culture)
         {
             return DefaultTypeBinder.BindToField(bindingAttr, match, value, culture);
-        }
-
-        public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
-        {
-            MethodBase matchingMethod = DefaultTypeBinder.SelectMethod(bindingAttr, match, types, modifiers);
-
-            if (matchingMethod != null)
-                return matchingMethod;
-
-            return match.FirstOrDefault(method => ParametersMatch(types, method.GetParameters()));
         }
 
         public override PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers)
@@ -93,7 +84,20 @@ namespace Vici.Core.Parser
             DefaultTypeBinder.ReorderArgumentArray(ref args, state);
         }
 
-        private static bool ParametersMatch(Type[] inputParameters, ParameterInfo[] expectedParameters)
+#endif
+
+        public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
+        {
+            MethodBase matchingMethod = DefaultTypeBinder.SelectMethod(bindingAttr, match, types, modifiers);
+
+            if (matchingMethod != null)
+                return matchingMethod;
+
+            return match.FirstOrDefault(method => ParametersMatch(types, method.GetParameters()));
+        }
+
+
+        public static bool ParametersMatch(Type[] inputParameters, ParameterInfo[] expectedParameters)
         {
             if (inputParameters.Length != expectedParameters.Length)
                 return false;

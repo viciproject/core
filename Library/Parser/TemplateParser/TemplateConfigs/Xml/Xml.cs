@@ -44,7 +44,7 @@ namespace Vici.Core.Parser.Config
             XmlWriter xmlWriter = XmlWriter.Create(writer, settings);
 
             xmlWriter.WriteString(text);
-            xmlWriter.Close();
+            xmlWriter.Dispose();
 
             return writer.ToString();
         }

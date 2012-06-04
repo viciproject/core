@@ -161,9 +161,13 @@ namespace Vici.Core.Parser
                 parameters[var.Key] = parser.Evaluate(var.Value, context);
             }
 
+#if NETFX_CORE
+            return null; // TODO: use isolated storage
+#else
             string includeFile = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(pExpr.MainExpression), fileName));
 
             return templateParser.ParseFile(includeFile);
+#endif
         }
 
         internal string EvalIncludeFile(ExpressionParser parser, string fileName, TemplateToken token, IParserContext context)
@@ -173,9 +177,13 @@ namespace Vici.Core.Parser
 
         protected virtual string OnEvalIncludeFile(ExpressionParser parser, string fileName, TemplateToken token, IParserContext context)
         {
+#if NETFX_CORE
+            return ""; // TODO: use isolated storage
+#else
             string includeFile = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(fileName), fileName));
 
             return CompatibilityLayer.File.ReadAllText(includeFile);
+#endif
         }
     }
 }

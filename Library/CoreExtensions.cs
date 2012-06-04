@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Vici.Core.Parser;
 
 namespace Vici.Core
 {
@@ -70,14 +71,21 @@ namespace Vici.Core
         Default
     }
 
-    public abstract class Binder
+    public class Binder
     {
+        /*
         public abstract MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state);
         public abstract FieldInfo BindToField(BindingFlags bindingAttr, FieldInfo[] match, object value, CultureInfo culture);
-        public abstract MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers);
+         */
+        public virtual MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
+        {
+            return match.FirstOrDefault(method => LazyBinder.ParametersMatch(types, method.GetParameters()));
+        }
+        /*
         public abstract PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers);
         public abstract object ChangeType(object value, Type type, CultureInfo culture);
         public abstract void ReorderArgumentArray(ref object[] args, object state);
+        */
     }
 
     public class ParameterModifier

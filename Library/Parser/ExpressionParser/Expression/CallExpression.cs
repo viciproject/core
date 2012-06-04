@@ -73,7 +73,7 @@ namespace Vici.Core.Parser
 			if (methodObject is Delegate[])
 			{
 				Delegate[] delegates = (Delegate[]) methodObject;
-				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.Method);
+				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => ((dynamic) d).Method);
 
                 MethodBase method = LazyBinder.Default.SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, methods, parameterTypes, null);
 

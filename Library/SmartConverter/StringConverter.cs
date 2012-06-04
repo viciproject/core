@@ -46,7 +46,7 @@ namespace Vici.Core
             {
                 value = null;
 
-                if (!typeof(T).IsAssignableFrom(targetType))
+                if (!typeof(T).Inspector().IsAssignableFrom(targetType))
                     return false;
 
                 T typedValue;
