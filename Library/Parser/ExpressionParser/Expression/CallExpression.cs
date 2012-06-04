@@ -53,14 +53,14 @@ namespace Vici.Core.Parser
 			{
 				Type returnType;
 
-                return Exp.Value(TokenPosition, ((MethodDefinition)methodObject).Invoke(parameterTypes, parameterValues, out returnType, LazyBinder.Default), returnType);
+                return Exp.Value(TokenPosition, ((MethodDefinition)methodObject).Invoke(parameterTypes, parameterValues, out returnType), returnType);
 			}
 
 			if (methodObject is ConstructorInfo[])
 			{
 				ConstructorInfo[] constructors = (ConstructorInfo[]) methodObject;
 
-                MethodBase method = new LazyBinder().SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, constructors, parameterTypes, null);
+                MethodBase method = LazyBinder.Default.SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, constructors, parameterTypes, null);
 
 				if (method == null)
 					throw new ExpressionEvaluationException("No match found for constructor " + constructors[0].Name, this);
@@ -75,7 +75,7 @@ namespace Vici.Core.Parser
 				Delegate[] delegates = (Delegate[]) methodObject;
 				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.Method);
 
-                MethodBase method = new LazyBinder().SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, methods, parameterTypes, null);
+                MethodBase method = LazyBinder.Default.SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, methods, parameterTypes, null);
 
 				if (method == null)
 					throw new ExpressionEvaluationException("No match found for delegate " + _methodExpression, this);

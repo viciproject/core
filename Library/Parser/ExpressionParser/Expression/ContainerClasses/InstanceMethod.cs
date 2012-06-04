@@ -43,16 +43,16 @@ namespace Vici.Core.Parser
             _object = @object;
         }
 
-        public override object Invoke(Type[] types, object[] parameters, out Type returnType, Binder binder)
+        public override object Invoke(Type[] types, object[] parameters, out Type returnType)
         {
-            MethodInfo methodInfo = GetMethodInfo(types, binder);
+            MethodInfo methodInfo = GetMethodInfo(types);
 
             if (methodInfo == null)
                 throw new MissingMethodException(MethodName);
 
             returnType = methodInfo.ReturnType;
 
-            return methodInfo.Invoke(_object, BindingFlags.Default, binder ?? LazyBinder.Default, parameters, null);
+            return methodInfo.Inspector().Invoke(_object, parameters);
         }
     }
 }

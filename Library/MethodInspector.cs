@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using Vici.Core.Parser;
 
 namespace Vici.Core
 {
@@ -14,6 +15,10 @@ namespace Vici.Core
             _m = method;
         }
 
+        public object Invoke(object o, object[] parameters)
+        {
+            return _m.Invoke(o, BindingFlags.Default, LazyBinder.Default, parameters, null);
+        }
     }
 
     public static class MethodInspectorExtension

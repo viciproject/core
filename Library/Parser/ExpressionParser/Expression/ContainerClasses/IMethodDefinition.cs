@@ -31,7 +31,7 @@ namespace Vici.Core.Parser
 {
     public interface IMethodDefinition
     {
-        object Invoke(Type[] types, object[] parameters, out Type returnType, Binder binder);
+        object Invoke(Type[] types, object[] parameters, out Type returnType);
         string MethodName { get; }
         Type Type { get; }
     }

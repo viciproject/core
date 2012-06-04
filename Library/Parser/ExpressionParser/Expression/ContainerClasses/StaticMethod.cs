@@ -39,9 +39,9 @@ namespace Vici.Core.Parser
         {
         }
 
-        public override object Invoke(Type[] types, object[] parameters, out Type returnType, Binder binder)
+        public override object Invoke(Type[] types, object[] parameters, out Type returnType)
         {
-            MethodInfo methodInfo = GetMethodInfo(types, binder);
+            MethodInfo methodInfo = GetMethodInfo(types);
 
             if (methodInfo == null)
                 throw new MissingMethodException(MethodName);

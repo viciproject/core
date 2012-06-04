@@ -3,11 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using Vici.Core.Parser;
 
 namespace Vici.Core
 {
 #if !NETFX_CORE
-    public static class TypeInfoMocker { public static Type GetTypeInfo(this Type type) { return type; } }
+    public static class TypeInfoMocker
+    {
+        public static Type GetTypeInfo(this Type type) { return type; }
+    }
 #endif
     public class TypeInspector
     {
@@ -60,11 +64,7 @@ namespace Vici.Core
 
         public bool IsGenericType
         {
-#if NETFX_CORE
             get { return _t.GetTypeInfo().IsGenericType; }
-#else
-            get { return _t.IsGenericType; }
-#endif
         }
 
         public bool IsNullable
@@ -84,11 +84,7 @@ namespace Vici.Core
 
         public bool IsPrimitive
         {
-#if NETFX_CORE
             get { return _t.GetTypeInfo().IsPrimitive; }
-#else
-            get { return _t.IsPrimitive; }
-#endif
         }
 
         public bool IsValueType
@@ -217,9 +213,9 @@ namespace Vici.Core
             return ImplementsOrInherits(typeof (T));
         }
 
-        public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Binder binder, Type[] parameterTypes, ParameterModifier[] modifiers)
+        public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes, ParameterModifier[] modifiers)
         {
-            return _t.GetMethod(methodName, bindingFlags, binder, parameterTypes, modifiers);
+            return _t.GetMethod(methodName, bindingFlags, LazyBinder.Default, parameterTypes, modifiers);
         }
 
         public Type[] GetGenericArguments()
