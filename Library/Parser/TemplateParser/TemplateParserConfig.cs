@@ -79,7 +79,7 @@ namespace Vici.Core.Parser
         {
             TemplateToken.ParameterizedExpression pExpr = templateToken.ExtractParameters();
 
-            parameters = new Dictionary<string, IValueWithType>(StringComparer.InvariantCultureIgnoreCase);
+            parameters = new Dictionary<string, IValueWithType>(StringComparer.OrdinalIgnoreCase);
 
             foreach (KeyValuePair<string, string> var in pExpr.Parameters)
             {
@@ -154,7 +154,7 @@ namespace Vici.Core.Parser
         {
             TemplateToken.ParameterizedExpression pExpr = token.ExtractParameters();
 
-            parameters = new Dictionary<string, IValueWithType>(StringComparer.InvariantCultureIgnoreCase);
+            parameters = new Dictionary<string, IValueWithType>(StringComparer.OrdinalIgnoreCase);
 
             foreach (KeyValuePair<string, string> var in pExpr.Parameters)
             {

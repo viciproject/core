@@ -67,7 +67,7 @@ namespace Vici.Core.Parser
 
 				object value = ((ConstructorInfo)method).Invoke(parameterValues);
 
-                return Exp.Value(TokenPosition, value, method.Inspector().ReflectedType);
+                return Exp.Value(TokenPosition, value, method.DeclaringType);
 			}
 
 			if (methodObject is Delegate[])

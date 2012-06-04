@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using System;
@@ -16,6 +17,46 @@ namespace Vici.Core
         {
             _t = type;
         }
+
+#if NETFX_CORE
+
+        private T WalkAndFindSingle<T>(Func<Type,T> f) where T:class 
+        {
+            Type t = _t;
+
+            while (t != null)
+            {
+                T result = f(t);
+
+                if (result != null)
+                    return result;
+
+                t = t.GetTypeInfo().BaseType;
+            }
+
+            return null;
+        }
+
+        private T[] WalkAndFindMultiple<T>(Func<Type, IEnumerable<T>> f) where T : class
+        {
+            List<T> array = new List<T>();
+
+            Type t = _t;
+
+            while (t != null)
+            {
+                IEnumerable<T> result = f(t);
+
+                if (result != null)
+                    array.AddRange(result);
+
+                t = t.GetTypeInfo().BaseType;
+            }
+
+            return array.ToArray();
+        }
+
+#endif
 
         public bool IsGenericType
         {
@@ -75,7 +116,11 @@ namespace Vici.Core
 
         public MethodInfo GetMethod(string name, Type[] types)
         {
+#if NETFX_CORE
+            return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredMethods(name).FirstOrDefault(mi => types.SequenceEqual(mi.GetParameters().Select(p => p.ParameterType))));
+#else
             return _t.GetMethod(name, types);
+#endif
         }
 
         public bool HasAttribute<T>(bool inherit) where T : Attribute
@@ -85,14 +130,14 @@ namespace Vici.Core
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
         {
-            T[] attributes = (T[]) _t.GetCustomAttributes(typeof(T), inherit);
+            T[] attributes = (T[]) _t.GetTypeInfo().GetCustomAttributes(typeof(T), inherit).ToArray();
 
             return attributes.Length > 0 ? attributes[0] : null;
         }
 
         public T[] GetAttributes<T>(bool inherit) where T : Attribute
         {
-            return (T[])_t.GetCustomAttributes(typeof(T), inherit);
+            return (T[])_t.GetTypeInfo().GetCustomAttributes(typeof(T), inherit).ToArray();
         }
 
         public bool IsAssignableFrom(Type type)
@@ -102,37 +147,59 @@ namespace Vici.Core
 
         public ConstructorInfo[] GetConstructors()
         {
+#if NETFX_CORE
+            return _t.GetTypeInfo().DeclaredConstructors.ToArray();
+#else
             return _t.GetConstructors();
+#endif
         }
 
         public MemberInfo[] GetMember(string propertyName)
         {
+#if NETFX_CORE
+            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers);
+#else
             return _t.GetMember(propertyName);
+#endif
         }
 
         public PropertyInfo GetIndexer(Type[] types)
         {
+            
+
             return _t.GetProperty("Item", new[] { typeof(string) });
         }
 
         public object[] GetCustomAttributes(Type type, bool inherit)
         {
+#if NETFX_CORE
+            return _t.GetTypeInfo().GetCustomAttributes(type, inherit).ToArray();
+#else
             return _t.GetCustomAttributes(type, inherit);
+#endif
         }
 
         public MethodInfo GetPropertyGetter(string propertyName, Type[] parameterTypes)
         {
-             return _t.GetMethod("get_" + propertyName, parameterTypes);
+            return GetMethod("get_" + propertyName, parameterTypes);
         }
 
         public PropertyInfo GetProperty(string propName)
         {
+#if NETFX_CORE
+            return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredProperty(propName));
+#else
             return _t.GetProperty(propName);
+#endif
         }
 
         public FieldInfo GetField(string fieldName)
         {
+#if NETFX_CORE
+            return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredField(fieldName));
+#else
             return _t.GetField(fieldName);
+#endif
         }
 
         public bool ImplementsOrInherits(Type type)
@@ -157,7 +224,11 @@ namespace Vici.Core
 
         public Type[] GetGenericArguments()
         {
+#if NETFX_CORE
+            return _t.GenericTypeArguments;
+#else
             return _t.GetGenericArguments();
+#endif
         }
 
         public FieldInfo[] GetFields(BindingFlags bindingFlags)
@@ -172,7 +243,11 @@ namespace Vici.Core
 
         public Type[] GetInterfaces()
         {
+#if NETFX_CORE
+            return _t.GetTypeInfo().ImplementedInterfaces.ToArray();
+#else
             return _t.GetInterfaces();
+#endif
         }
     }
 

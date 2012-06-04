@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -46,6 +47,16 @@ namespace Vici.Core
             return Array.ConvertAll(array,converter);
 #endif
         } 
+
+#if NETFX_CORE
+        public static void ForEach<T>(this IEnumerable<T> list, Action<T> action)
+        {
+            foreach (var item in list)
+                action(item);
+            
+
+        }
+#endif
     }
 
 #if NETFX_CORE
@@ -55,7 +66,8 @@ namespace Vici.Core
         Public,
         Static,
         Instance,
-        DeclaredOnly
+        DeclaredOnly,
+        Default
     }
 
     public abstract class Binder

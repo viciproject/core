@@ -14,10 +14,6 @@ namespace Vici.Core
             _m = method;
         }
 
-        public Type ReflectedType
-        {
-            get { return _m.ReflectedType; }
-        }
     }
 
     public static class MethodInspectorExtension

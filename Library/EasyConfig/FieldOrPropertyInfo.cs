@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Vici.Core.Config
@@ -62,7 +63,7 @@ namespace Vici.Core.Config
         public object[] GetCustomAttributes(Type type, bool inherit)
         {
 #if NETFX_CORE
-            return new[] {_memberInfo.GetCustomAttributes(type, inherit)};
+            return _memberInfo.GetCustomAttributes(type, inherit).ToArray();
 #else
             return _memberInfo.GetCustomAttributes(type, inherit);
 #endif

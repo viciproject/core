@@ -120,7 +120,7 @@ namespace Vici.Core.Json
 
             bool pendingSeparator = false;
 
-            foreach (FieldInfo field in obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (FieldInfo field in obj.GetType().Inspector().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (pendingSeparator)
                     _output.Append(',');
@@ -130,7 +130,7 @@ namespace Vici.Core.Json
                 pendingSeparator = true;
             }
 
-            foreach (PropertyInfo property in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (PropertyInfo property in obj.GetType().Inspector().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!property.CanRead)
                     continue;

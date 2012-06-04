@@ -43,7 +43,11 @@ namespace Vici.Core.Parser
 
         private Binder DefaultTypeBinder
         {
+#if NETFX_CORE
+            get { return new Binder(); }
+#else
             get { return Type.DefaultBinder; }
+#endif
         }
 
         public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state)
@@ -76,7 +80,7 @@ namespace Vici.Core.Parser
             if (value.GetType() == type)
                 return value;
 
-            MethodInfo conversionMethod = type.GetMethod("op_Implicit", new[] { value.GetType() });
+            MethodInfo conversionMethod = type.Inspector().GetMethod("op_Implicit", new[] { value.GetType() });
 
             if (conversionMethod == null)
                 return DefaultTypeBinder.ChangeType(value, type, culture);
@@ -103,7 +107,7 @@ namespace Vici.Core.Parser
 
         private static bool CanConvert(Type from, Type to)
         {
-            return to.GetMethod("op_Implicit", new[] {from}) != null;
+            return to.Inspector().GetMethod("op_Implicit", new[] {from}) != null;
         }
 
     }

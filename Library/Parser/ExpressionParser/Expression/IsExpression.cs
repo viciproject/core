@@ -56,7 +56,7 @@ namespace Vici.Core.Parser
             
             Type checkType = className.Type;
 
-            if (!objectType.IsValueType)
+            if (!objectType.Inspector().IsValueType)
                 return Exp.Value(TokenPosition, checkType.Inspector().IsAssignableFrom(objectType));
 
             checkType = Nullable.GetUnderlyingType(checkType) ?? checkType;
