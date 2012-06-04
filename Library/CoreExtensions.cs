@@ -40,7 +40,7 @@ namespace Vici.Core
         {  
             if (array == null)  
                 throw new ArgumentException();  
-#if WINDOWS_PHONE || SILVERLIGHT
+#if WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE
             return (from item in array select converter(item)).ToArray();  
 #else
             return Array.ConvertAll(array,converter);

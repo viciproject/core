@@ -41,19 +41,24 @@ namespace Vici.Core.Parser
             get { return _default; }
         }
 
+        private Binder DefaultTypeBinder
+        {
+            get { return Type.DefaultBinder; }
+        }
+
         public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state)
         {
-            return Type.DefaultBinder.BindToMethod(bindingAttr, match, ref args, modifiers, culture, names, out state);
+            return DefaultTypeBinder.BindToMethod(bindingAttr, match, ref args, modifiers, culture, names, out state);
         }
 
         public override FieldInfo BindToField(BindingFlags bindingAttr, FieldInfo[] match, object value, CultureInfo culture)
         {
-            return Type.DefaultBinder.BindToField(bindingAttr, match, value, culture);
+            return DefaultTypeBinder.BindToField(bindingAttr, match, value, culture);
         }
 
         public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
-            MethodBase matchingMethod = Type.DefaultBinder.SelectMethod(bindingAttr, match, types, modifiers);
+            MethodBase matchingMethod = DefaultTypeBinder.SelectMethod(bindingAttr, match, types, modifiers);
 
             if (matchingMethod != null)
                 return matchingMethod;
@@ -63,7 +68,7 @@ namespace Vici.Core.Parser
 
         public override PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers)
         {
-            return Type.DefaultBinder.SelectProperty(bindingAttr, match, returnType, indexes, modifiers);
+            return DefaultTypeBinder.SelectProperty(bindingAttr, match, returnType, indexes, modifiers);
         }
 
         public override object ChangeType(object value, Type type, CultureInfo culture)
@@ -74,14 +79,14 @@ namespace Vici.Core.Parser
             MethodInfo conversionMethod = type.GetMethod("op_Implicit", new[] { value.GetType() });
 
             if (conversionMethod == null)
-                return Type.DefaultBinder.ChangeType(value, type, culture);
+                return DefaultTypeBinder.ChangeType(value, type, culture);
 
             return conversionMethod.Invoke(null, new[] {value});
         }
 
         public override void ReorderArgumentArray(ref object[] args, object state)
         {
-            Type.DefaultBinder.ReorderArgumentArray(ref args, state);
+            DefaultTypeBinder.ReorderArgumentArray(ref args, state);
         }
 
         private static bool ParametersMatch(Type[] inputParameters, ParameterInfo[] expectedParameters)

@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace Vici.Core
 {
+#if !NETFX_CORE
+    public static class TypeInfoMocker { public static Type GetTypeInfo(this Type type) { return type; } }
+#endif
     public class TypeInspector
     {
         private Type _t;
@@ -14,9 +17,18 @@ namespace Vici.Core
             _t = type;
         }
 
+        public bool IsGenericType
+        {
+#if NETFX_CORE
+            get { return _t.GetTypeInfo().IsGenericType; }
+#else
+            get { return _t.IsGenericType; }
+#endif
+        }
+
         public bool IsNullable
         {
-            get { return (_t.IsGenericType && _t.GetGenericTypeDefinition() == typeof (Nullable<>)); }
+            get { return (IsGenericType && _t.GetGenericTypeDefinition() == typeof (Nullable<>)); }
         }
 
         public bool CanBeNull
@@ -31,22 +43,26 @@ namespace Vici.Core
 
         public bool IsPrimitive
         {
+#if NETFX_CORE
+            get { return _t.GetTypeInfo().IsPrimitive; }
+#else
             get { return _t.IsPrimitive; }
+#endif
         }
 
         public bool IsValueType
         {
-            get { return _t.IsValueType; }
+            get { return _t.GetTypeInfo().IsValueType; }
         }
 
         public Type BaseType
         {
-            get { return _t.BaseType; }
+            get { return _t.GetTypeInfo().BaseType; }
         }
 
         public bool IsEnum
         {
-            get { return _t.IsEnum; }
+            get { return _t.GetTypeInfo().IsEnum; }
         }
 
         public object DefaultValue()
@@ -64,7 +80,7 @@ namespace Vici.Core
 
         public bool HasAttribute<T>(bool inherit) where T : Attribute
         {
-            return _t.IsDefined(typeof(T), inherit);
+            return _t.GetTypeInfo().IsDefined(typeof(T), inherit);
         }
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
@@ -81,7 +97,7 @@ namespace Vici.Core
 
         public bool IsAssignableFrom(Type type)
         {
-            return _t.IsAssignableFrom(type);
+            return _t.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
         }
 
         public ConstructorInfo[] GetConstructors()
@@ -121,12 +137,12 @@ namespace Vici.Core
 
         public bool ImplementsOrInherits(Type type)
         {
-            if (type.IsGenericTypeDefinition && type.IsInterface)
+            if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetTypeInfo().IsInterface)
             {
-                return _t.FindInterfaces((t, criteria) => (t.IsGenericType && t.GetGenericTypeDefinition() == type), null).Any();
+                return _t.FindInterfaces((t, criteria) => (IsGenericType && _t.GetTypeInfo().GetGenericTypeDefinition() == type), null).Any();
             }
 
-            return type.IsAssignableFrom(_t);
+            return type.GetTypeInfo().IsAssignableFrom(_t.GetTypeInfo());
         }
 
         public bool ImplementsOrInherits<T>()

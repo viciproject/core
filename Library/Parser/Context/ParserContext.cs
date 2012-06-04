@@ -43,7 +43,7 @@ namespace Vici.Core.Parser
         public ParserContextBehavior Behavior { get; private set; }
 
         private AssignmentPermissions _assignmentPermissions = AssignmentPermissions.None;
-        private StringComparison _stringComparison = StringComparison.InvariantCulture;
+        private StringComparison _stringComparison = StringComparison.Ordinal;
         private IFormatProvider _formatProvider = NumberFormatInfo.InvariantInfo;
         
         public ParserContext(ParserContextBehavior behavior)
@@ -52,8 +52,8 @@ namespace Vici.Core.Parser
 
             if ((behavior & ParserContextBehavior.CaseInsensitiveVariables) == ParserContextBehavior.CaseInsensitiveVariables)
             {
-                _variables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-                _types = new Dictionary<string, Type>(StringComparer.InvariantCultureIgnoreCase);
+                _variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                _types = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
             }
             else
             {
