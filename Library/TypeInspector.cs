@@ -153,6 +153,11 @@ namespace Vici.Core
         {
             return _t.GetProperties(bindingFlags);
         }
+
+        public Type[] GetInterfaces()
+        {
+            return _t.GetInterfaces();
+        }
     }
 
     public static class TypeInspectorExtension
