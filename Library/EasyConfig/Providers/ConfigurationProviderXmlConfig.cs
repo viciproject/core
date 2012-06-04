@@ -31,14 +31,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !NETFX_CORE
 using System.Xml.XPath;
 #endif
 
 namespace Vici.Core.Config
 {
-//TODO: change implementation for WP7
-#if !WINDOWS_PHONE
+    //TODO: change implementation for WP7
+#if !WINDOWS_PHONE && !NETFX_CORE
     public class ConfigurationProviderXmlConfig : IConfigurationProvider
     {
         private XDocument _xDoc;

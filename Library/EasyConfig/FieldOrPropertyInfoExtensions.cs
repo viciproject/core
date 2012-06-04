@@ -37,8 +37,8 @@ namespace Vici.Core.Config
         {
             List<MemberInfo> members = new List<MemberInfo>();
 
-            members.AddRange(type.GetFields(bindingFlags));
-            members.AddRange(type.GetProperties(bindingFlags));
+            members.AddRange(type.Inspector().GetFields(bindingFlags));
+            members.AddRange(type.Inspector().GetProperties(bindingFlags));
 
             return members.Select(m => new FieldOrPropertyInfo(m)).ToArray();
         }

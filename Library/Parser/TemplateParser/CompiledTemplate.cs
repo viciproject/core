@@ -33,7 +33,7 @@ namespace Vici.Core.Parser
 	{
 	    internal CompiledTemplate(Node tree)
 	    {
-	        Macros = new Dictionary<string, Node>(StringComparer.InvariantCultureIgnoreCase);
+	        Macros = new Dictionary<string, Node>(StringComparer.OrdinalIgnoreCase);
 	        Tree = tree;
 	    }
 

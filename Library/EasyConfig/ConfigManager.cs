@@ -105,14 +105,14 @@ namespace Vici.Core.Config
 
         private void Fill(Type type)
         {
-            ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) type.GetCustomAttributes(typeof (ConfigKeyAttribute), false);
+            ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) type.Inspector().GetCustomAttributes(typeof (ConfigKeyAttribute), false);
             
             Fill(type, null, attributes.Length > 0 ? attributes[0].BaseKey : null);
         }
 
         private void Fill(object obj)
         {
-            ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) obj.GetType().GetCustomAttributes(typeof (ConfigKeyAttribute), false);
+            ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) obj.GetType().Inspector().GetCustomAttributes(typeof (ConfigKeyAttribute), false);
             
             Fill(null, obj, attributes.Length > 0 ? attributes[0].BaseKey : null);
         }
@@ -152,7 +152,7 @@ namespace Vici.Core.Config
 
                 Type fieldType = field.FieldType;
 
-                bool follow = (attributes.Length > 0 && attributes[0] is ConfigObjectAttribute) || typeof (IConfigObject).IsAssignableFrom(fieldType);
+                bool follow = (attributes.Length > 0 && attributes[0] is ConfigObjectAttribute) || fieldType.Inspector().ImplementsOrInherits<IConfigObject>();
                 bool ignore = field.IsDefined(typeof (ConfigIgnoreAttribute), false);
                 
                 key = baseKey + key;
@@ -176,15 +176,15 @@ namespace Vici.Core.Config
                 }
                 else
                 {
-                    if (typeof(IDictionary).IsAssignableFrom(field.FieldType))
+                    if (field.FieldType.Inspector().ImplementsOrInherits<IDictionary>())
                     {
-                        Type dicInterface = fieldType.GetInterfaces().Where(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>)).FirstOrDefault();
+                        Type dicInterface = fieldType.Inspector().GetInterfaces().Where(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>)).FirstOrDefault();
 
                         Type targetType = typeof (object);
 
                         if (dicInterface != null)
                         {
-                            targetType = dicInterface.GetGenericArguments()[1];
+                            targetType = dicInterface.Inspector().GetGenericArguments()[1];
                         }
 
                         object configObject = field.GetValue(obj);

@@ -111,9 +111,11 @@
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\Json.cs" />
+    <Compile Include="MethodInspector.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
+    <Compile Include="Parser\Context\LazyBinder.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
@@ -136,7 +138,6 @@
     <Compile Include="EasyConfig\IConfigObject.cs" />
     <Compile Include="EasyConfig\IConfigurationProvider.cs" />
     <Compile Include="EasyConfig\ConfigManager.cs" />
-    <Compile Include="EasyConfig\Providers\ConfigurationProviderAppConfig.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LoggingProvider.cs" />
     <Compile Include="Logger\Providers\LoggingProviderFile.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="SmartConverter\StringConverter.cs" />
+    <Compile Include="TypeInspector.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

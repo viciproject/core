@@ -61,7 +61,7 @@ namespace Vici.Core.CompatibilityLayer
     {
         public static string ReadAllText(string filename)
         {
-#if WINDOWS_PHONE || SILVERLIGHT
+#if WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE
             using (var stream = System.IO.File.OpenText(filename))
             {
                 return stream.ReadToEnd();

@@ -43,7 +43,7 @@ namespace Vici.Core.Parser
         {
         }
 
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !NETFX_CORE
         protected ParserException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

@@ -59,9 +59,13 @@ namespace Vici.Core.Config
                 ((PropertyInfo)_memberInfo).SetValue(o, value, null);
         }
 
-        public object [] GetCustomAttributes(Type type, bool inherit)
+        public object[] GetCustomAttributes(Type type, bool inherit)
         {
+#if NETFX_CORE
+            return new[] {_memberInfo.GetCustomAttributes(type, inherit)};
+#else
             return _memberInfo.GetCustomAttributes(type, inherit);
+#endif
         }
 
         public bool IsDefined(Type type, bool b)

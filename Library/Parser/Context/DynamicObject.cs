@@ -33,7 +33,7 @@ namespace Vici.Core.Parser
 {
     public class DynamicObject : IDynamicObject
     {
-        private readonly Dictionary<string, object> _dic = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, object> _dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         private readonly LinkedList<object> _objects = new LinkedList<object>();
 
         public DynamicObject()

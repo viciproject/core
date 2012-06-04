@@ -25,10 +25,15 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace Vici.Core
 {
+#if NETFX_CORE
+    public delegate TOutput Converter<TInput, TOutput>(TInput value);
+#endif
     public static class CoreExtensions
     {
         public static TOutput[] ConvertAll<TInput, TOutput>(this TInput[] array, Converter<TInput, TOutput> converter) 
@@ -42,4 +47,32 @@ namespace Vici.Core
 #endif
         } 
     }
+
+#if NETFX_CORE
+    [Flags]
+    public enum BindingFlags
+    {
+        Public,
+        Static,
+        Instance,
+        DeclaredOnly
+    }
+
+    public abstract class Binder
+    {
+        public abstract MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state);
+        public abstract FieldInfo BindToField(BindingFlags bindingAttr, FieldInfo[] match, object value, CultureInfo culture);
+        public abstract MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers);
+        public abstract PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers);
+        public abstract object ChangeType(object value, Type type, CultureInfo culture);
+        public abstract void ReorderArgumentArray(ref object[] args, object state);
+    }
+
+    public class ParameterModifier
+    {
+        
+    }
+
+    
+#endif
 }

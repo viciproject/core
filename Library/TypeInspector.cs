@@ -138,6 +138,21 @@ namespace Vici.Core
         {
             return _t.GetMethod(methodName, bindingFlags, binder, parameterTypes, modifiers);
         }
+
+        public Type[] GetGenericArguments()
+        {
+            return _t.GetGenericArguments();
+        }
+
+        public FieldInfo[] GetFields(BindingFlags bindingFlags)
+        {
+            return _t.GetFields(bindingFlags);
+        }
+
+        public PropertyInfo[] GetProperties(BindingFlags bindingFlags)
+        {
+            return _t.GetProperties(bindingFlags);
+        }
     }
 
     public static class TypeInspectorExtension
