@@ -131,7 +131,6 @@
     <Compile Include="Scheduler\ScheduleWeekDays.cs" />
     <Compile Include="Scheduler\TimeOfDayScheduler.cs" />
     <Compile Include="SmartConverter\EnumConverter.cs" />
-    <Compile Include="Tuple.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigIgnoreAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigObjectAttribute.cs" />

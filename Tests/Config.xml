@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Config version="2">
-    <Prop1>21</Prop1>
-    <Prop2></Prop2>
-    <SubGroupProp1>
-        <SubProp2>22</SubProp2>
-        <SubProp4>yeah</SubProp4>
-    </SubGroupProp1>
-</Config>

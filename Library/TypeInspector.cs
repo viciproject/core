@@ -126,9 +126,7 @@ namespace Vici.Core
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
         {
-            T[] attributes = (T[]) _t.GetTypeInfo().GetCustomAttributes(typeof(T), inherit).ToArray();
-
-            return attributes.Length > 0 ? attributes[0] : null;
+            return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).FirstOrDefault();
         }
 
         public T[] GetAttributes<T>(bool inherit) where T : Attribute
@@ -153,7 +151,7 @@ namespace Vici.Core
         public MemberInfo[] GetMember(string propertyName)
         {
 #if NETFX_CORE
-            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers);
+            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers.Where(m => m.Name == propertyName));
 #else
             return _t.GetMember(propertyName);
 #endif
@@ -168,12 +166,13 @@ namespace Vici.Core
 #endif
         }
 
-        public object[] GetCustomAttributes(Type type, bool inherit)
+        public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
 #if NETFX_CORE
-            return _t.GetTypeInfo().GetCustomAttributes(type, inherit).ToArray();
+            var attributes = _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();
+            return attributes;
 #else
-            return _t.GetCustomAttributes(type, inherit);
+            return (T[]) _t.GetCustomAttributes(type, inherit);
 #endif
         }
 
@@ -223,7 +222,9 @@ namespace Vici.Core
         public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes, ParameterModifier[] modifiers)
         {
 #if NETFX_CORE
-            return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredMethods(methodName).FirstOrDefault(mi => LazyBinder.ParametersMatch(parameterTypes, mi.GetParameters())));
+            Binder binder = new Binder();
+
+            return (MethodInfo) WalkAndFindSingle(t => binder.BestMatch(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes));
 #else
             return _t.GetMethod(methodName, bindingFlags, LazyBinder.Default, parameterTypes, modifiers);
 #endif
@@ -245,6 +246,12 @@ namespace Vici.Core
                 return false;
 
             if ((flags & BindingFlags.Instance) == 0 && !fieldInfo.IsStatic)
+                return false;
+
+            if ((flags & BindingFlags.Public) != 0 && !fieldInfo.IsPublic)
+                return false;
+
+            if ((flags & BindingFlags.NonPublic) != 0 && !fieldInfo.IsPrivate)
                 return false;
 
             return true;

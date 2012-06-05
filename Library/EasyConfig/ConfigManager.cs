@@ -105,14 +105,14 @@ namespace Vici.Core.Config
 
         private void Fill(Type type)
         {
-            ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) type.Inspector().GetCustomAttributes(typeof (ConfigKeyAttribute), false);
+            ConfigKeyAttribute[] attributes = type.Inspector().GetCustomAttributes<ConfigKeyAttribute>(false);
             
             Fill(type, null, attributes.Length > 0 ? attributes[0].BaseKey : null);
         }
 
         private void Fill(object obj)
         {
-            ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) obj.GetType().Inspector().GetCustomAttributes(typeof (ConfigKeyAttribute), false);
+            ConfigKeyAttribute[] attributes = obj.GetType().Inspector().GetCustomAttributes<ConfigKeyAttribute>(false);
             
             Fill(null, obj, attributes.Length > 0 ? attributes[0].BaseKey : null);
         }

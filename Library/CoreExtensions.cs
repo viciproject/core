@@ -64,11 +64,12 @@ namespace Vici.Core
     [Flags]
     public enum BindingFlags
     {
-        Public,
-        Static,
-        Instance,
-        DeclaredOnly,
-        Default
+        Public = 16,
+        NonPublic = 32,
+        Static = 8,
+        Instance = 4,
+        DeclaredOnly = 2,
+        Default = 0
     }
 
     public class Binder
@@ -79,13 +80,65 @@ namespace Vici.Core
          */
         public virtual MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
-            return match.FirstOrDefault(method => LazyBinder.ParametersMatch(types, method.GetParameters()));
+            return BestMatch(match, types);
+            //return match.FirstOrDefault(method => LazyBinder.ParametersMatch(types, method.GetParameters()));
         }
         /*
         public abstract PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers);
         public abstract object ChangeType(object value, Type type, CultureInfo culture);
         public abstract void ReorderArgumentArray(ref object[] args, object state);
         */
+
+
+        private enum ParameterCompareType
+        {
+            Exact,
+            Assignable,
+            Implicit
+        }
+
+        private class ParameterComparer : IEqualityComparer<Type>
+        {
+            private ParameterCompareType _compareType;
+
+            public ParameterComparer(ParameterCompareType compareType)
+            {
+                _compareType = compareType;
+            }
+
+            public bool Equals(Type x, Type y)
+            {
+                switch (_compareType)
+                {
+                    case ParameterCompareType.Exact:
+                        return x == y;
+                    case ParameterCompareType.Assignable:
+                        return y.GetTypeInfo().IsAssignableFrom(x.GetTypeInfo());
+                    case ParameterCompareType.Implicit:
+                        return y.Inspector().GetMethod("op_Implicit", new[] { x }) != null;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            public int GetHashCode(Type obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
+
+        private bool IsMatch(Type[] parameterTypes, ParameterInfo[] parameters, ParameterCompareType compareType)
+        {
+            return parameterTypes.SequenceEqual(parameters.Select(p => p.ParameterType), new ParameterComparer(compareType));
+        }
+
+        internal MethodBase BestMatch(IEnumerable<MethodBase> methods, Type[] parameterTypes)
+        {
+            var compareTypes = new[] {ParameterCompareType.Exact, ParameterCompareType.Assignable, ParameterCompareType.Implicit};
+
+            return compareTypes.Select(compareType => methods.FirstOrDefault(m => IsMatch(parameterTypes, m.GetParameters(), compareType))).FirstOrDefault(match => match != null);
+        }
     }
 
     public class ParameterModifier

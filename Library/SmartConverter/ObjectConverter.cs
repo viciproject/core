@@ -41,13 +41,19 @@ namespace Vici.Core
             if (value == null)
                 return targetType.Inspector().DefaultValue();
 
-            if (value is string)
-                return StringConverter.Convert((string) value, targetType);
-
             Type type = targetType.Inspector().RealType;
 
             if (value.GetType() == type)
                 return value;
+
+
+            var implicitOperator = type.Inspector().GetMethod("op_Implicit", new Type[] {value.GetType()});
+
+            if (implicitOperator != null)
+                return implicitOperator.Invoke(null, new object[] {value});
+            
+            if (value is string)
+                return StringConverter.Convert((string) value, targetType);
 
             if (type == typeof (Guid) && value is byte[])
                 return new Guid((byte[]) value);

@@ -13,5 +13,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly:InternalsVisibleTo("Vici.Core.Test")]
+[assembly: InternalsVisibleTo("Vici.Core.Metro.Test")]
 
 [assembly: Guid("85cfa949-a3df-4f38-bb53-a2d992d0adc1")]

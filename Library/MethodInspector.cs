@@ -18,7 +18,16 @@ namespace Vici.Core
         public object Invoke(object o, object[] parameters)
         {
 #if NETFX_CORE
-            return _m.Invoke(o, parameters);
+            var parameterTypes = _m.GetParameters();
+
+            object[] newParameters = new object[parameters.Length];
+
+            for (int i = 0; i < parameters.Length;i++ )
+            {
+                newParameters[i] = parameters[i].Convert(parameterTypes[i].ParameterType);
+            }
+
+            return _m.Invoke(o, newParameters);
 #else
             return _m.Invoke(o, BindingFlags.Default, LazyBinder.Default, parameters, null);
 #endif

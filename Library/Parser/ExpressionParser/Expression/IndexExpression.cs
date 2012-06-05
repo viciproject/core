@@ -91,7 +91,7 @@ namespace Vici.Core.Parser
             }
             else
             {
-                DefaultMemberAttribute[] att = (DefaultMemberAttribute[]) targetType.Inspector().GetCustomAttributes(typeof(DefaultMemberAttribute), true);
+                DefaultMemberAttribute[] att = targetType.Inspector().GetCustomAttributes<DefaultMemberAttribute>(true);
 
                 MethodInfo methodInfo = targetType.Inspector().GetPropertyGetter(att[0].MemberName, parameterTypes);
 
