@@ -126,7 +126,11 @@ namespace Vici.Core
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
         {
+#if NETFX_CORE        
             return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).FirstOrDefault();
+#else
+			return (T) _t.GetCustomAttributes(typeof(T),inherit).FirstOrDefault();
+#endif            
         }
 
         public T[] GetAttributes<T>(bool inherit) where T : Attribute
@@ -169,10 +173,9 @@ namespace Vici.Core
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
 #if NETFX_CORE
-            var attributes = _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();
-            return attributes;
+            return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();;
 #else
-            return (T[]) _t.GetCustomAttributes(type, inherit);
+            return (T[]) _t.GetCustomAttributes(typeof(T), inherit);
 #endif
         }
 
