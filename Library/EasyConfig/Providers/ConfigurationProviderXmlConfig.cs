@@ -49,7 +49,7 @@ namespace Vici.Core.Config
             
 
             if (!File.Exists(filePath))
-                throw new FileNotFoundException("Cofiguration file could not be found.");
+                throw new FileNotFoundException(string.Format("Cofiguration file {0} could not be found",filePath));
 
             _filePath = filePath;
         }
