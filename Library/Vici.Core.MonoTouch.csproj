@@ -248,6 +248,8 @@
     <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="TypedWeakReference.cs" />
+    <Compile Include="TypeInspector.cs" />
+    <Compile Include="MethodInspector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
