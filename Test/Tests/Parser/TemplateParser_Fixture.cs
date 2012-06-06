@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vici.Core.Parser;
 
 namespace Vici.Core.Test

@@ -52,10 +52,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.4.6.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Library\References\nunit.framework.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -70,25 +67,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryExtensionsTest.cs" />
-    <Compile Include="ConfigTest.cs" />
-    <Compile Include="Parser\CSharpParserFixture.cs" />
-    <Compile Include="DynamicObjectTest.cs" />
-    <Compile Include="ExpressionWithContext.cs" />
-    <Compile Include="Json\JSONParserFixture.cs" />
-    <Compile Include="Json\JsonSeralizerTestFixture.cs" />
-    <Compile Include="MockTimeProvider.cs" />
-    <Compile Include="NotifierTest.cs" />
-    <Compile Include="ObjectConverter\ObjectConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchedulerTest.cs" />
-    <Compile Include="SmartCache_Fixture.cs" />
-    <Compile Include="StringConverter\StringConverterPluginTest.cs" />
-    <Compile Include="StringConverter\StringConverterTest.cs" />
-    <Compile Include="StringExtensionsTest.cs" />
-    <Compile Include="Parser\TemplateParser_Fixture.cs" />
-    <Compile Include="Tokenizer_Fixture.cs" />
-    <Compile Include="TypeExtensionsTest.cs" />
+    <Compile Include="Tests\BinaryExtensionsTest.cs" />
+    <Compile Include="Tests\ConfigTest.cs" />
+    <Compile Include="Tests\DynamicObjectTest.cs" />
+    <Compile Include="Tests\ExpressionWithContext.cs" />
+    <Compile Include="Tests\Json\JSONParserFixture.cs" />
+    <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
+    <Compile Include="Tests\MockTimeProvider.cs" />
+    <Compile Include="Tests\NotifierTest.cs" />
+    <Compile Include="Tests\ObjectConverter\ObjectConverterTest.cs" />
+    <Compile Include="Tests\Parser\CSharpParserFixture.cs" />
+    <Compile Include="Tests\Parser\TemplateParser_Fixture.cs" />
+    <Compile Include="Tests\SchedulerTest.cs" />
+    <Compile Include="Tests\SmartCache_Fixture.cs" />
+    <Compile Include="Tests\StringConverter\StringConverterPluginTest.cs" />
+    <Compile Include="Tests\StringConverter\StringConverterTest.cs" />
+    <Compile Include="Tests\StringExtensionsTest.cs" />
+    <Compile Include="Tests\TestFrameworkFooler.cs" />
+    <Compile Include="Tests\Tokenizer_Fixture.cs" />
+    <Compile Include="Tests\TypeExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Library\Vici.Core.csproj">
@@ -98,11 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -120,6 +113,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -28,9 +28,7 @@ using System;
 //using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-
-using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Vici.Core.Test
 {

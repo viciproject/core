@@ -25,12 +25,9 @@
 #endregion
 
 using System;
-//using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vici.Core.Parser;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-
-using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
 
 namespace Vici.Core.Test
 {

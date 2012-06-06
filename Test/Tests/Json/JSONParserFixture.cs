@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vici.Core.Json;
 
 namespace Vici.Core.Test

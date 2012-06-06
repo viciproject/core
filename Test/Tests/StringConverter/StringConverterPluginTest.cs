@@ -1,5 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Vici.Core.Test
 {

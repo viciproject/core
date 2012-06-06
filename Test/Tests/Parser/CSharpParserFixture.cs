@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vici.Core.Parser;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 

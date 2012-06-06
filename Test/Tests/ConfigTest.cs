@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vici.Core.Config;
 
 namespace Vici.Core.Test
@@ -171,7 +172,7 @@ namespace Vici.Core.Test
             ConfigManager configManager = new ConfigManager();
 
             configManager.Register(config);
-            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(Environment.CurrentDirectory + "\\Config.xml"));
+            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(Environment.CurrentDirectory + "\\Data\\Config.xml"));
             configManager.Update();
 
             Assert.AreEqual(21, config.Prop1);
@@ -188,7 +189,7 @@ namespace Vici.Core.Test
             ConfigManager configManager = new ConfigManager();
 
             configManager.Register(config);
-            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(Environment.CurrentDirectory + "\\Config.xml"));
+            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(Environment.CurrentDirectory + "\\Data\\Config.xml"));
             configManager.Update();
            
             Assert.AreEqual("test", config.SubGroupProp1.SubProp3);
