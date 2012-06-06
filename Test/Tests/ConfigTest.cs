@@ -172,7 +172,7 @@ namespace Vici.Core.Test
             ConfigManager configManager = new ConfigManager();
 
             configManager.Register(config);
-            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(Environment.CurrentDirectory + "\\Data\\Config.xml"));
+            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(AppDomain.CurrentDomain.BaseDirectory + "\\Data\\Config.xml"));
             configManager.Update();
 
             Assert.AreEqual(21, config.Prop1);
@@ -189,7 +189,7 @@ namespace Vici.Core.Test
             ConfigManager configManager = new ConfigManager();
 
             configManager.Register(config);
-            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(Environment.CurrentDirectory + "\\Data\\Config.xml"));
+            configManager.RegisterProvider(new ConfigurationProviderXmlConfig(AppDomain.CurrentDomain.BaseDirectory + "\\Data\\Config.xml"));
             configManager.Update();
            
             Assert.AreEqual("test", config.SubGroupProp1.SubProp3);

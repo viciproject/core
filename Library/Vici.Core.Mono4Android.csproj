@@ -81,6 +81,7 @@
     <Compile Include="Logger\LogLevel.cs" />
     <Compile Include="Logger\Providers\LoggingProviderConsole.cs" />
     <Compile Include="Logger\Providers\LoggingProviderFile.cs" />
+    <Compile Include="MethodInspector.cs" />
     <Compile Include="Mocking\ITimeProvider.cs" />
     <Compile Include="Mocking\RealTimeProvider.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Tuple.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="TypeHelper.cs" />
+    <Compile Include="TypeInspector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
