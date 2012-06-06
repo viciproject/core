@@ -42,21 +42,17 @@ namespace Vici.Core.Config
     public class ConfigurationProviderXmlConfig : IConfigurationProvider
     {
         private XDocument _xDoc;
-        private readonly string _filePath;
 
-        public ConfigurationProviderXmlConfig(string filePath)
+        public ConfigurationProviderXmlConfig(XDocument xDoc)
         {
-            
-
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException(string.Format("Cofiguration file {0} could not be found",filePath));
-
-            _filePath = filePath;
+            _xDoc = xDoc;
         }
 
         public long Version()
         {
-            return new FileInfo(_filePath).LastWriteTimeUtc.Ticks;
+            return ((int?) _xDoc.Root.Attribute("version") ?? 1);
+
+//            return new FileInfo(_filePath).LastWriteTimeUtc.Ticks;
         }
 
         public bool CanSave
@@ -66,9 +62,6 @@ namespace Vici.Core.Config
 
         public string GetValue(string key, string environment)
         {
-            if (_xDoc == null)
-                ReloadConfigFile();
-
             var xElement = _xDoc.XPathSelectElement("//" + key.Replace('.', '/'));
 
             return xElement != null ? xElement.Value : null;
@@ -76,9 +69,6 @@ namespace Vici.Core.Config
 
         public IEnumerable<KeyValuePair<string, string>> EnumerateValues(string key, string environment)
         {
-            if (_xDoc == null)
-                ReloadConfigFile();
-
             var xElement = _xDoc.XPathSelectElement("//" + key.Replace('.', '/'));
 
             if (xElement == null)
@@ -90,18 +80,6 @@ namespace Vici.Core.Config
         public void SetValue(string key, string value, string environment)
         {
             throw new NotSupportedException();
-        }
-
-        private void ReloadConfigFile()
-        {
-            try
-            {
-                _xDoc = XDocument.Load(_filePath);
-            }
-            catch (Exception err)
-            {
-                throw new FormatException("The XML of the configuration file could not be loaded.", err);
-            }
         }
     }
 #endif
