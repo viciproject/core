@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using Vici.Core.CompatibilityLayer;
 using Vici.Core.Parser;
 
 namespace Vici.Core
