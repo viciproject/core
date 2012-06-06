@@ -13,16 +13,15 @@ namespace Vici.Core
         public static Type GetTypeInfo(this Type type) { return type; }
     }
 #endif
+
     public class TypeInspector
     {
-        private Type _t;
+        private readonly Type _t;
 
         public TypeInspector(Type type)
         {
             _t = type;
         }
-
-#if NETFX_CORE
 
         private T WalkAndFindSingle<T>(Func<Type,T> f) where T:class 
         {
@@ -59,8 +58,6 @@ namespace Vici.Core
 
             return array.ToArray();
         }
-
-#endif
 
         public bool IsGenericType
         {
@@ -169,8 +166,7 @@ namespace Vici.Core
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
 #if NETFX_CORE
-            var attributes = _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();
-            return attributes;
+            return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();
 #else
             return (T[]) _t.GetCustomAttributes(type, inherit);
 #endif
@@ -259,12 +255,20 @@ namespace Vici.Core
 
         private bool MatchBindingFlags(PropertyInfo propertyInfo, BindingFlags flags)
         {
-            if ((flags & BindingFlags.Static) == 0 && propertyInfo.GetMethod.IsStatic)
+            var method = propertyInfo.GetMethod ?? propertyInfo.SetMethod;
+
+            if ((flags & BindingFlags.Static) == 0 && method.IsStatic)
                 return false;
 
-            if ((flags & BindingFlags.Instance) == 0 && !propertyInfo.GetMethod.IsStatic)
+            if ((flags & BindingFlags.Instance) == 0 && !method.IsStatic)
                 return false;
 
+            if ((flags & BindingFlags.Public) != 0 && !method.IsPublic)
+                return false;
+
+            if ((flags & BindingFlags.NonPublic) != 0 && !method.IsPrivate)
+                return false;
+            
             return true;
         }
 #endif

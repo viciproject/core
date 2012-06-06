@@ -74,7 +74,7 @@ namespace Vici.Core.Parser
 			{
 				Delegate[] delegates = (Delegate[]) methodObject;
 #if NETFX_CORE
-				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => ((dynamic) d).Method);
+				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.GetMethodInfo());
 #else
                 MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.Method);
 #endif

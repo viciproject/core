@@ -43,7 +43,7 @@ namespace Vici.Core
             if (array == null)  
                 throw new ArgumentException();  
 #if WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE
-            return (from item in array select converter(item)).ToArray();  
+            return array.Select(item => converter(item)).ToArray();
 #else
             return Array.ConvertAll(array,converter);
 #endif
@@ -54,8 +54,6 @@ namespace Vici.Core
         {
             foreach (var item in list)
                 action(item);
-            
-
         }
 #endif
     }
@@ -130,6 +128,9 @@ namespace Vici.Core
 
         private bool IsMatch(Type[] parameterTypes, ParameterInfo[] parameters, ParameterCompareType compareType)
         {
+            if (parameterTypes.Length != parameters.Length)
+                return false;
+
             return parameterTypes.SequenceEqual(parameters.Select(p => p.ParameterType), new ParameterComparer(compareType));
         }
 
@@ -137,7 +138,9 @@ namespace Vici.Core
         {
             var compareTypes = new[] {ParameterCompareType.Exact, ParameterCompareType.Assignable, ParameterCompareType.Implicit};
 
-            return compareTypes.Select(compareType => methods.FirstOrDefault(m => IsMatch(parameterTypes, m.GetParameters(), compareType))).FirstOrDefault(match => match != null);
+            return compareTypes
+                .Select(compareType => methods.FirstOrDefault(m => IsMatch(parameterTypes, m.GetParameters(), compareType)))
+                .FirstOrDefault(match => match != null);
         }
     }
 
