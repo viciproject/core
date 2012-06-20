@@ -143,7 +143,7 @@ namespace Vici.Core.Config
             
             foreach (FieldOrPropertyInfo field in members)
             {
-                ConfigKeyAttribute[] attributes = (ConfigKeyAttribute[]) field.GetCustomAttributes(typeof (ConfigKeyAttribute), false);
+                ConfigKeyAttribute[] attributes = field.GetCustomAttributes<ConfigKeyAttribute>(false);
 
                 string key = field.Name;
 

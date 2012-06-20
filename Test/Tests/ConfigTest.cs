@@ -26,8 +26,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -83,7 +85,7 @@ namespace Vici.Core.Test
             public string SubProp4 = "test";
         }
 
-
+#if !NETFX_CORE
         [TestMethod]
         public void TestStaticClassWithoutKey()
         {
@@ -167,15 +169,21 @@ namespace Vici.Core.Test
             Assert.AreEqual(3, config.IntValues.Count);
 
         }
+#endif
 
         [TestMethod]
         public void TestXmlConfigFile()
         {
-            XDocument xDoc;
+            XDocument xDoc = null;
 
+#if NETFX_CORE
+            var task = Windows.ApplicationModel.Package.Current.InstalledLocation.OpenStreamForReadAsync("Data\\Config.xml");
+
+            xDoc = XDocument.Load(task.Result);
+#else
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Vici.Core.Test.Data.Config.xml"))
                 xDoc = XDocument.Load(new XmlTextReader(stream));
-
+#endif
             InstanceXmlConfig config = new InstanceXmlConfig();
 
             ConfigManager configManager = new ConfigManager();
@@ -193,11 +201,16 @@ namespace Vici.Core.Test
         [TestMethod]
         public void TestDefaults()
         {
-            XDocument xDoc;
+            XDocument xDoc = null;
 
+#if NETFX_CORE
+            var task = Windows.ApplicationModel.Package.Current.InstalledLocation.OpenStreamForReadAsync("Data\\Config.xml");
+
+            xDoc = XDocument.Load(task.Result);
+#else
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Vici.Core.Test.Data.Config.xml"))
                 xDoc = XDocument.Load(new XmlTextReader(stream));
-
+#endif
             InstanceXmlConfig config = new InstanceXmlConfig();
 
             ConfigManager configManager = new ConfigManager();

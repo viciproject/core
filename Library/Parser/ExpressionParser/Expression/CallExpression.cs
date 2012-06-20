@@ -60,12 +60,14 @@ namespace Vici.Core.Parser
 			{
 				ConstructorInfo[] constructors = (ConstructorInfo[]) methodObject;
 
-                MethodBase method = LazyBinder.Default.SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, constructors, parameterTypes, null);
+                MethodBase method = LazyBinder.SelectBestMethod(constructors, parameterTypes, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
 				if (method == null)
 					throw new ExpressionEvaluationException("No match found for constructor " + constructors[0].Name, this);
 
-				object value = ((ConstructorInfo)method).Invoke(parameterValues);
+			    object value = LazyBinder.Invoke(method, parameterValues);
+
+				//object value = ((ConstructorInfo)method).Invoke(parameterValues);
 
                 return Exp.Value(TokenPosition, value, method.DeclaringType);
 			}
@@ -79,12 +81,12 @@ namespace Vici.Core.Parser
                 MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.Method);
 #endif
 
-                MethodBase method = LazyBinder.Default.SelectMethod(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, methods, parameterTypes, null);
+                MethodBase method = LazyBinder.SelectBestMethod(methods, parameterTypes, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
 				if (method == null)
 					throw new ExpressionEvaluationException("No match found for delegate " + _methodExpression, this);
 
-				object value = method.Invoke(delegates[Array.IndexOf(methods, method)].Target, parameterValues);
+                object value = LazyBinder.Invoke(method, delegates[Array.IndexOf(methods, method)].Target, parameterValues);
 
                 return Exp.Value(TokenPosition, value, ((MethodInfo)method).ReturnType);
 			}

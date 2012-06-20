@@ -162,7 +162,7 @@ namespace Vici.Core
         public PropertyInfo GetIndexer(Type[] types)
         {
 #if NETFX_CORE
-            return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.ParametersMatch(types, pi.GetIndexParameters())));
+            return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.MatchParameters(types, pi.GetIndexParameters())));
 #else            
             return _t.GetProperty("Item", new[] { typeof(string) });
 #endif
@@ -220,12 +220,10 @@ namespace Vici.Core
             return ImplementsOrInherits(typeof (T));
         }
 
-        public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes, ParameterModifier[] modifiers)
+        public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes)
         {
 #if NETFX_CORE
-            Binder binder = new Binder();
-
-            return (MethodInfo) WalkAndFindSingle(t => binder.BestMatch(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes));
+            return (MethodInfo) WalkAndFindSingle(t => LazyBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes));
 #else
             return _t.GetMethod(methodName, bindingFlags, LazyBinder.Default, parameterTypes, modifiers);
 #endif
@@ -243,6 +241,9 @@ namespace Vici.Core
 #if NETFX_CORE
         private bool MatchBindingFlags(FieldInfo fieldInfo, BindingFlags flags)
         {
+            if (flags == BindingFlags.Default)
+                return true;
+
             if ((flags & BindingFlags.Static) == 0 && fieldInfo.IsStatic)
                 return false;
 
@@ -260,6 +261,9 @@ namespace Vici.Core
 
         private bool MatchBindingFlags(PropertyInfo propertyInfo, BindingFlags flags)
         {
+            if (flags == BindingFlags.Default)
+                return true;
+
             var method = propertyInfo.GetMethod ?? propertyInfo.SetMethod;
 
             if ((flags & BindingFlags.Static) == 0 && method.IsStatic)

@@ -60,12 +60,21 @@ namespace Vici.Core.Config
                 ((PropertyInfo)_memberInfo).SetValue(o, value, null);
         }
 
-        public object[] GetCustomAttributes(Type type, bool inherit)
+        public Attribute[] GetCustomAttributes(Type type, bool inherit)
         {
 #if NETFX_CORE
             return _memberInfo.GetCustomAttributes(type, inherit).ToArray();
 #else
-            return _memberInfo.GetCustomAttributes(type, inherit);
+            return (Attribute[]) _memberInfo.GetCustomAttributes(type, inherit);
+#endif
+        }
+
+        public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
+        {
+#if NETFX_CORE
+            return _memberInfo.GetCustomAttributes<T>(inherit).ToArray();
+#else
+            return (Attribute[]) _memberInfo.GetCustomAttributes(typeof(T), inherit);
 #endif
         }
 

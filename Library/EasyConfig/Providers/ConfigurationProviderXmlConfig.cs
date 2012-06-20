@@ -38,21 +38,40 @@ using System.Xml.XPath;
 namespace Vici.Core.Config
 {
     //TODO: change implementation for WP7
-#if !WINDOWS_PHONE && !NETFX_CORE
     public class ConfigurationProviderXmlConfig : IConfigurationProvider
     {
-        private XDocument _xDoc;
+        private Dictionary<string, string> _settings = new Dictionary<string, string>();
 
         public ConfigurationProviderXmlConfig(XDocument xDoc)
         {
-            _xDoc = xDoc;
+            _settings.Clear();
+
+            foreach (var xElement in xDoc.Root.Elements())
+            {
+                LoadElement(xElement,"");
+            }
+        }
+
+        private void LoadElement(XElement xElement, string baseKey)
+        {
+            if (baseKey.Length > 0)
+                baseKey += '.';
+
+            foreach (var x in xElement.Elements())
+            {
+                LoadElement(x, baseKey + xElement.Name);
+            }
+
+            string s = xElement.Value;
+
+            if (s != null)
+                _settings[baseKey + xElement.Name] = s;
+
         }
 
         public long Version()
         {
-            return ((int?) _xDoc.Root.Attribute("version") ?? 1);
-
-//            return new FileInfo(_filePath).LastWriteTimeUtc.Ticks;
+            return 1;
         }
 
         public bool CanSave
@@ -62,25 +81,35 @@ namespace Vici.Core.Config
 
         public string GetValue(string key, string environment)
         {
-            var xElement = _xDoc.XPathSelectElement("//" + key.Replace('.', '/'));
+            string value = null;
 
-            return xElement != null ? xElement.Value : null;
+            if (!string.IsNullOrEmpty(environment))
+                value = GetValue(environment + '.' + key, null);
+
+            if (value != null)
+                return value;
+
+            return _settings.TryGetValue(key, out value) ? value : null;
         }
 
         public IEnumerable<KeyValuePair<string, string>> EnumerateValues(string key, string environment)
         {
-            var xElement = _xDoc.XPathSelectElement("//" + key.Replace('.', '/'));
+            if (!string.IsNullOrEmpty(environment))
+                key = environment + '.' + key;
 
-            if (xElement == null)
-                return Enumerable.Empty<KeyValuePair<string,string>>();
+            key += '.';
 
-            return xElement.Elements().Select(e => new KeyValuePair<string, string>(e.Name.ToString(),e.Value));
+            return
+                from string s in _settings.Keys
+                where s.StartsWith(key)
+                select new KeyValuePair<string, string>(s.Substring(key.Length), _settings[s]);
         }
+
 
         public void SetValue(string key, string value, string environment)
         {
             throw new NotSupportedException();
         }
     }
-#endif
+
 }

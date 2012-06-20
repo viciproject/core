@@ -65,7 +65,7 @@ namespace Vici.Core.Parser
 
             while (t != null)
             {
-                MethodInfo methodInfo = t.Inspector().GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, parameterTypes, null);
+                MethodInfo methodInfo = t.Inspector().GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, parameterTypes);
 
                 if (methodInfo != null)
                     return methodInfo;

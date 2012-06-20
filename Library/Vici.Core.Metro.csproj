@@ -105,17 +105,17 @@
   <ItemGroup>
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="BinaryHelper.cs" />
+    <Compile Include="CompatibilityLayer.cs" />
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
     <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\Json.cs" />
-    <Compile Include="MethodInspector.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
-    <Compile Include="Parser\Context\LazyBinder.cs" />
+    <Compile Include="Reflection\LazyBinder.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />

@@ -52,7 +52,7 @@ namespace Vici.Core.Parser
 
             returnType = methodInfo.ReturnType;
 
-            return methodInfo.Inspector().Invoke(_object, parameters);
+            return LazyBinder.Invoke(methodInfo, _object, parameters);
         }
     }
 }
