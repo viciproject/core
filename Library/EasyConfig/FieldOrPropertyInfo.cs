@@ -74,7 +74,7 @@ namespace Vici.Core.Config
 #if NETFX_CORE
             return _memberInfo.GetCustomAttributes<T>(inherit).ToArray();
 #else
-            return (Attribute[]) _memberInfo.GetCustomAttributes(typeof(T), inherit);
+            return (T[]) _memberInfo.GetCustomAttributes(typeof(T), inherit);
 #endif
         }
 

@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
 using Vici.Core.CompatibilityLayer;
-using Vici.Core.Parser;
 
 namespace Vici.Core
 {
@@ -12,6 +10,11 @@ namespace Vici.Core
     public static class TypeInfoMocker
     {
         public static Type GetTypeInfo(this Type type) { return type; }
+
+        public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type type, string name)
+        {
+            return type.GetMethods(BindingFlags.DeclaredOnly|BindingFlags.Static|BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic).Where(m => m.Name == name);
+        }
     }
 #endif
 
@@ -164,7 +167,7 @@ namespace Vici.Core
 #if NETFX_CORE
             return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.MatchParameters(types, pi.GetIndexParameters())));
 #else            
-            return _t.GetProperty("Item", new[] { typeof(string) });
+            return _t.GetProperty("Item", null, types);
 #endif
         }
 
@@ -222,11 +225,7 @@ namespace Vici.Core
 
         public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes)
         {
-#if NETFX_CORE
-            return (MethodInfo) WalkAndFindSingle(t => LazyBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes));
-#else
-            return _t.GetMethod(methodName, bindingFlags, LazyBinder.Default, parameterTypes, modifiers);
-#endif
+            return (MethodInfo) WalkAndFindSingle(t => LazyBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes,bindingFlags));
         }
 
         public Type[] GetGenericArguments()

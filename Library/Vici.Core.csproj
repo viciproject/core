@@ -74,10 +74,10 @@
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\Json.cs" />
-    <Compile Include="MethodInspector.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
+    <Compile Include="Reflection\LazyBinder.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
@@ -115,7 +115,6 @@
     <Compile Include="Parser\Context\DynamicObject.cs" />
     <Compile Include="Parser\Context\IDynamicObject.cs" />
     <Compile Include="Parser\Context\IParserContext.cs" />
-    <Compile Include="Parser\Context\LazyBinder.cs" />
     <Compile Include="Parser\Context\ParserContext.cs" />
     <Compile Include="Parser\Context\PropertyHelper.cs" />
     <Compile Include="Parser\ExpressionParser\Exceptions\BadArgumentException.cs" />

@@ -56,7 +56,7 @@ namespace Vici.Core
 
 #endif
 
-    public class LazyBinder : Binder
+    public class LazyBinder
     {
         private static readonly LazyBinder _default = new LazyBinder();
 
@@ -64,7 +64,7 @@ namespace Vici.Core
         {
             get { return _default; }
         }
-
+/*
 #if !NETFX_CORE
         public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state)
         {
@@ -110,7 +110,7 @@ namespace Vici.Core
             return methods.FirstOrDefault(method => ParametersMatch(types, method.GetParameters()));
         }
 #endif
-
+*/
         private static bool MatchBindingFlags(MethodBase methodBase, BindingFlags flags)
         {
             if (flags == BindingFlags.Default)

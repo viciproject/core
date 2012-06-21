@@ -84,7 +84,6 @@
     <Compile Include="Logger\LogLevel.cs" />
     <Compile Include="Logger\Providers\LoggingProviderConsole.cs" />
     <Compile Include="Logger\Providers\LoggingProviderFile.cs" />
-    <Compile Include="MethodInspector.cs" />
     <Compile Include="Mocking\ITimeProvider.cs" />
     <Compile Include="Mocking\RealTimeProvider.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="Parser\Context\DynamicObject.cs" />
     <Compile Include="Parser\Context\IDynamicObject.cs" />
     <Compile Include="Parser\Context\IParserContext.cs" />
-    <Compile Include="Parser\Context\LazyBinder.cs" />
     <Compile Include="Parser\Context\ParserContext.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\Context\PropertyHelper.cs" />
@@ -217,6 +215,7 @@
     <Compile Include="Parser\Tokenizer\TokenizerState.cs" />
     <Compile Include="Parser\Tokenizer\TokenMatcher.cs" />
     <Compile Include="Parser\Tokenizer\TokenPosition.cs" />
+    <Compile Include="Reflection\LazyBinder.cs" />
     <Compile Include="Scheduler\CyclicScheduler.cs" />
     <Compile Include="Scheduler\MonthlyScheduler.cs" />
     <Compile Include="Scheduler\ScheduleHistory\DefaultHistoryStore.cs" />
