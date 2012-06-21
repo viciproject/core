@@ -79,7 +79,6 @@
     <Compile Include="Parser\Context\DynamicObject.cs" />
     <Compile Include="Parser\Context\IDynamicObject.cs" />
     <Compile Include="Parser\Context\IParserContext.cs" />
-    <Compile Include="Parser\Context\LazyBinder.cs" />
     <Compile Include="Parser\Context\ParserContext.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\Context\PropertyHelper.cs" />
@@ -249,7 +248,7 @@
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="TypeInspector.cs" />
-    <Compile Include="MethodInspector.cs" />
+    <Compile Include="Reflection\LazyBinder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
