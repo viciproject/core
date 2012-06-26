@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Vici.Core.Parser
 {
@@ -88,7 +89,8 @@ namespace Vici.Core.Parser
             int firstValidIndex = -1;
             int lastSavedIndex = -1;
 
-            string filler = "";
+            StringBuilder filler = new StringBuilder();
+
             TokenPosition fillerPosition = TokenPosition.Unknown;
 
             for (int textIndex = 0; textIndex < s.Length; textIndex++)
@@ -133,7 +135,7 @@ namespace Vici.Core.Parser
                 {
                     if (_allowFillerTokens)
                     {
-                        filler += s[++lastSavedIndex];
+                        filler.Append(s[++lastSavedIndex]);
                         
                         textIndex = lastSavedIndex;
 
@@ -160,13 +162,13 @@ namespace Vici.Core.Parser
 
                 if (filler.Length > 0)
                 {
-                    T fillerToken = CreateToken(null,filler);
+                    T fillerToken = CreateToken(null,filler.ToString());
                     
                     fillerToken.TokenPosition = fillerPosition;
 
                     tokens.Add(fillerToken);
 
-                    filler = "";
+                    filler.Length = 0;
                 }
 
                 T token = CreateToken(successMatch.Matches[0].Matcher, successMatch.Token);
@@ -203,7 +205,7 @@ namespace Vici.Core.Parser
 
             if (_allowFillerTokens && filler.Length > 0)
             {
-                T fillerToken = CreateToken(null, filler);
+                T fillerToken = CreateToken(null, filler.ToString());
 
                 fillerToken.TokenPosition = fillerPosition;
 
