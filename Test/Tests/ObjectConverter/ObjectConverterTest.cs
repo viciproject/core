@@ -266,6 +266,15 @@ namespace Vici.Core.Test
             Assert.AreEqual(charA, ObjectConverter.Convert("A", typeof(char)));
         }
 
+        [TestMethod]
+        public void Test_NumbersToString()
+        {
+            Assert.AreEqual("1.2",(1.2m).Convert<string>());
+            Assert.AreEqual("1.2", (1.2).Convert<string>());
+            Assert.AreEqual("1", (1m).Convert<string>());
+            Assert.AreEqual("100", (100).Convert<string>());
+        }
+
         private enum EnumType
         {
             Zero=0,One=1

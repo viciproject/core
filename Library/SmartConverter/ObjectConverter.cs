@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Vici.Core
@@ -46,14 +47,27 @@ namespace Vici.Core
             if (value.GetType() == type)
                 return value;
 
-
-            var implicitOperator = type.Inspector().GetMethod("op_Implicit", new Type[] {value.GetType()});
+            var implicitOperator = type.Inspector().GetMethod("op_Implicit", new [] {value.GetType()});
 
             if (implicitOperator != null)
                 return implicitOperator.Invoke(null, new object[] {value});
             
             if (value is string)
                 return StringConverter.Convert((string) value, targetType);
+
+            if (type == typeof(string))
+            {
+                Type valueType = value.GetType();
+
+                if (valueType == typeof(decimal))
+                    return ((decimal)value).ToString(CultureInfo.InvariantCulture);
+                if (valueType == typeof(double))
+                    return ((double)value).ToString(CultureInfo.InvariantCulture);
+                if (valueType == typeof(float))
+                    return ((float)value).ToString(CultureInfo.InvariantCulture);
+
+                return value.ToString();
+            }
 
             if (type == typeof (Guid) && value is byte[])
                 return new Guid((byte[]) value);
@@ -82,9 +96,6 @@ namespace Vici.Core
 
             if (type.Inspector().IsAssignableFrom(value.GetType()))
                 return value;
-
-            if (type == typeof (string))
-                return value.ToString();
 
             try
             {
