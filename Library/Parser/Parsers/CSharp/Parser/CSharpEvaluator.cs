@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace Vici.Core.Parser
 {
@@ -248,7 +249,7 @@ namespace Vici.Core.Parser
             if (s.IndexOf('\\') < 0)
                 return Exp.Value(position, s);
 
-            string output = "";
+            StringBuilder output = new StringBuilder(token.Length);
 
             bool inEscape = false;
             string hexString = null;
@@ -267,7 +268,7 @@ namespace Vici.Core.Parser
 
                     if (hexString == null && (c != 'x' || c != 'X'))
                     {
-                        output += UnEscape("\\" + c, position);
+                        output.Append(UnEscape("\\" + c, position));
                         inEscape = false;
                         continue;
                     }
@@ -280,7 +281,7 @@ namespace Vici.Core.Parser
                     {
                         if (((char.ToLower(c) < 'a' || char.ToLower(c) > 'f') && (c < '0' || c > '9')) || hexString.Length == 4)
                         {
-                            output += UnEscape("\\x" + hexString, position);
+                            output.Append(UnEscape("\\x" + hexString, position));
                             inEscape = false;
                             hexString = null;
                         }
@@ -294,7 +295,7 @@ namespace Vici.Core.Parser
 
                 if (c != '\\')
                 {
-                    output += c;
+                    output.Append(c);
 
                     continue;
                 }
@@ -302,7 +303,7 @@ namespace Vici.Core.Parser
                 inEscape = true;
             }
 
-            return Exp.Value(position, output);
+            return Exp.Value(position, output.ToString());
         }
 
         public static Expression DotOperator(string token, TokenPosition position, Expression[] terms)
