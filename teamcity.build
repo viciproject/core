@@ -55,6 +55,12 @@
 			</fileset>
 		</zip>
 
+		<zip zipfile="_zip/${Product}.Metro.${build.number}.bin.zip">
+			<fileset basedir="_build">
+				<include name="*.Metro.dll" />
+			</fileset>
+		</zip>
+
 		<zip zipfile="_zip/${Product}.${build.number}.src.zip">
 			<fileset>
 				<include name="**/*" />
