@@ -150,15 +150,6 @@
     <Compile Include="Parser\TemplateParser\Exceptions\TemplateParserException.cs" />
     <Compile Include="Parser\TemplateParser\Exceptions\TemplateParsingException.cs" />
     <Compile Include="Parser\TemplateParser\Exceptions\TemplateRenderingException.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\ExpressionNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\ForEachNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\IfNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\IncludeFileNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\MacroCallNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\MacroDefinitionNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\Node.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\ParseFileNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\TextNode.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\DoubleCurly\DoubleCurly.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\DoubleCurly\DoubleCurlyTokenizer.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\ProMesh\ProMesh.cs" />
@@ -167,7 +158,6 @@
     <Compile Include="Parser\TemplateParser\TemplateConfigs\Velocity\VelocityTokenizer.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\Xml\Xml.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\Xml\XmlTokenizer.cs" />
-    <Compile Include="Parser\TemplateParser\TemplateConfigs\DollarExpressionMatcher.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\SmartExpressionMatcher.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\WrappedExpressionMatcher.cs" />
     <Compile Include="Parser\TemplateParser\Tokenizer\ForeachTemplateToken.cs" />
@@ -249,6 +239,26 @@
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="TypeInspector.cs" />
     <Compile Include="Reflection\LazyBinder.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\FunctionValueExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ReturnExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ReturnValueExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\SequenceExpression.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ExpressionTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ForEachTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\IfTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\IncludeFileTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\MacroCallTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\MacroDefinitionTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ParseFileTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\TemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\TextTemplateNode.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\ForEachExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\FunctionDefinitionExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\IfExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\InExpression.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Parser\TemplateParser\Nodes\" />
+  </ItemGroup>
 </Project>
