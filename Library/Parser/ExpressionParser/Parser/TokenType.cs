@@ -40,6 +40,15 @@ namespace Vici.Core.Parser
         LeftParen , 
         RightParen , 
         ArgumentSeparator,
-        WhiteSpace
+        WhiteSpace,
+        StatementSeparator,
+        ForEach,
+        If,
+        Else,
+        ElseIf,
+        Return,
+        OpenBrace,
+        CloseBrace,
+        FunctionDefinition
     }
 }

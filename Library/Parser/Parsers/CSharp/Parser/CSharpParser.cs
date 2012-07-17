@@ -35,4 +35,15 @@ namespace Vici.Core.Parser
             FunctionEvaluator = CSharpEvaluator.Function;
         }
     }
+
+    public class CScriptParser : ExpressionParser
+    {
+        public CScriptParser() : base(new CSharpTokenizer())
+        {
+            FunctionEvaluator = CSharpEvaluator.Function;
+        }
+
+        
+        
+    }
 }

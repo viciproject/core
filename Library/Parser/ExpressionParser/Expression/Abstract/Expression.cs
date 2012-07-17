@@ -71,8 +71,10 @@ namespace Vici.Core.Parser
         public static DivideExpression Divide(TokenPosition position, Expression left, Expression right) { return new DivideExpression(position, left, right); }
         public static ValueExpression<T> Value<T>(TokenPosition position, T value) { return new ValueExpression<T>(position, value); }
         public static ValueExpression Value(TokenPosition position, object value, Type type) { return new ValueExpression(position, value, type); }
+        public static ReturnValueExpression ReturnValue(TokenPosition position, object value, Type type) { return new ReturnValueExpression(position, value, type); }
         public static BinaryArithmicExpression Op(TokenPosition position, string op, Expression left, Expression right) { return new BinaryArithmicExpression(position, op, left, right); }
         public static AndAlsoExpression AndAlso(TokenPosition position, Expression left, Expression right) { return new AndAlsoExpression(position, left, right); }
         public static OrElseExpression OrElse(TokenPosition position, Expression left, Expression right) { return new OrElseExpression(position, left, right); }
+        public static ValueExpression NullValue(TokenPosition position) { return Value(position, null, typeof(object)); }
     }
 }

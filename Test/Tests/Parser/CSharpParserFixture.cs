@@ -631,5 +631,245 @@ namespace Vici.Core.Test
             Assert.IsTrue(_parser.Evaluate<bool>("!!RandomObject", context));
         }
 
+        [TestMethod]
+        public void Sequence()
+        {
+            CSharpContext context = new CSharpContext();
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            
+            _parser.Evaluate("f(1);f(2);",context);
+
+            Assert.AreEqual("12",output);
+            
+            output = "";
+
+            _parser.Evaluate("foreach (x in [1...9]) f(x);", context);
+
+            Assert.AreEqual("123456789", output);
+
+            output = "";
+            _parser.Evaluate("foreach (x in [1...9]) { f(x); f(x-1); }", context);
+
+            Assert.AreEqual("102132435465768798", output);
+        }
+
+        [TestMethod]
+        public void SequenceWithReturn()
+        {
+            CSharpContext context = new CSharpContext();
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            Assert.AreEqual(5,_parser.Evaluate<int>("f(1);return 5;f(2);", context));
+
+            Assert.AreEqual("1", output);
+        }
+
+        [TestMethod]
+        public void ForEach()
+        {
+            CSharpContext context = new CSharpContext();
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            
+
+            _parser.Evaluate("foreach (x in [1...9]) f(x);", context);
+
+            Assert.AreEqual("123456789", output);
+
+            output = "";
+            _parser.Evaluate("foreach (x in [1...3]) { f(x); foreach(y in [1...x]) f(y); }", context);
+
+            Assert.AreEqual("112123123", output);
+        }
+
+        [TestMethod]
+        public void If()
+        {
+            CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            _parser.Evaluate("if(1==1) f(1);f(2)", context);
+
+            Assert.AreEqual("12", output);
+
+            output = "";
+
+            _parser.Evaluate("if(0) f(1);f(2)", context);
+
+            Assert.AreEqual("2", output);
+
+            output = "";
+        }
+
+        [TestMethod]
+        public void IfWithReturn()
+        {
+            CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            Assert.AreEqual(5,_parser.Evaluate<int>("if(1==1) { f(1); return 5; } f(2);", context));
+
+            Assert.AreEqual("1", output);
+        }
+
+        [TestMethod]
+        public void IfElse()
+        {
+            CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            _parser.Evaluate("if(1==1) f(1); else f(3); f(2)", context);
+
+            Assert.AreEqual("12", output);
+
+            output = "";
+
+            _parser.Evaluate("if(1==0) f(1); else f(3); f(2)", context);
+
+            Assert.AreEqual("32", output);
+
+            output = "";
+
+            _parser.Evaluate("if(1==0) f(1); else if(1==1) f(3); f(2)", context);
+
+            Assert.AreEqual("32", output);
+
+            output = "";
+
+        }
+
+        [TestMethod]
+        public void ComplexScript1()
+        {
+            CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
+
+            string output = "";
+
+            context.AssignmentPermissions = AssignmentPermissions.All;
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+            
+
+            int[] array = new int[50];
+
+            context.Set("array", array);
+
+            for (int i = 0; i < array.Length; i++)
+                array[i] = i + 1;
+
+            Random rnd = new Random();
+
+            for (int i=0;i<array.Length-1;i++)
+            {
+                int idx = rnd.Next(i + 1, array.Length - 1);
+
+                int tmp = array[idx];
+                array[idx] = array[i];
+                array[i] = tmp;
+            }
+
+            string script =
+                @"
+
+numSwaps = 0;
+
+foreach (i in [0...array.Length-2])
+{
+   foreach (j in [i+1...array.Length-1])
+   {
+        if (array[i] > array[j])
+        {
+             tmp = array[i];
+             array[i] = array[j];
+             array[j] = tmp;
+ 
+             numSwaps = numSwaps + 1;
+        }
+   }
+}
+
+return numSwaps;
+";
+
+            _parser.Evaluate(script, context);
+
+            object o;
+            Type t;
+
+            context.Get("array", out o, out t);
+
+            array = (int[]) o;
+
+
+            Assert.AreEqual(1, array[0]);
+            Assert.AreEqual(2, array[1]);
+            Assert.AreEqual(3, array[2]);
+            Assert.AreEqual(4, array[3]);
+            Assert.AreEqual(5, array[4]);
+            Assert.AreEqual(6, array[5]);
+            Assert.AreEqual(7, array[6]);
+            Assert.AreEqual(8, array[7]);
+            Assert.AreEqual(9, array[8]);
+        }
+
+        [TestMethod]
+        public void FunctionDefinition()
+        {
+            CSharpContext context = new CSharpContext();
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+
+            _parser.Evaluate("function x(a,b) { f(a); f(b); } x(1,2);", context);
+
+            Assert.AreEqual("12",output);
+        }
+
+        [TestMethod]
+        public void FunctionDefinition2()
+        {
+            CSharpContext context = new CSharpContext();
+
+            string output = "";
+
+            context.Set("f", new Action<int>(delegate(int i) { output += i; }));
+
+            string script = @"
+function max(a,b)
+{
+    return a > b ? a : b;
+}
+
+f(max(1,2));
+f(max(2,1));
+";
+
+
+            _parser.Evaluate(script, context);
+
+            Assert.AreEqual("22", output);
+        }
+
     }
 }

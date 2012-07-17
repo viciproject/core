@@ -42,6 +42,11 @@ namespace Vici.Core.Parser
 
         public override ValueExpression Evaluate(IParserContext context)
         {
+            return Evaluate(context, false, null);
+        }
+
+        public ValueExpression Evaluate(IParserContext context, bool assign, object newValue)
+        {
             ValueExpression targetValue = _target.Evaluate(context);
 
             Type targetType = targetValue.Type;
@@ -76,6 +81,9 @@ namespace Vici.Core.Parser
                     for (int i=0;i<parameters.Length;i++)
                         indexes[i] = Convert.ToInt64(parameterValues[i]);
 
+                    if (assign)
+                        ((Array)targetObject).SetValue(newValue, indexes);
+
                     return Exp.Value(TokenPosition, ((Array)targetObject).GetValue(indexes), returnType);
                 }
                 else
@@ -85,6 +93,9 @@ namespace Vici.Core.Parser
 
                     for (int i = 0; i < parameters.Length; i++)
                         indexes[i] = Convert.ToInt32(parameterValues[i]);
+
+                    if (assign)
+                        ((Array)targetObject).SetValue(newValue,indexes);
 
                     return Exp.Value(TokenPosition, ((Array)targetObject).GetValue(indexes), returnType);
                 }
@@ -99,6 +110,11 @@ namespace Vici.Core.Parser
 
                 return new ValueExpression(TokenPosition, value, methodInfo.ReturnType);
             }
+        }
+
+        public ValueExpression Assign(IParserContext context, object newValue)
+        {
+            return Evaluate(context, true, newValue);
         }
 
         public override string ToString()

@@ -26,12 +26,280 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vici.Core.Cache;
 
 namespace Vici.Core.Parser
 {
     public abstract class ExpressionParser
     {
+        class ExpressionCompiler
+        {
+            private readonly ExpressionParser _parser;
+            private readonly ExpressionToken[] _tokens;
+            private int _currentIndex = -1;
+            private ExpressionToken _currentToken;
+
+            public ExpressionCompiler(ExpressionParser parser, ExpressionToken[] tokens)
+            {
+                _parser = parser;
+                _tokens = tokens;
+            }
+
+            public Expression Compile()
+            {
+                CurrentIndex = 0;
+
+                return Compile(multiple: true);
+            }
+
+            public ExpressionToken CurrentToken
+            {
+                get { return _currentToken ?? (_currentToken = (CurrentIndex < _tokens.Length ? _tokens[CurrentIndex] : null)); }
+            }
+
+            public int CurrentIndex
+            {
+                get { return _currentIndex; }
+                set { _currentIndex = value; _currentToken = null; }
+            }
+
+            public bool MoveNext()
+            {
+                CurrentIndex++;
+
+                return CurrentIndex < _tokens.Length;
+            }
+
+            private Expression CompileStatement()
+            {
+                return CompileStatement(Int32.MaxValue);
+            }
+
+            private Expression CompileStatement(int lastToken)
+            {
+                RPNExpression rpn = new RPNExpression(_parser.FunctionEvaluator);
+
+                rpn.Start();
+
+                while (CurrentToken != null && CurrentIndex <= lastToken)
+                {
+                    if (CurrentToken.IsStatementSeperator)
+                    {
+                        MoveNext();
+                        break;
+                    }
+
+                    rpn.ApplyToken(CurrentToken);
+
+                    MoveNext();
+                }
+
+                rpn.Finish();
+
+                return rpn.Compile();
+            }
+
+            private Expression CompileBracketed()
+            {
+                int level = 0;
+
+                if (!CurrentToken.IsLeftParen)
+                    throw new LexerException("Expected (", TokenPosition.Unknown, CurrentToken.Text);
+
+                MoveNext();
+
+                int start = CurrentIndex;
+
+                while(CurrentToken != null)
+                {
+                    if (CurrentToken.IsRightParen)
+                    {
+                        if (level > 0)
+                        {
+                            level--;
+                        }
+                        else
+                        {
+                            int idx = CurrentIndex-1;
+                            CurrentIndex = start;
+
+                            var expr = CompileStatement(idx);
+
+                            MoveNext();
+
+                            return expr;
+                        }
+                    }
+
+                    if (CurrentToken.IsLeftParen)
+                        level++;
+
+                    MoveNext();
+                }
+
+                throw new LexerException("Unterminated foreach() expression", TokenPosition.Unknown, null);
+            }
+
+            private Expression Compile(bool multiple)
+            {
+                if (CurrentToken == null)
+                    return null;
+
+                List<Expression> expressions = new List<Expression>();
+
+                bool braced = CurrentToken.IsOpenBrace;
+
+                if (braced)
+                {
+                    MoveNext();
+                    multiple = true;
+                }
+
+                IfExpression ifExpression = null;
+
+                while (CurrentToken != null)
+                {
+                    var token = CurrentToken;
+
+                    switch (token.TokenType)
+                    {
+                        case TokenType.CloseBrace:
+                            {
+                                if (!braced)
+                                    throw new LexerException(TokenPosition.Unknown, token.Text);
+
+                                MoveNext();
+                                multiple = false;
+                                break;
+                            }
+                        case TokenType.ForEach:
+                            {
+                                MoveNext();
+
+                                InExpression expression = CompileBracketed() as InExpression;
+
+                                if (expression == null)
+                                    throw new LexerException("foreach syntax error", token.TokenPosition, token.Text);
+
+                                ForEachExpression forEach = new ForEachExpression(TokenPosition.Unknown);
+
+                                forEach.Iterator = expression.Variable;
+                                forEach.Expression = expression.Expression;
+                                forEach.Body = Compile(false);
+
+                                expressions.Add(forEach);
+
+                                break;
+                            }
+
+                        case TokenType.If:
+                            {
+                                MoveNext();
+
+                                var expr = CompileBracketed();
+
+                                ifExpression = new IfExpression(TokenPosition.Unknown,expr);
+
+                                ifExpression.TrueExpression = Compile(false);
+
+                                expressions.Add(ifExpression);
+
+                                break;
+                            }
+
+                        case TokenType.Else:
+                            {
+                                MoveNext();
+
+                                if (ifExpression != null)
+                                {
+                                    ifExpression.FalseExpression = Compile(false);
+                                    ifExpression = null;
+                                }
+
+                                break;
+                            }
+
+                        case TokenType.Return:
+                            {
+                                MoveNext();
+
+                                Expression expression = Compile(multiple: false);
+
+                                expressions.Add(new ReturnExpression(TokenPosition.Unknown, expression));
+
+                                break;
+                            }
+                        case TokenType.FunctionDefinition:
+                            {
+                                MoveNext();
+
+                                var functionExpression = new FunctionDefinitionExpression(TokenPosition.Unknown);
+
+                                if (CurrentToken.TokenType == TokenType.Term)
+                                {
+                                    functionExpression.Name = CurrentToken.Text;
+                                    MoveNext();
+                                }
+
+                                int level = 0;
+                                int start = CurrentIndex-1;
+                                int end = -1;
+
+                                while(CurrentToken != null)
+                                {
+                                    if (CurrentToken.IsLeftParen)
+                                        level++;
+                                    else if (CurrentToken.IsRightParen)
+                                    {
+                                        if (level > 0)
+                                        {
+                                            level--;
+
+                                            if (level == 0)
+                                            {
+                                                end = CurrentIndex;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    MoveNext();
+                                }
+
+                                CurrentIndex = start;
+                                
+                                
+                                var parameters = CompileStatement(end) as CallExpression;
+
+                                functionExpression.ParameterNames = (from p in parameters.Parameters select ((VariableExpression)p).VarName).ToArray();
+
+                                functionExpression.Body = Compile(false);
+
+                                expressions.Add(functionExpression);
+                            }
+                            break;
+                        default:
+                            expressions.Add(CompileStatement());
+                            break;
+                    }
+
+                    if (!multiple)
+                        break;
+                }
+
+                if (expressions.Count > 1)
+                    return new SequenceExpression(TokenPosition.Unknown, expressions.ToArray());
+
+                if (expressions.Count == 1)
+                    return expressions[0];
+
+                return null;
+            }
+
+        }
+
         private TokenEvaluator _functionEvaluator;
         private IParserContext _defaultContext;
 
@@ -56,24 +324,6 @@ namespace Vici.Core.Parser
             set { _defaultContext = value; }
         }
 
-        private RPNExpression ParseToRPN(string s, TokenPosition position)
-        {
-            RPNExpression rpnExpression = new RPNExpression(_functionEvaluator);
-
-            rpnExpression.Start();
-
-            ExpressionToken[] tokens = _tokenizer.Tokenize(s, position);
-
-            foreach (ExpressionToken token in tokens)
-            {
-                if (token.TokenType != TokenType.WhiteSpace)
-                    rpnExpression.ApplyToken(token);
-            }
-
-            rpnExpression.Finish();
-
-            return rpnExpression;
-        }
 
         public void ResetCache()
         {
@@ -98,7 +348,9 @@ namespace Vici.Core.Parser
             if (_expressionCache.TryGetValue(s, out expression))
                 return expression;
 
-            expression = ParseToRPN(s,position).Compile();
+            ExpressionToken[] tokens = _tokenizer.Tokenize(s, position).Where(t => t.TokenType != TokenType.WhiteSpace).ToArray();
+
+            expression = new ExpressionCompiler(this, tokens).Compile();
 
             _expressionCache.Add(s, expression);
 

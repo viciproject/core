@@ -59,6 +59,9 @@ namespace Vici.Core.Parser
                 case TokenType.Operator: _numTerms = 2; break;
             }
 
+            if (tokenMatcher.NumTerms != null)
+                _numTerms = tokenMatcher.NumTerms.Value;
+
             _precedence = tokenMatcher.Precedence;
             _associativity = tokenMatcher.Associativity;
             _tokenType = tokenMatcher.TokenType;
@@ -129,6 +132,11 @@ namespace Vici.Core.Parser
             get { return TokenMatcher != null && TokenMatcher.IsPartial; }
         }
 
+        public bool IsStatementSeperator
+        {
+            get { return TokenType == TokenType.StatementSeparator; }
+        }
+
         public ExpressionToken Alternate
         {
             get
@@ -143,6 +151,16 @@ namespace Vici.Core.Parser
         public ExpressionTokenMatcher Root
         {
             get { return TokenMatcher.Root; }
+        }
+
+        public bool IsOpenBrace
+        {
+            get { return TokenType == TokenType.OpenBrace; }
+        }
+
+        public bool IsCloseBrace
+        {
+            get { return TokenType == TokenType.CloseBrace; }
         }
 
         public override string ToString()

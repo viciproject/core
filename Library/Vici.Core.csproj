@@ -77,6 +77,16 @@
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\FunctionValueExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\FunctionDefinitionExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\IfExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\InExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\Logic\ForEachExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ReturnExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\ReturnValueExpression.cs" />
+    <Compile Include="Parser\ExpressionParser\Expression\SequenceExpression.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ExpressionTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ForEachTemplateNode.cs" />
     <Compile Include="Reflection\LazyBinder.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
@@ -198,16 +208,13 @@
     <Compile Include="Parser\TemplateParser\Exceptions\TemplateParserException.cs" />
     <Compile Include="Parser\TemplateParser\Exceptions\TemplateParsingException.cs" />
     <Compile Include="Parser\TemplateParser\Exceptions\TemplateRenderingException.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\ExpressionNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\ForEachNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\IfNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\IncludeFileNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\MacroCallNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\MacroDefinitionNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\Node.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\ParseFileNode.cs" />
-    <Compile Include="Parser\TemplateParser\Nodes\TextNode.cs" />
-    <Compile Include="Parser\TemplateParser\TemplateConfigs\DollarExpressionMatcher.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\IfTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\IncludeFileTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\MacroCallTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\MacroDefinitionTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\TemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\ParseFileTemplateNode.cs" />
+    <Compile Include="Parser\TemplateParser\Nodes\TextTemplateNode.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\DoubleCurly\DoubleCurly.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\DoubleCurly\DoubleCurlyTokenizer.cs" />
     <Compile Include="Parser\TemplateParser\TemplateConfigs\SmartExpressionMatcher.cs" />
@@ -271,6 +278,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

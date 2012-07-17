@@ -77,6 +77,4 @@ namespace Vici.Core.Parser
             get { return (T)base.Value; }
         }
     }
-
-
 }

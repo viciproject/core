@@ -43,10 +43,10 @@ namespace Vici.Core.Parser
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-        	return Evaluate(context, null);
+        	return Evaluate(context, false, null);
         }
 
-		private ValueExpression Evaluate(IParserContext context, object newValue)
+		private ValueExpression Evaluate(IParserContext context, bool assign, object newValue)
     	{
     		ValueExpression targetValue = _target.Evaluate(context);
     		object targetObject;
@@ -106,7 +106,7 @@ namespace Vici.Core.Parser
     					member = mi;
     		}
 
-			if (newValue != null)
+			if (assign)
 			{
 				if (member is FieldInfo)
 					((FieldInfo) member).SetValue(targetObject, newValue);
@@ -151,7 +151,7 @@ namespace Vici.Core.Parser
 
     	public ValueExpression Assign(IParserContext context, object value)
     	{
-    		return Evaluate(context, value);
+    		return Evaluate(context, true, value);
     	}
     }
 }

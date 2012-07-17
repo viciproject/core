@@ -100,7 +100,7 @@ namespace Vici.Core.Parser
                 bool foundToken = false;
                 successfulTokens.Clear();
 
-                //TODO: parralel processing in .NET 4.0
+                //TODO: parallel processing in .NET 4.0
                 foreach (TokenMatcher tokenMatcher in tokenMatchers)
                 {
                     TokenizerState state = tokenMatcher.Feed(c, s, textIndex);

@@ -84,13 +84,13 @@ namespace Vici.Core.Parser
         {
             try
             {
-                Stack<Node> nodeStack = new Stack<Node>();
+                Stack<TemplateNode> nodeStack = new Stack<TemplateNode>();
 
-                Node currentNode = new Node();
+                TemplateNode currentNode = new TemplateNode();
 
                 CompiledTemplate compiledTemplate = new CompiledTemplate(currentNode); 
 
-                TextNode lastTextNode = null;
+                TextTemplateNode lastTextNode = null;
                 bool checkEmptyLine = false;
 
                 TemplateToken[] tokens = Config.Tokenizer.Tokenize(inputString);
@@ -104,7 +104,7 @@ namespace Vici.Core.Parser
                         if (checkEmptyLine)
                             text = CheckEmptyLine(lastTextNode, text);
 
-                        lastTextNode = (TextNode) currentNode.Add(new TextNode(token.TokenPosition, text));
+                        lastTextNode = (TextTemplateNode) currentNode.Add(new TextTemplateNode(token.TokenPosition, text));
 
                         checkEmptyLine = false;
 
@@ -117,26 +117,26 @@ namespace Vici.Core.Parser
                     {
                         case TemplateTokenType.MacroCall:
                             {
-                                currentNode.Add(new MacroCallNode(token));
+                                currentNode.Add(new MacroCallTemplateNode(token));
                             }
                             break;
 
                         case TemplateTokenType.ParseFile:
                             {
-                                currentNode.Add(new ParseFileNode(token));
+                                currentNode.Add(new ParseFileTemplateNode(token));
                             }
                             break;
 
                         case TemplateTokenType.IncludeFile:
                             {
-                                currentNode.Add(new IncludeFileNode(token));
+                                currentNode.Add(new IncludeFileTemplateNode(token));
                             }
                             break;
 
                         case TemplateTokenType.Statement:
                         case TemplateTokenType.Expression:
                             {
-                                currentNode.Add(new ExpressionNode(token));
+                                currentNode.Add(new ExpressionTemplateNode(token));
                             }
                             break;
 
@@ -144,7 +144,7 @@ namespace Vici.Core.Parser
                             {
                                 nodeStack.Push(currentNode);
 
-                                currentNode = currentNode.Add(new MacroDefinitionNode(token));
+                                currentNode = currentNode.Add(new MacroDefinitionTemplateNode(token));
 
                                 string macroName = EvalMacroDefinition(token);
 
@@ -156,7 +156,7 @@ namespace Vici.Core.Parser
                             {
                                 nodeStack.Push(currentNode);
 
-                                currentNode = currentNode.Add(new ForEachNode((ForeachTemplateToken) token));
+                                currentNode = currentNode.Add(new ForEachTemplateNode((ForeachTemplateToken) token));
                             }
                             break;
 
@@ -164,9 +164,9 @@ namespace Vici.Core.Parser
                             {
                                 nodeStack.Push(currentNode);
 
-                                IfNode ifNode = (IfNode) currentNode.Add(new IfNode(token));
+                                IfTemplateNode ifNode = (IfTemplateNode) currentNode.Add(new IfTemplateNode(token));
 
-                                ifNode.TrueNode = new Node();
+                                ifNode.TrueNode = new TemplateNode();
 
                                 nodeStack.Push(ifNode);
 
@@ -176,13 +176,13 @@ namespace Vici.Core.Parser
 
                         case TemplateTokenType.ElseIf:
                             {
-                                IfNode ifNode = (IfNode) nodeStack.Peek();
+                                IfTemplateNode ifNode = (IfTemplateNode) nodeStack.Peek();
 
-                                currentNode = ifNode.FalseNode = new Node();
+                                currentNode = ifNode.FalseNode = new TemplateNode();
 
-                                ifNode = (IfNode) currentNode.Add(new IfNode(token));
+                                ifNode = (IfTemplateNode) currentNode.Add(new IfTemplateNode(token));
 
-                                ifNode.TrueNode = new Node();
+                                ifNode.TrueNode = new TemplateNode();
 
                                 nodeStack.Push(ifNode);
 
@@ -192,15 +192,15 @@ namespace Vici.Core.Parser
 
                         case TemplateTokenType.Else:
                             {
-                                IfNode ifNode = (IfNode) nodeStack.Peek();
+                                IfTemplateNode ifNode = (IfTemplateNode) nodeStack.Peek();
 
-                                currentNode = ifNode.FalseNode = new Node();
+                                currentNode = ifNode.FalseNode = new TemplateNode();
                             }
                             break;
 
                         case TemplateTokenType.EndBlock:
                             {
-                                while (nodeStack.Peek() is IfNode)
+                                while (nodeStack.Peek() is IfTemplateNode)
                                 {
                                     nodeStack.Pop();
                                 }
@@ -223,7 +223,7 @@ namespace Vici.Core.Parser
             }
         }
 
-    	private static string CheckEmptyLine(TextNode lastTextNode, string text)
+    	private static string CheckEmptyLine(TextTemplateNode lastTextNode, string text)
     	{
     		string prevText = lastTextNode == null ? "":lastTextNode.Text;
 
@@ -261,7 +261,7 @@ namespace Vici.Core.Parser
 
                 StringBuilder outputBuffer = new StringBuilder();
 
-                Dictionary<string,Node> macros = new Dictionary<string, Node>(compiledTemplate.Macros, StringComparer.OrdinalIgnoreCase);
+                Dictionary<string,TemplateNode> macros = new Dictionary<string, TemplateNode>(compiledTemplate.Macros, StringComparer.OrdinalIgnoreCase);
 
                 BuildOutput(compiledTemplate, macros, compiledTemplate.Tree, outputBuffer, context);
 
@@ -282,16 +282,16 @@ namespace Vici.Core.Parser
             return Render(Parse(inputString), context);
         }
 
-        private void BuildOutput(CompiledTemplate compiledTemplate, Dictionary<string, Node> macros, Node rootNode, StringBuilder outputBuffer, IParserContext context)
+        private void BuildOutput(CompiledTemplate compiledTemplate, Dictionary<string, TemplateNode> macros, TemplateNode rootNode, StringBuilder outputBuffer, IParserContext context)
         {
             if (rootNode == null || rootNode.Children == null)
                 return;
 
-            foreach (Node node in rootNode.Children)
+            foreach (TemplateNode node in rootNode.Children)
             {
-                if (node is ForEachNode)
+                if (node is ForEachTemplateNode)
                 {
-                    ForEachNode forEachNode = (ForEachNode)node;
+                    ForEachTemplateNode forEachNode = (ForEachTemplateNode)node;
 
                 	IEnumerable list = EvalForeach(forEachNode.TemplateToken, context);
 
@@ -314,18 +314,18 @@ namespace Vici.Core.Parser
                     }
                 }
 
-                else if (node is IfNode)
+                else if (node is IfTemplateNode)
                 {
-                    IfNode ifNode = (IfNode)node;
+                    IfTemplateNode ifNode = (IfTemplateNode)node;
 
                 	bool result = EvalIf(ifNode.TemplateToken, context);
 
                     BuildOutput(compiledTemplate, macros, result ? ifNode.TrueNode : ifNode.FalseNode, outputBuffer, context);
                 }
 
-                else if (node is ExpressionNode)
+                else if (node is ExpressionTemplateNode)
                 {
-                    ExpressionNode exprNode = (ExpressionNode)node;
+                    ExpressionTemplateNode exprNode = (ExpressionTemplateNode)node;
 
                 	string value = EvalExpression(exprNode.TemplateToken, context);
 
@@ -333,9 +333,9 @@ namespace Vici.Core.Parser
                         outputBuffer.Append(value);
                 }
 
-                else if (node is ParseFileNode)
+                else if (node is ParseFileTemplateNode)
                 {
-                    ParseFileNode parseFileNode = (ParseFileNode) node;
+                    ParseFileTemplateNode parseFileNode = (ParseFileTemplateNode) node;
 
                     Dictionary<string, IValueWithType> parameters;
 
@@ -343,7 +343,7 @@ namespace Vici.Core.Parser
 
                     if (template != null)
                     {
-                        foreach (KeyValuePair<string, Node> macro in template.Macros)
+                        foreach (KeyValuePair<string, TemplateNode> macro in template.Macros)
                             macros[macro.Key] = macro.Value;
 
                         IParserContext localContext = context.CreateLocal();
@@ -355,9 +355,9 @@ namespace Vici.Core.Parser
                     }
                 }
 
-                else if (node is IncludeFileNode)
+                else if (node is IncludeFileTemplateNode)
                 {
-                    IncludeFileNode includeNode = (IncludeFileNode) node;
+                    IncludeFileTemplateNode includeNode = (IncludeFileTemplateNode) node;
 
                     string value = EvalIncludeFile(compiledTemplate.FileName, includeNode.TemplateToken, context);
 
@@ -365,16 +365,16 @@ namespace Vici.Core.Parser
                         outputBuffer.Append(value);
                 }
 
-                else if (node is MacroCallNode)
+                else if (node is MacroCallTemplateNode)
                 {
-                    MacroCallNode macroCallNode = (MacroCallNode) node;
+                    MacroCallTemplateNode macroCallNode = (MacroCallTemplateNode) node;
 
                     Dictionary<string, IValueWithType> parameters;
 
                     string macroName = EvalMacroCall(macroCallNode.TemplateToken, context, out parameters);
 
 
-                    Node macro;
+                    TemplateNode macro;
                     
                     if (!macros.TryGetValue(macroName, out macro))
                         throw new TemplateRenderingException("Unknown macro " + macroName, macroCallNode.TemplateToken.TokenPosition);
@@ -389,9 +389,9 @@ namespace Vici.Core.Parser
                     BuildOutput(compiledTemplate, macros, macro, outputBuffer, localContext);
                 }
 
-                else if (node is TextNode)
+                else if (node is TextTemplateNode)
                 {
-                    outputBuffer.Append(EvalText(((TextNode)node).Text));
+                    outputBuffer.Append(EvalText(((TextTemplateNode)node).Text));
                 }
             }
 

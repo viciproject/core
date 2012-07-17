@@ -36,6 +36,7 @@ namespace Vici.Core.Parser
         private int _precedence;
         private OperatorAssociativity _associativity;
         private ExpressionTokenMatcher _root;
+        private int? _numTerms;
 
         public ExpressionTokenMatcher(ITokenMatcher matcher, TokenType tokenType, TokenEvaluator tokenEvaluator)
         {
@@ -96,6 +97,12 @@ namespace Vici.Core.Parser
         {
             get { return _associativity; }
             set { _associativity = value; }
+        }
+
+        public int? NumTerms
+        {
+            get { return _numTerms; }
+            set { _numTerms = value; }
         }
     }
 }

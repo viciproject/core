@@ -30,24 +30,29 @@ namespace Vici.Core.Parser
 {
     public class ExpressionTokenizer : Tokenizer<ExpressionToken>
     {
-        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType)
+        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, int? numTerms = null)
         {
-            AddTokenMatcher(tokenMatcher, tokenType, 0, OperatorAssociativity.Left, null);
+            AddTokenMatcher(tokenMatcher, tokenType, 0, OperatorAssociativity.Left, null, numTerms);
         }
 
-        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, TokenEvaluator tokenEvaluator)
+        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, TokenEvaluator tokenEvaluator, int? numTerms = null)
         {
-            AddTokenMatcher(tokenMatcher, tokenType, 0, OperatorAssociativity.Left, tokenEvaluator);
+            AddTokenMatcher(tokenMatcher, tokenType, 0, OperatorAssociativity.Left, tokenEvaluator, numTerms);
         }
 
-        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, int precedence, TokenEvaluator tokenEvaluator)
+        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, int precedence, TokenEvaluator tokenEvaluator, int? numTerms = null)
         {
-            AddTokenMatcher(tokenMatcher, tokenType, precedence, OperatorAssociativity.Left, tokenEvaluator);
+            AddTokenMatcher(tokenMatcher, tokenType, precedence, OperatorAssociativity.Left, tokenEvaluator, numTerms);
         }
 
-        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, int precedence, OperatorAssociativity associativity, TokenEvaluator tokenEvaluator)
+        public void AddTokenMatcher(ITokenMatcher tokenMatcher, TokenType tokenType, int precedence, OperatorAssociativity associativity, TokenEvaluator tokenEvaluator, int? numTerms = null)
         {
-            AddTokenMatcher(new ExpressionTokenMatcher(tokenMatcher, tokenType, precedence, associativity, tokenEvaluator));
+            var matcher = new ExpressionTokenMatcher(tokenMatcher, tokenType, precedence, associativity, tokenEvaluator);
+
+            if (numTerms != null)
+                matcher.NumTerms = numTerms;
+
+            AddTokenMatcher(matcher);
         }
 
         public void AddTernaryTokenMatcher(ITokenMatcher matcher1, ITokenMatcher matcher2, int precedence, OperatorAssociativity associativity, TokenEvaluator tokenEvaluator)
@@ -66,26 +71,7 @@ namespace Vici.Core.Parser
 
         public override ExpressionToken CreateToken(ITokenMatcher tokenMatcher, string token)
         {
-            ExpressionToken t = new ExpressionToken((ExpressionTokenMatcher) tokenMatcher, token);
-
-            
-
-            return t;
+            return new ExpressionToken((ExpressionTokenMatcher) tokenMatcher, token);
         }
-
-        //        public void AddTernaryOperator(string pattern1, string pattern2, int precedence, OperatorAssociativity associativity, TokenEvaluator evaluator)
-        //        {
-        //            TokenDefinition root = new TokenDefinition(TokenType.TernaryOperator, evaluator);
-        //
-        //            TokenDefinition partial1 = new TokenDefinition(TokenType.TernaryOperator1, precedence, associativity, pattern1);
-        //            TokenDefinition partial2 = new TokenDefinition(TokenType.TernaryOperator2, precedence, associativity, pattern2);
-        //
-        //            partial1.Root = root;
-        //            partial2.Root = root;
-        //
-        //            AddTokenDefinition(partial1);
-        //            AddTokenDefinition(partial2);
-        //        }
-
     }
 }

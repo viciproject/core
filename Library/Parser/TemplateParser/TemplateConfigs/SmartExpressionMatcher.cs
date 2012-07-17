@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Vici.Core.Parser.Config
+namespace Vici.Core.Parser
 {
     public class SmartExpressionMatcher : ITokenMatcher, ITokenProcessor
     {

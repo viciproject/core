@@ -78,6 +78,7 @@
     <Compile Include="Tests\NotifierTest.cs" />
     <Compile Include="Tests\ObjectConverter\ObjectConverterTest.cs" />
     <Compile Include="Tests\Parser\CSharpParserFixture.cs" />
+    <Compile Include="Tests\Parser\ScriptParser_Fixture.cs" />
     <Compile Include="Tests\Parser\TemplateParser_Fixture.cs" />
     <Compile Include="Tests\SchedulerTest.cs" />
     <Compile Include="Tests\SmartCache_Fixture.cs" />

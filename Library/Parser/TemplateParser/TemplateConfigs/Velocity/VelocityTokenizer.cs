@@ -45,6 +45,23 @@ namespace Vici.Core.Parser.Config
             AddTokenMatcher(TemplateTokenType.Comment, new WrappedExpressionMatcher("#*", "*#"), true);
         }
 
+        private class DollarExpressionMatcher : CompositeMatcher
+        {
+            public DollarExpressionMatcher()
+                : base(
+                    new CharMatcher('$'),
+                    new SmartExpressionMatcher(" \t\r\n")
+                    )
+            {
+            }
+
+            protected override string TranslateToken(string originalToken, CompositeTokenProcessor tokenProcessor)
+            {
+                return originalToken.Substring(1);
+            }
+        }
+
+
         private class VelocityForEachMatcher : CompositeMatcher
         {
             public VelocityForEachMatcher()

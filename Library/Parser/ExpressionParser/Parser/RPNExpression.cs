@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Vici.Core.Parser
 {
@@ -206,7 +207,7 @@ namespace Vici.Core.Parser
 
         public Expression Compile()
         {
-            Stack<Expression> tempStack = new Stack<Expression>();
+            Stack<Expression> resultStack = new Stack<Expression>();
 
             Expression currentExpression = null;
 
@@ -218,7 +219,7 @@ namespace Vici.Core.Parser
                 {
                     currentExpression = evaluator(token.Text, token.TokenPosition, null);
 
-                    tempStack.Push(currentExpression);
+                    resultStack.Push(currentExpression);
                 }
                 else
                 {
@@ -230,11 +231,11 @@ namespace Vici.Core.Parser
                     Expression[] parameters = new Expression[numTerms];
 
                     for (int i = numTerms-1; i >= 0; i--)
-                        parameters[i] = tempStack.Pop();
+                        parameters[i] = resultStack.Pop();
 
                     currentExpression = evaluator(token.Text, token.TokenPosition, parameters);
 
-                    tempStack.Push(currentExpression);
+                    resultStack.Push(currentExpression);
                 }
             }
 

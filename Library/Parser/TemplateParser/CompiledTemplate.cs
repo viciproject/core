@@ -31,14 +31,14 @@ namespace Vici.Core.Parser
 {
 	public class CompiledTemplate
 	{
-	    internal CompiledTemplate(Node tree)
+	    internal CompiledTemplate(TemplateNode tree)
 	    {
-	        Macros = new Dictionary<string, Node>(StringComparer.OrdinalIgnoreCase);
+	        Macros = new Dictionary<string, TemplateNode>(StringComparer.OrdinalIgnoreCase);
 	        Tree = tree;
 	    }
 
-	    internal Dictionary<string, Node> Macros { get; private set; }
-	    internal Node Tree { get; set; }
+	    internal Dictionary<string, TemplateNode> Macros { get; private set; }
+	    internal TemplateNode Tree { get; set; }
 
         public string FileName { get; set; }
     }

@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Vici.Core.Parser
@@ -60,6 +61,14 @@ namespace Vici.Core.Parser
 
             return null;
         }
+
+        public static Expression InOperator(string token, TokenPosition position, Expression[] terms)
+        {
+            VariableExpression varExpression = terms[0] as VariableExpression;
+
+            return new InExpression(position, varExpression, terms[1]);
+        }
+
 
         public static Expression Ternary(string token, TokenPosition position, Expression[] terms)
         {
@@ -230,6 +239,11 @@ namespace Vici.Core.Parser
                 return new BitwiseComplementExpression(position, terms[0]);
 
             return null;
+        }
+
+        public static Expression StatementSeperator(string token, TokenPosition position, Expression[] terms)
+        {
+            return new SequenceExpression(position,terms);
         }
 
         public static Expression Operator(string token, TokenPosition position, Expression[] terms)

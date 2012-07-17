@@ -68,7 +68,16 @@ namespace Vici.Core.Parser
 				return ((FieldExpression)Left).Assign(context, valueRight.Value);
 			}
 
+            if (Left is IndexExpression)
+            {
+                if ((context.AssignmentPermissions & AssignmentPermissions.Indexer) == AssignmentPermissions.None)
+                    throw new IllegalAssignmentException("Assignment to indexer not allowed", this);
+
+                return ((IndexExpression)Left).Assign(context, valueRight.Value);
+            }
+
             throw new IllegalAssignmentException(this);
         }
     }
+
 }

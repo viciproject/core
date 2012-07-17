@@ -41,6 +41,11 @@ namespace Vici.Core.Parser
         {
         }
 
+        protected Token(ITokenMatcher tokenMatcher)
+        {
+            _tokenMatcher = tokenMatcher;
+        }
+
         protected Token(ITokenMatcher tokenMatcher, string text)
         {
             _tokenMatcher = tokenMatcher;

@@ -41,11 +41,21 @@ namespace Vici.Core.Parser
             _parameters = parameters;
         }
 
+        public Expression MethodExpression
+        {
+            get { return _methodExpression; }
+        }
+
+        public Expression[] Parameters
+        {
+            get { return _parameters; }
+        }
+
         public override ValueExpression Evaluate(IParserContext context)
         {
-            object methodObject = _methodExpression.Evaluate(context).Value;
+            object methodObject = MethodExpression.Evaluate(context).Value;
 
-            ValueExpression[] parameters = EvaluateExpressionArray(_parameters, context);
+            ValueExpression[] parameters = EvaluateExpressionArray(Parameters, context);
             Type[] parameterTypes = parameters.ConvertAll(expr => expr.Type);
             object[] parameterValues = parameters.ConvertAll(expr => expr.Value);
 
@@ -84,7 +94,7 @@ namespace Vici.Core.Parser
                 MethodBase method = LazyBinder.SelectBestMethod(methods, parameterTypes, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
 				if (method == null)
-					throw new ExpressionEvaluationException("No match found for delegate " + _methodExpression, this);
+					throw new ExpressionEvaluationException("No match found for delegate " + MethodExpression, this);
 
                 object value = LazyBinder.Invoke(method, delegates[Array.IndexOf(methods, method)].Target, parameterValues);
 
@@ -105,14 +115,28 @@ namespace Vici.Core.Parser
                 return new ValueExpression(TokenPosition, value, methodInfo.ReturnType);
             }
 
-            throw new ExpressionEvaluationException(_methodExpression + " is not a function", this);
+            if (methodObject is FunctionDefinitionExpression)
+            {
+                FunctionDefinitionExpression func = (FunctionDefinitionExpression) methodObject;
+
+                var functionContext = context.CreateLocal();
+
+                for (int i=0;i<parameterValues.Length;i++)
+                {
+                    functionContext.Set(func.ParameterNames[i],parameterValues[i]);
+                }
+
+                return func.Body.Evaluate(functionContext);
+            }
+
+            throw new ExpressionEvaluationException(MethodExpression + " is not a function", this);
         }
 
         public override string ToString()
         {
-            string[] parameters = _parameters.ConvertAll(expr => expr.ToString());
+            string[] parameters = Parameters.ConvertAll(expr => expr.ToString());
 
-            return "(" + _methodExpression + "(" + String.Join(",", parameters) + "))";
+            return "(" + MethodExpression + "(" + String.Join(",", parameters) + "))";
         }
     }
 }
