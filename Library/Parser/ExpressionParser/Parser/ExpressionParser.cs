@@ -237,11 +237,12 @@ namespace Vici.Core.Parser
 
                                 var functionExpression = new FunctionDefinitionExpression(TokenPosition.Unknown);
 
-                                if (CurrentToken.TokenType == TokenType.Term)
-                                {
-                                    functionExpression.Name = CurrentToken.Text;
-                                    MoveNext();
-                                }
+                                if (CurrentToken.TokenType != TokenType.Term)
+                                    throw new LexerException("function name expected",TokenPosition.Unknown,CurrentToken.Text);
+
+                                functionExpression.Name = CurrentToken.Text;
+
+                                MoveNext();
 
                                 int level = 0;
                                 int start = CurrentIndex-1;
@@ -323,7 +324,6 @@ namespace Vici.Core.Parser
             get { return _defaultContext; }
             set { _defaultContext = value; }
         }
-
 
         public void ResetCache()
         {

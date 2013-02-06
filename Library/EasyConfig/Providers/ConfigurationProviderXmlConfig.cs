@@ -28,16 +28,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-#if !WINDOWS_PHONE && !NETFX_CORE
-using System.Xml.XPath;
-#endif
 
 namespace Vici.Core.Config
 {
-    //TODO: change implementation for WP7
     public class ConfigurationProviderXmlConfig : IConfigurationProvider
     {
         private Dictionary<string, string> _settings = new Dictionary<string, string>();
@@ -58,15 +53,9 @@ namespace Vici.Core.Config
                 baseKey += '.';
 
             foreach (var x in xElement.Elements())
-            {
                 LoadElement(x, baseKey + xElement.Name);
-            }
 
-            string s = xElement.Value;
-
-            if (s != null)
-                _settings[baseKey + xElement.Name] = s;
-
+            _settings[baseKey + xElement.Name] = xElement.Value;
         }
 
         public long Version()
@@ -100,11 +89,10 @@ namespace Vici.Core.Config
             key += '.';
 
             return
-                from string s in _settings.Keys
+                from s in _settings.Keys
                 where s.StartsWith(key)
                 select new KeyValuePair<string, string>(s.Substring(key.Length), _settings[s]);
         }
-
 
         public void SetValue(string key, string value, string environment)
         {

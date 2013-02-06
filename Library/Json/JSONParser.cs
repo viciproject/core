@@ -190,7 +190,16 @@ namespace Vici.Core.Json
 
             if (type == typeof(string))
                 return ParseString();
-            
+
+            if (type == typeof(bool))
+            {
+                bool value = CurrentToken().TokenMatcher is TrueTokenMatcher;
+
+                NextToken();
+
+                return value;
+            }
+
             if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
                 return ParseNumber(type);
             

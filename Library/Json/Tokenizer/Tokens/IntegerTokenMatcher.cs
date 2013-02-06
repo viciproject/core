@@ -29,10 +29,45 @@ using Vici.Core.Parser;
 
 namespace Vici.Core.Json
 {
-    public class IntegerTokenMatcher : SequenceOfCharRangeMatcher
+    public class IntegerTokenMatcher : ITokenMatcher, ITokenProcessor
     {
-        public IntegerTokenMatcher() : base('0','9')
+        private bool _firstChar = true;
+
+        public IntegerTokenMatcher()
         {
+        }
+
+        public ITokenProcessor CreateTokenProcessor()
+        {
+            return new IntegerTokenMatcher();
+        }
+
+        public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
+        {
+            return originalToken;
+        }
+
+        public void ResetState()
+        {
+            _firstChar = true;
+        }
+
+        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
+        {
+            try
+            {
+                if (c == '-' && _firstChar)
+                    return TokenizerState.Valid;
+
+                if (char.IsDigit(c))
+                    return TokenizerState.Valid;
+
+                return _firstChar ? TokenizerState.Fail : TokenizerState.Success;
+            }
+            finally
+            {
+                _firstChar = false;
+            }
         }
     }
 

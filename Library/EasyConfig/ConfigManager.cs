@@ -178,7 +178,7 @@ namespace Vici.Core.Config
                 {
                     if (field.FieldType.Inspector().ImplementsOrInherits<IDictionary>())
                     {
-                        Type dicInterface = fieldType.Inspector().GetInterfaces().Where(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>)).FirstOrDefault();
+                        Type dicInterface = fieldType.Inspector().GetInterfaces().FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>));
 
                         Type targetType = typeof (object);
 
@@ -216,7 +216,7 @@ namespace Vici.Core.Config
 
         public object GetValue(string key, Type type)
         {
-            foreach (IConfigurationProvider provider in _configProviders)
+            foreach (var provider in _configProviders)
             {
                 string value = provider.GetValue(key, _environment);
 

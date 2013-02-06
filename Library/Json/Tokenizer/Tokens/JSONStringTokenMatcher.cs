@@ -110,6 +110,7 @@ namespace Vici.Core.Json
             }
 
             token = token.Replace("\\\\", "\\");
+            token = token.Replace("\\/", "/");
 
             return token;
         }

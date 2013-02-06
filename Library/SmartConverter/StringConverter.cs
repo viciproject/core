@@ -123,19 +123,9 @@ namespace Vici.Core
             }
         }
 
-        public static T To<T>(this string stringValue)
-        {
-            return Convert<T>(stringValue);
-        }
-
         public static T To<T>(this string stringValue, params string[] dateFormats)
         {
             return Convert<T>(stringValue, dateFormats);
-        }
-
-        public static object To(this string stringValue, Type targetType)
-        {
-            return Convert(stringValue, targetType, null);
         }
 
         public static object To(this string stringValue, Type targetType, params string[] dateFormats)
@@ -148,18 +138,11 @@ namespace Vici.Core
             return (T) Convert(stringValue, typeof (T), dateFormats);
         }
 
-        public static T Convert<T>(this string stringValue)
-        {
-            return Convert<T>(stringValue, null);
-        }
-
-        public static object Convert(this string stringValue, Type targetType)
-        {
-            return Convert(stringValue, targetType, null);
-        }
-
         public static object Convert(this string stringValue, Type targetType, params string[] dateFormats)
         {
+            if (dateFormats.Length == 0)
+                dateFormats = null;
+
             if (stringValue == null)
                 return targetType.Inspector().DefaultValue();
 

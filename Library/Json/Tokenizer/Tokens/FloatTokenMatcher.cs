@@ -34,7 +34,7 @@ namespace Vici.Core.Json
     {
         public FloatTokenMatcher() : 
             base(
-                new SequenceOfCharRangeMatcher('0', '9'),
+                new IntegerTokenMatcher(),
                 new CharMatcher('.'),
                 new SequenceOfCharRangeMatcher('0', '9')
                 )

@@ -101,7 +101,6 @@
     <Compile Include="Scheduler\ScheduleHistory\FileHistoryStore.cs" />
     <Compile Include="Scheduler\ScheduleHistory\IScheduleHistoryStore.cs" />
     <Compile Include="Scheduler\Scheduler.cs" />
-    <Compile Include="Scheduler\ScheduleWeekDays.cs" />
     <Compile Include="Scheduler\TimeOfDayScheduler.cs" />
     <Compile Include="SmartConverter\EnumConverter.cs" />
     <Compile Include="Tuple.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="EasyConfig\IConfigurationProvider.cs" />
     <Compile Include="EasyConfig\ConfigManager.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderAppConfig.cs" />
-    <Compile Include="FastReflection\FastPropertyInfo.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LoggingProvider.cs" />
     <Compile Include="Logger\Providers\LoggingProviderConsole.cs" />
@@ -190,7 +188,7 @@
     <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\StringLiteralMatcher.cs" />
     <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\TypeCastMatcher.cs" />
     <Compile Include="Parser\Parsers\CSharp\Tokenizer\Tokens\VariableMatcher.cs" />
-    <Compile Include="Json\JSONParser.cs" />
+    <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Json\Tokenizer\JSONTokenizer.cs" />
     <Compile Include="Json\Tokenizer\Tokens\ArrayEndTokenMatcher.cs" />
     <Compile Include="Json\Tokenizer\Tokens\ArrayStartTokenMatcher.cs" />
