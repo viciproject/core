@@ -22,7 +22,7 @@ namespace Vici.Core.Json
     {
         private readonly StringBuilder _output = new StringBuilder();
         private readonly JsonDateFormat _dateFormat;
-        private readonly Dictionary<object,bool> _serializedObjects = new Dictionary<object, bool>(); // because HashSet<T> is not supported in WP7
+        private readonly Stack<object> _circularStack = new Stack<object>();
 
         public JsonSerializer()
         {
@@ -108,13 +108,16 @@ namespace Vici.Core.Json
 
         private void WriteObject(object obj)
         {
-            if (_serializedObjects.ContainsKey(obj))
+            foreach (var o in _circularStack)
             {
-                WriteValue(null);
-                return;
+                if (o == obj)
+                {
+                    WriteValue(null);
+                    return;
+                }
             }
 
-            _serializedObjects.Add(obj,true);
+            _circularStack.Push(obj);
 
             _output.Append('{');
 
@@ -144,6 +147,8 @@ namespace Vici.Core.Json
             }
 
             _output.Append('}');
+
+            _circularStack.Pop();
         }
 
         private void WritePair(string name, object value)
