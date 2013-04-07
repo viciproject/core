@@ -169,14 +169,29 @@ namespace Vici.Core.Notifications
 
             foreach (Subscription subscription in _subscriptions)
             {
-                if (subscription is Subscription<T> && subscription.Matches(name))
+                if (subscription.Matches(name))
                 {
-                    var method = ((Subscription<T>) subscription).Method;
+                    if (subscription is Subscription<T>)
+                    {
+                        NotificationDelegate<T> method = ((Subscription<T>) subscription).Method;
 
-                    if (method == null)
-                        subscription.EnqueueNotification(notification);
+                        if (method == null)
+                            subscription.EnqueueNotification(notification);
+                        else
+                            method(notification);
+                    }
                     else
-                        method(notification);
+                    {
+                        if (subscription.GetType() == typeof (Subscription))
+                        {
+                            NotificationDelegate method = subscription.Method;
+
+                            if (method == null)
+                                subscription.EnqueueNotification(notification);
+                            else
+                                method(notification);
+                        }
+                    }
                 }
             }
         }

@@ -49,6 +49,7 @@ namespace Vici.Core.Test
             notifier.Subscribe("x|y", delegate(Notification<string> notification) { _notificationResult += notification.Payload + "C"; });
             notifier.Subscribe("y|z", delegate(Notification<string> notification) { _notificationResult += notification.Payload + "D"; });
             notifier.Subscribe(delegate(Notification<int> notification) { _notificationResult += "E"; });
+            notifier.Subscribe("x", notification => _notificationResult += notification.Payload + "Z");
 
             return notifier;
         }
@@ -76,7 +77,7 @@ namespace Vici.Core.Test
 
             notifier.Post("x","X");
 
-            Assert.AreEqual("XAXBXC", _notificationResult);
+            Assert.AreEqual("XAXBXCXZ", _notificationResult);
 
             _notificationResult = "";
 
