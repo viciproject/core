@@ -117,6 +117,5 @@ namespace Vici.Core.Parser
             }
         }
 
-
     }
 }

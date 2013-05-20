@@ -31,7 +31,7 @@ namespace Vici.Core.Parser
 {
     public class CSharpTokenizer : ExpressionTokenizer
     {
-        public CSharpTokenizer()
+        public CSharpTokenizer(bool allowScripting)
         {
             AddTokenMatcher(new CharMatcher('('), TokenType.LeftParen);
             AddTokenMatcher(new CharMatcher(')'), TokenType.RightParen);
@@ -51,12 +51,17 @@ namespace Vici.Core.Parser
             AddTokenMatcher(new AnyOfStringMatcher("<<",">>"), TokenType.Operator, 16,CSharpEvaluator.Operator);
             AddTokenMatcher(new AnyOfStringMatcher("<=",">=","<",">"), TokenType.Operator, 15,CSharpEvaluator.Operator);
             AddTokenMatcher(new AnyOfStringMatcher("as","is"), TokenType.Operator, 15,CSharpEvaluator.IsAsOperator);
-            AddTokenMatcher(new StringMatcher("foreach"), TokenType.ForEach);
-            AddTokenMatcher(new StringMatcher("if"), TokenType.If);
-            AddTokenMatcher(new StringMatcher("else"), TokenType.Else);
-            AddTokenMatcher(new StringMatcher("return"), TokenType.Return);
-            AddTokenMatcher(new StringMatcher("function"), TokenType.FunctionDefinition);
-            AddTokenMatcher(new StringMatcher("in"), TokenType.Operator,2,CSharpEvaluator.InOperator);
+            
+            if (allowScripting)
+            {
+                AddTokenMatcher(new StringMatcher("foreach"), TokenType.ForEach);
+                AddTokenMatcher(new StringMatcher("if"), TokenType.If);
+                AddTokenMatcher(new StringMatcher("else"), TokenType.Else);
+                AddTokenMatcher(new StringMatcher("return"), TokenType.Return);
+                AddTokenMatcher(new StringMatcher("function"), TokenType.FunctionDefinition);
+                AddTokenMatcher(new StringMatcher("in"), TokenType.Operator, 2, CSharpEvaluator.InOperator);
+            }
+
             AddTokenMatcher(new AnyCharMatcher("&|"), TokenType.Operator, 13,CSharpEvaluator.Operator);
             AddTokenMatcher(new CharMatcher('^'), TokenType.Operator, 12, CSharpEvaluator.Operator);
             AddTokenMatcher(new CharMatcher('='), TokenType.Operator, 6, OperatorAssociativity.Right, CSharpEvaluator.Assignment);
@@ -70,9 +75,13 @@ namespace Vici.Core.Parser
             AddTokenMatcher(new IntegerLiteralMatcher(), TokenType.Term, CSharpEvaluator.Number);
             AddTokenMatcher(new DecimalLiteralMatcher(), TokenType.Term, CSharpEvaluator.Number);
             AddTokenMatcher(new TypeCastMatcher(), TokenType.UnaryOperator, 19, OperatorAssociativity.Right, CSharpEvaluator.TypeCast);
-            AddTokenMatcher(new CharMatcher(';'), TokenType.StatementSeparator);
-            AddTokenMatcher(new CharMatcher('{'), TokenType.OpenBrace);
-            AddTokenMatcher(new CharMatcher('}'), TokenType.CloseBrace);
+
+            if (allowScripting)
+            {
+                AddTokenMatcher(new CharMatcher(';'), TokenType.StatementSeparator);
+                AddTokenMatcher(new CharMatcher('{'), TokenType.OpenBrace);
+                AddTokenMatcher(new CharMatcher('}'), TokenType.CloseBrace);
+            }
         }
     }
 }

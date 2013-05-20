@@ -30,7 +30,7 @@ namespace Vici.Core.Parser
 {
     public class CSharpParser : ExpressionParser
     {
-        public CSharpParser() : base(new CSharpTokenizer())
+        public CSharpParser() : base(new CSharpTokenizer(false))
         {
             FunctionEvaluator = CSharpEvaluator.Function;
         }
@@ -38,7 +38,7 @@ namespace Vici.Core.Parser
 
     public class CScriptParser : ExpressionParser
     {
-        public CScriptParser() : base(new CSharpTokenizer())
+        public CScriptParser() : base(new CSharpTokenizer(true))
         {
             FunctionEvaluator = CSharpEvaluator.Function;
         }

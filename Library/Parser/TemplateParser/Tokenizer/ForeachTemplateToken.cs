@@ -46,5 +46,10 @@ namespace Vici.Core.Parser
         {
             get { return Text; }
         }
+
+        public override string ToString()
+        {
+            return string.Format("ForeachTemplateToken(iterator={0},expression={1}", Iterator, Expression);
+        }
     }
 }

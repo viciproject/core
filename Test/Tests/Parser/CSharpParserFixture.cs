@@ -34,7 +34,7 @@ namespace Vici.Core.Test
     public class CSharpParserFixture
     {
         private readonly ParserContext _context = new CSharpContext();
-        private readonly CSharpParser _parser = new CSharpParser();
+        private readonly CScriptParser _parser = new CScriptParser();
 
         private class DataClass
         {
@@ -177,8 +177,6 @@ namespace Vici.Core.Test
         [TestMethod]
         public void TypeCast()
         {
-            CSharpTokenizer tokenizer = new CSharpTokenizer();
-
             Assert.IsInstanceOfType(_parser.EvaluateToObject("(int)5L"),typeof(int) );
         }
 
@@ -870,6 +868,51 @@ f(max(2,1));
 
             Assert.AreEqual("22", output);
         }
+
+
+        [TestMethod]
+        public void FunctionDefinition3()
+        {
+            CSharpContext context = new CSharpContext();
+
+            string output = "";
+
+            context.Set("f", new Action<string>(delegate(string i) { output += i; }));
+
+            string libraryScript = @"
+function plural(n,a,b,c,d)
+{
+    if (n == 1)
+        return a;
+
+    if (n == 2 || n == 0)
+        return b;
+
+    if (n == 3)
+        return c;
+
+    return d;
+}
+";
+
+            string script = @"
+f(plural(0,""a"",""b"",""c"",""d""));
+f(plural(1,""a"",""b"",""c"",""d""));
+f(plural(2,""a"",""b"",""c"",""d""));
+f(plural(3,""a"",""b"",""c"",""d""));
+f(plural(4,""a"",""b"",""c"",""d""));
+";
+
+            var library = _parser.Parse(libraryScript);
+
+            library.Evaluate(context);
+
+            _parser.Evaluate(script, context);
+
+            Assert.AreEqual("babcd", output);
+        }
+
+
 
     }
 }
