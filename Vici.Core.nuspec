@@ -3,7 +3,7 @@
   <metadata>
     <id>vici.core</id>
     <title>Vici Core</title>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
     <authors>Philippe Leybaert</authors>
 	<owners>Philippe Leybaert</owners>
     <description>General purpose library for expression parsing, template rendering, type conversion, configuration management, ...</description>
