@@ -39,7 +39,7 @@ namespace Vici.Core.Parser
         {
         }
 
-#if !WINDOWS_PHONE && !NETFX_CORE
+#if !WINDOWS_PHONE && !NETFX_CORE && !PCL
         public TemplateRenderingException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

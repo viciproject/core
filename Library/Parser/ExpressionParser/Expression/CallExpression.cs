@@ -85,7 +85,7 @@ namespace Vici.Core.Parser
 			if (methodObject is Delegate[])
 			{
 				Delegate[] delegates = (Delegate[]) methodObject;
-#if NETFX_CORE
+#if NETFX_CORE || PCL
 				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.GetMethodInfo());
 #else
                 MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.Method);
@@ -104,7 +104,7 @@ namespace Vici.Core.Parser
             if (methodObject is Delegate)
             {
                 Delegate method = (Delegate) methodObject;
-#if NETFX_CORE
+#if NETFX_CORE || PCL
                 MethodInfo methodInfo = method.GetMethodInfo();
 #else
                 MethodInfo methodInfo = method.Method;

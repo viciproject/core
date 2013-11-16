@@ -53,7 +53,7 @@ namespace Vici.Core.Parser
             ExpressionNode = expressionNode;
         }
 
-#if !WINDOWS_PHONE && !NETFX_CORE
+#if !WINDOWS_PHONE && !NETFX_CORE && !PCL
         public ExpressionEvaluationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

@@ -70,7 +70,7 @@ namespace Vici.Core.Parser
     		get { return _config; }
     	}
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !PCL
         public CompiledTemplate ParseFile(string fileName)
         {
             CompiledTemplate template = Parse(CompatibilityLayer.File.ReadAllText(fileName));
@@ -244,7 +244,7 @@ namespace Vici.Core.Parser
     		return text;
     	}
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !PCL
         public string RenderFile(string fileName, IParserContext context)
         {
             return Render(ParseFile(fileName), context);

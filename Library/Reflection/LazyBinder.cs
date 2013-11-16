@@ -32,7 +32,7 @@ using System.Reflection;
 
 namespace Vici.Core
 {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
     public abstract class Binder { }
 
     [Flags]

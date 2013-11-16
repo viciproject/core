@@ -6,7 +6,7 @@ using Vici.Core.CompatibilityLayer;
 
 namespace Vici.Core
 {
-#if !NETFX_CORE
+#if !NETFX_CORE && !PCL
     public static class TypeInfoMocker
     {
         public static Type GetTypeInfo(this Type type) { return type; }
@@ -113,7 +113,7 @@ namespace Vici.Core
 
         public MethodInfo GetMethod(string name, Type[] types)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredMethods(name).FirstOrDefault(mi => types.SequenceEqual(mi.GetParameters().Select(p => p.ParameterType))));
 #else
             return _t.GetMethod(name, types);
@@ -127,7 +127,7 @@ namespace Vici.Core
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
         {
-#if NETFX_CORE        
+#if NETFX_CORE || PCL
             return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).FirstOrDefault();
 #else
 			return (T) _t.GetCustomAttributes(typeof(T),inherit).FirstOrDefault();
@@ -146,7 +146,7 @@ namespace Vici.Core
 
         public ConstructorInfo[] GetConstructors()
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return _t.GetTypeInfo().DeclaredConstructors.ToArray();
 #else
             return _t.GetConstructors();
@@ -155,7 +155,7 @@ namespace Vici.Core
 
         public MemberInfo[] GetMember(string propertyName)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers.Where(m => m.Name == propertyName));
 #else
             return _t.GetMember(propertyName);
@@ -164,7 +164,7 @@ namespace Vici.Core
 
         public PropertyInfo GetIndexer(Type[] types)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.MatchParameters(types, pi.GetIndexParameters())));
 #else            
             return _t.GetProperty("Item", null, types);
@@ -173,7 +173,7 @@ namespace Vici.Core
 
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();
 #else
             return (T[]) _t.GetCustomAttributes(typeof(T), inherit);
@@ -187,7 +187,7 @@ namespace Vici.Core
 
         public PropertyInfo GetProperty(string propName)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredProperty(propName));
 #else
             return _t.GetProperty(propName);
@@ -196,7 +196,7 @@ namespace Vici.Core
 
         public FieldInfo GetField(string fieldName)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredField(fieldName));
 #else
             return _t.GetField(fieldName);
@@ -207,7 +207,7 @@ namespace Vici.Core
         {
             if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetTypeInfo().IsInterface)
             {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
                 return _t.GetTypeInfo().ImplementedInterfaces.Any(t => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type));
 #else
                 return _t.FindInterfaces((t, criteria) => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type), null).Any();
@@ -230,14 +230,14 @@ namespace Vici.Core
 
         public Type[] GetGenericArguments()
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return _t.GenericTypeArguments;
 #else
             return _t.GetGenericArguments();
 #endif
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || PCL
         private bool MatchBindingFlags(FieldInfo fieldInfo, BindingFlags flags)
         {
             if (flags == BindingFlags.Default)
@@ -283,7 +283,7 @@ namespace Vici.Core
 
         public FieldInfo[] GetFields(BindingFlags bindingFlags)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
                 return _t.GetTypeInfo().DeclaredFields.Where(fi => MatchBindingFlags(fi, bindingFlags)).ToArray();
             else
@@ -295,7 +295,7 @@ namespace Vici.Core
 
         public PropertyInfo[] GetProperties(BindingFlags bindingFlags)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
                 return _t.GetTypeInfo().DeclaredProperties.Where(pi => MatchBindingFlags(pi, bindingFlags)).ToArray();
             else
@@ -307,7 +307,7 @@ namespace Vici.Core
 
         public Type[] GetInterfaces()
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return _t.GetTypeInfo().ImplementedInterfaces.ToArray();
 #else
             return _t.GetInterfaces();

@@ -57,7 +57,7 @@ namespace Vici.Core.CompatibilityLayer
     }
 #endif
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !PCL
     public static class File
     {
         public static string ReadAllText(string filename)

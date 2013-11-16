@@ -43,7 +43,7 @@ namespace Vici.Core.Parser
             _tokenPosition = tokenPosition;
         }
 
-#if !WINDOWS_PHONE && !NETFX_CORE
+#if !WINDOWS_PHONE && !NETFX_CORE && !PCL
         public TemplateParserException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

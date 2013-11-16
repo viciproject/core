@@ -62,7 +62,7 @@ namespace Vici.Core.Config
 
         public Attribute[] GetCustomAttributes(Type type, bool inherit)
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return _memberInfo.GetCustomAttributes(type, inherit).ToArray();
 #else
             return (Attribute[]) _memberInfo.GetCustomAttributes(type, inherit);
@@ -71,7 +71,7 @@ namespace Vici.Core.Config
 
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
-#if NETFX_CORE
+#if NETFX_CORE || PCL
             return _memberInfo.GetCustomAttributes<T>(inherit).ToArray();
 #else
             return (T[]) _memberInfo.GetCustomAttributes(typeof(T), inherit);
