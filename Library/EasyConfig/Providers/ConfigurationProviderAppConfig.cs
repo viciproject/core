@@ -31,7 +31,6 @@ using System.Configuration;
 
 namespace Vici.Core.Config
 {
-#if !MONOTOUCH && !WINDOWS_PHONE && !MONO4ANDROID
     public class ConfigurationProviderAppConfig : IConfigurationProvider
     {
         public long Version()
@@ -72,5 +71,4 @@ namespace Vici.Core.Config
             throw new NotSupportedException();
         }
     }
-#endif
 }

@@ -29,10 +29,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-#if WINDOWS_PHONE || SILVERLIGHT
-using Vici.Core.CompatibilityLayer;
-#endif
-
 namespace Vici.Core.Notifications
 {
     public delegate void NotificationDelegate(Notification notification);

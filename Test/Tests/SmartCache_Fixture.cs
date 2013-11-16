@@ -39,7 +39,7 @@ namespace Vici.Core.Test
         private object _exceptionCountLock = new object();
         private int _exceptionCount;
 
-#if !NETFX_CORE
+#if !PCL
         [TestMethod]
         public void ThreadedTest()
         {

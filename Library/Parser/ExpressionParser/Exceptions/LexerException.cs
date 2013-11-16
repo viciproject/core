@@ -52,7 +52,7 @@ namespace Vici.Core.Parser
             Token = token;
         }
 
-#if !WINDOWS_PHONE && !NETFX_CORE && !PCL
+#if !PCL
         public LexerException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

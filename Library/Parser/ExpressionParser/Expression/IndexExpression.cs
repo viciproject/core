@@ -73,7 +73,7 @@ namespace Vici.Core.Parser
                         throw new BadArgumentException(t.GetType().Name + " is not a valid type for array indexers", this);
                 }
 
-#if !WINDOWS_PHONE && !NETFX_CORE && !PCL
+#if !PCL
                 if (useLong)
                 {
                     long[] indexes = new long[parameters.Length];

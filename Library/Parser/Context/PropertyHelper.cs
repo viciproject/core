@@ -31,12 +31,6 @@ namespace Vici.Core.Parser
 {
     public static class PropertyHelper
     {
-#if WINDOWS_PHONE || SILVERLIGHT
-        public static PropertyInfo GetProperty(this Type type, string name, Type[] types)
-        {
-            return type.GetProperty(name, null, types);
-        }
-#endif
         public static bool TryGetValue(object obj, string propertyName, out object value, out Type type)
         {
             value = null;

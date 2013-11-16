@@ -31,10 +31,6 @@ using System.Globalization;
 using System.Reflection;
 using Vici.Core.Parser;
 
-#if WINDOWS_PHONE || SILVERLIGHT
-using Vici.Core.CompatibilityLayer;
-#endif
-
 namespace Vici.Core.Json
 {
     public class JsonParser

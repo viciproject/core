@@ -32,7 +32,7 @@ using System.Reflection;
 
 namespace Vici.Core
 {
-#if NETFX_CORE || PCL
+#if PCL
     public abstract class Binder { }
 
     [Flags]
@@ -64,53 +64,7 @@ namespace Vici.Core
         {
             get { return _default; }
         }
-/*
-#if !NETFX_CORE
-        public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, out object state)
-        {
-            return DefaultTypeBinder.BindToMethod(bindingAttr, match, ref args, modifiers, culture, names, out state);
-        }
 
-        public override FieldInfo BindToField(BindingFlags bindingAttr, FieldInfo[] match, object value, CultureInfo culture)
-        {
-            return DefaultTypeBinder.BindToField(bindingAttr, match, value, culture);
-        }
-
-        public override PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers)
-        {
-            return DefaultTypeBinder.SelectProperty(bindingAttr, match, returnType, indexes, modifiers);
-        }
-
-        public override object ChangeType(object value, Type type, CultureInfo culture)
-        {
-            if (value.GetType() == type)
-                return value;
-
-            MethodInfo conversionMethod = type.Inspector().GetMethod("op_Implicit", new[] { value.GetType() });
-
-            if (conversionMethod == null)
-                return DefaultTypeBinder.ChangeType(value, type, culture);
-
-            return conversionMethod.Invoke(null, new[] {value});
-        }
-
-        public override void ReorderArgumentArray(ref object[] args, object state)
-        {
-            DefaultTypeBinder.ReorderArgumentArray(ref args, state);
-        }
-
-
-        public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] methods, Type[] types, ParameterModifier[] modifiers)
-        {
-            MethodBase matchingMethod = DefaultTypeBinder.SelectMethod(bindingAttr, methods, types, modifiers);
-
-            if (matchingMethod != null)
-                return matchingMethod;
-
-            return methods.FirstOrDefault(method => ParametersMatch(types, method.GetParameters()));
-        }
-#endif
-*/
         private static bool MatchBindingFlags(MethodBase methodBase, BindingFlags flags)
         {
             if (flags == BindingFlags.Default)

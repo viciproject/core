@@ -44,7 +44,7 @@ namespace Vici.Core.Parser.Config
             XmlWriter xmlWriter = XmlWriter.Create(writer, settings);
 
             xmlWriter.WriteString(text);
-#if NETFX_CORE || PCL
+#if PCL
             xmlWriter.Dispose();
 #else
             xmlWriter.Close();

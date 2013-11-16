@@ -44,7 +44,7 @@ namespace Vici.Core.Parser
         {
         }
 
-#if !WINDOWS_PHONE && !NETFX_CORE && !PCL
+#if !PCL
         public IllegalAssignmentException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

@@ -40,7 +40,6 @@
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="BinaryHelper.cs" />
     <Compile Include="Cache\SmartCache.cs" />
-    <Compile Include="CompatibilityLayer.cs" />
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigIgnoreAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />

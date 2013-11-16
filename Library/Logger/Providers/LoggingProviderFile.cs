@@ -152,7 +152,7 @@ namespace Vici.Core.Logging
                     for (int i = 0; i < 10;i++ )
                         try
                         {
-                            CompatibilityLayer.File.AppendAllText(fn, s + "\r\n");
+                            File.AppendAllText(fn, s + "\r\n");
 
                             break;
                         }

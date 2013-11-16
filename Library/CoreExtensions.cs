@@ -33,7 +33,7 @@ using Vici.Core.Parser;
 
 namespace Vici.Core
 {
-#if NETFX_CORE || PCL
+#if PCL
     public delegate TOutput Converter<TInput, TOutput>(TInput value);
 #endif
     public static class CoreExtensions
@@ -42,14 +42,14 @@ namespace Vici.Core
         {  
             if (array == null)  
                 throw new ArgumentException();  
-#if WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE || PCL
+#if PCL
             return array.Select(item => converter(item)).ToArray();
 #else
             return Array.ConvertAll(array,converter);
 #endif
         } 
 
-#if NETFX_CORE || PCL
+#if PCL
         public static void ForEach<T>(this IEnumerable<T> list, Action<T> action)
         {
             foreach (var item in list)

@@ -167,7 +167,7 @@ namespace Vici.Core.Test
             Assert.IsFalse(scheduler.ShouldRun());
         }
 
-#if !NETFX_CORE
+#if !PCL
         [TestMethod]
         public void TestFileHistoryStore()
         {
