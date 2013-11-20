@@ -71,6 +71,7 @@
     <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
     <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
+    <Compile Include="EasyDictionary.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\Json.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
