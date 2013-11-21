@@ -139,7 +139,7 @@ namespace Vici.Core.Config
                 bindingFlags |= BindingFlags.Static;
             }
 
-            FieldOrPropertyInfo[] members = type.GetFieldsAndProperties(bindingFlags);
+			FieldOrPropertyInfo[] members = type.Inspector().GetFieldsAndProperties(bindingFlags);
             
             foreach (FieldOrPropertyInfo field in members)
             {

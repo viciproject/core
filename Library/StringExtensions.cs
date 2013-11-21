@@ -28,9 +28,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Vici.Core
+namespace Vici.Core.StringExtensions
 {
-    public static class StringHelper
+	public static class StringExtensions
     {
         public static string Left(this string s, int num)
         {

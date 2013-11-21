@@ -39,23 +39,27 @@ namespace Vici.Core
 
         public static object Convert(this object value, Type targetType)
         {
+			object defaultReturnValue = targetType.Inspector().DefaultValue();
+
             if (value == null)
-                return targetType.Inspector().DefaultValue();
+				return defaultReturnValue;
 
-            Type type = targetType.Inspector().RealType;
+			if (value is string)
+				return StringConverter.Convert((string) value, targetType);
 
-            if (value.GetType() == type)
+			targetType = targetType.Inspector().RealType;
+			Type sourceType = value.GetType();
+
+			if (sourceType == targetType)
                 return value;
 
-            var implicitOperator = type.Inspector().GetMethod("op_Implicit", new [] {value.GetType()});
+			var implicitOperator = targetType.Inspector().GetMethod("op_Implicit", new [] {sourceType});
 
             if (implicitOperator != null)
                 return implicitOperator.Invoke(null, new object[] {value});
             
-            if (value is string)
-                return StringConverter.Convert((string) value, targetType);
 
-            if (type == typeof(string))
+			if (targetType == typeof(string))
             {
                 Type valueType = value.GetType();
 
@@ -69,41 +73,57 @@ namespace Vici.Core
                 return value.ToString();
             }
 
-            if (type == typeof (Guid) && value is byte[])
+			if (targetType == typeof (Guid) && value is byte[])
                 return new Guid((byte[]) value);
 
-            if (type == typeof (byte[]) && value is Guid)
+			if (targetType == typeof (byte[]) && value is Guid)
                 return ((Guid) value).ToByteArray();
 
-            if (type.Inspector().IsEnum)
+			if (targetType.Inspector().IsEnum)
             {
                 try
                 {
                     value = System.Convert.ToInt64(value);
 
-                    value = Enum.ToObject(type, value);
+					value = Enum.ToObject(targetType, value);
                 }
                 catch
                 {
-                    return targetType.Inspector().DefaultValue();
+					return defaultReturnValue;
                 }
 
-                return Enum.IsDefined(type, value) ? 
+				return Enum.IsDefined(targetType, value) ? 
                             value 
                             : 
-                            targetType.Inspector().DefaultValue();
+							defaultReturnValue;
             }
 
-            if (type.Inspector().IsAssignableFrom(value.GetType()))
+			if (targetType.Inspector().IsAssignableFrom(value.GetType()))
                 return value;
+
+			if (targetType.IsArray && sourceType.IsArray)
+			{
+				Type targetArrayType = targetType.GetElementType();
+				Array sourceArray = value as Array;
+
+				Array array = Array.CreateInstance(targetArrayType, new int[1] { sourceArray.Length }, new int[1] { 0 });
+
+				for (int i = 0; i < sourceArray.Length; i++)
+				{
+					array.SetValue(sourceArray.GetValue(i).Convert(targetArrayType), i);
+				}
+
+				return array;
+			}
+
 
             try
             {
-                return System.Convert.ChangeType(value, type, null);
+				return System.Convert.ChangeType(value, targetType, null);
             }
             catch
             {
-                return targetType.Inspector().DefaultValue();
+				return defaultReturnValue;
             }
         }
 

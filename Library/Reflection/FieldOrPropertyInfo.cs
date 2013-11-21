@@ -28,7 +28,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Vici.Core.Config
+namespace Vici.Core
 {
     public class FieldOrPropertyInfo
     {
@@ -59,6 +59,78 @@ namespace Vici.Core.Config
             else
                 ((PropertyInfo)_memberInfo).SetValue(o, value, null);
         }
+
+		public bool IsField { get { return _memberInfo is FieldInfo; } }
+		public bool IsProperty { get { return _memberInfo is PropertyInfo; } }
+
+		private FieldInfo AsField { get { return _memberInfo as FieldInfo; } }
+		private PropertyInfo AsProperty { get { return _memberInfo as PropertyInfo; } }
+
+		public Action<object,object> Setter()
+		{
+			return delegate(object target, object value) { SetValue(target,value); };
+		}
+
+		public Action<object> Setter(object target)
+		{
+			return delegate(object value) { SetValue(target,value); };
+		}
+
+		public Action<object,T> Setter<T>()
+		{
+			return delegate(object target, T value) { SetValue(target,value); };
+		}
+
+		public Action<T> Setter<T>(object target)
+		{
+			return delegate(T value) { SetValue(target,value); };
+		}
+
+		public Func<object,object> Getter()
+		{
+			return delegate(object target) { return GetValue(target); };
+		}
+
+		public Func<object,T> Getter<T>()
+		{
+			return delegate(object target) { return (T) GetValue(target); };
+		}
+
+		public Func<object> Getter(object target)
+		{
+			return delegate() { return GetValue(target); };
+		}
+
+		public Func<T> Getter<T>(object target)
+		{
+			return delegate() { return (T) GetValue(target); };
+		}
+
+		public bool IsPrivate
+		{
+			get 
+			{ 
+				if (IsField)
+					return AsField.IsPrivate;
+
+				var method = AsProperty.GetMethod ?? AsProperty.SetMethod;
+
+				return method.IsPrivate;
+			}
+		}
+
+		public bool IsStatic
+		{
+			get
+			{
+				if (IsField)
+					return AsField.IsStatic;
+
+				var method = AsProperty.GetMethod ?? AsProperty.SetMethod;
+
+				return method.IsStatic;
+			}
+		}
 
         public Attribute[] GetCustomAttributes(Type type, bool inherit)
         {

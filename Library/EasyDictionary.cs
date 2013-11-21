@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Vici.Core
@@ -13,12 +12,10 @@ namespace Vici.Core
 
         public EasyDictionary()
         {
-            DefaultValue = default(TV);
         }
 
         public EasyDictionary(IEqualityComparer<TK> comparer) : base(comparer)
         {
-            DefaultValue = default(TV);
         }
 
         public new TV this[TK key]
@@ -47,4 +44,15 @@ namespace Vici.Core
 
         public TV DefaultValue { get; set; }
     }
+
+	public class EasyStringDictionary<T> : EasyDictionary<string,T>
+	{
+		public EasyStringDictionary()
+		{
+		}
+
+		public EasyStringDictionary(bool ignoreCase) : base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
+		{
+		}
+	}
 }

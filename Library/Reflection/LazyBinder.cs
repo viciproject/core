@@ -33,8 +33,8 @@ using System.Reflection;
 namespace Vici.Core
 {
 #if PCL
-    public abstract class Binder { }
-
+	//public abstract class Binder { }
+	
     [Flags]
     public enum BindingFlags
     {
@@ -46,14 +46,13 @@ namespace Vici.Core
         Default = 0
     }
 
-    public class MissingMethodException : Exception
+	public class MissingMethodException : Exception
     {
-        public MissingMethodException(string name)
+		public MissingMethodException(string name) : base("Method not found: " + name)
         {
 
         }
     }
-
 #endif
 
     public class LazyBinder
@@ -63,26 +62,6 @@ namespace Vici.Core
         public static LazyBinder Default
         {
             get { return _default; }
-        }
-
-        private static bool MatchBindingFlags(MethodBase methodBase, BindingFlags flags)
-        {
-            if (flags == BindingFlags.Default)
-                return true;
-
-            if ((flags & BindingFlags.Static) == 0 && methodBase.IsStatic)
-                return false;
-
-            if ((flags & BindingFlags.Instance) == 0 && !methodBase.IsStatic)
-                return false;
-
-            if ((flags & BindingFlags.Public) != 0 && !methodBase.IsPublic)
-                return false;
-
-            if ((flags & BindingFlags.NonPublic) != 0 && !methodBase.IsPrivate)
-                return false;
-
-            return true;
         }
 
         private enum ParameterCompareType
@@ -146,7 +125,7 @@ namespace Vici.Core
             var compareTypes = new[] { ParameterCompareType.Exact, ParameterCompareType.Assignable, ParameterCompareType.Implicit };
 
             return compareTypes
-                .Select(compareType => methods.FirstOrDefault(m => MatchParameters(parameterTypes, m.GetParameters(), compareType) && MatchBindingFlags(m, bindingFlags) ))
+					.Select(compareType => methods.FirstOrDefault(m => MatchParameters(parameterTypes, m.GetParameters(), compareType) && m.MatchBindingFlags(bindingFlags) ))
                 .FirstOrDefault(match => match != null);
         }
 

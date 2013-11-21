@@ -5,25 +5,15 @@ using System.Reflection;
 
 namespace Vici.Core
 {
-#if !PCL
-    public static class TypeInfoMocker
-    {
-        public static Type GetTypeInfo(this Type type) { return type; }
-
-        public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type type, string name)
-        {
-            return type.GetMethods(BindingFlags.DeclaredOnly|BindingFlags.Static|BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic).Where(m => m.Name == name);
-        }
-    }
-#endif
-
     public class TypeInspector
     {
         private readonly Type _t;
+		private readonly TypeInfo _typeInfo;
 
         public TypeInspector(Type type)
         {
             _t = type;
+			_typeInfo = type.GetTypeInfo();
         }
 
         private T WalkAndFindSingle<T>(Func<Type,T> f) where T:class 
@@ -64,7 +54,7 @@ namespace Vici.Core
 
         public bool IsGenericType
         {
-            get { return _t.GetTypeInfo().IsGenericType; }
+			get { return _typeInfo.IsGenericType; }
         }
 
         public bool IsNullable
@@ -84,22 +74,22 @@ namespace Vici.Core
 
         public bool IsPrimitive
         {
-            get { return _t.GetTypeInfo().IsPrimitive; }
+			get { return _typeInfo.IsPrimitive; }
         }
 
         public bool IsValueType
         {
-            get { return _t.GetTypeInfo().IsValueType; }
+			get { return _typeInfo.IsValueType; }
         }
 
         public Type BaseType
         {
-            get { return _t.GetTypeInfo().BaseType; }
+			get { return _typeInfo.BaseType; }
         }
 
         public bool IsEnum
         {
-            get { return _t.GetTypeInfo().IsEnum; }
+			get { return _typeInfo.IsEnum; }
         }
 
         public object DefaultValue()
@@ -121,13 +111,13 @@ namespace Vici.Core
 
         public bool HasAttribute<T>(bool inherit) where T : Attribute
         {
-            return _t.GetTypeInfo().IsDefined(typeof(T), inherit);
+            return _typeInfo.IsDefined(typeof(T), inherit);
         }
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
         {
 #if PCL
-            return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).FirstOrDefault();
+            return _typeInfo.GetCustomAttributes<T>(inherit).FirstOrDefault();
 #else
 			return (T) _t.GetCustomAttributes(typeof(T),inherit).FirstOrDefault();
 #endif            
@@ -135,18 +125,18 @@ namespace Vici.Core
 
         public T[] GetAttributes<T>(bool inherit) where T : Attribute
         {
-            return (T[])_t.GetTypeInfo().GetCustomAttributes(typeof(T), inherit).ToArray();
+            return (T[])_typeInfo.GetCustomAttributes(typeof(T), inherit).ToArray();
         }
 
         public bool IsAssignableFrom(Type type)
         {
-            return _t.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+            return _typeInfo.IsAssignableFrom(type.GetTypeInfo());
         }
 
         public ConstructorInfo[] GetConstructors()
         {
 #if PCL
-            return _t.GetTypeInfo().DeclaredConstructors.ToArray();
+            return _typeInfo.DeclaredConstructors.ToArray();
 #else
             return _t.GetConstructors();
 #endif
@@ -173,7 +163,7 @@ namespace Vici.Core
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
 #if PCL
-            return _t.GetTypeInfo().GetCustomAttributes<T>(inherit).ToArray();
+            return _typeInfo.GetCustomAttributes<T>(inherit).ToArray();
 #else
             return (T[]) _t.GetCustomAttributes(typeof(T), inherit);
 #endif
@@ -207,14 +197,14 @@ namespace Vici.Core
             if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetTypeInfo().IsInterface)
             {
 #if PCL
-                return _t.GetTypeInfo().ImplementedInterfaces.Any(t => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type));
+                return _typeInfo.ImplementedInterfaces.Any(t => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type));
 #else
                 return _t.FindInterfaces((t, criteria) => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type), null).Any();
 #endif
 
             }
 
-            return type.GetTypeInfo().IsAssignableFrom(_t.GetTypeInfo());
+            return type.GetTypeInfo().IsAssignableFrom(_typeInfo);
         }
 
         public bool ImplementsOrInherits<T>()
@@ -236,57 +226,14 @@ namespace Vici.Core
 #endif
         }
 
-#if PCL
-        private bool MatchBindingFlags(FieldInfo fieldInfo, BindingFlags flags)
-        {
-            if (flags == BindingFlags.Default)
-                return true;
-
-            if ((flags & BindingFlags.Static) == 0 && fieldInfo.IsStatic)
-                return false;
-
-            if ((flags & BindingFlags.Instance) == 0 && !fieldInfo.IsStatic)
-                return false;
-
-            if ((flags & BindingFlags.Public) != 0 && !fieldInfo.IsPublic)
-                return false;
-
-            if ((flags & BindingFlags.NonPublic) != 0 && !fieldInfo.IsPrivate)
-                return false;
-
-            return true;
-        }
-
-        private bool MatchBindingFlags(PropertyInfo propertyInfo, BindingFlags flags)
-        {
-            if (flags == BindingFlags.Default)
-                return true;
-
-            var method = propertyInfo.GetMethod ?? propertyInfo.SetMethod;
-
-            if ((flags & BindingFlags.Static) == 0 && method.IsStatic)
-                return false;
-
-            if ((flags & BindingFlags.Instance) == 0 && !method.IsStatic)
-                return false;
-
-            if ((flags & BindingFlags.Public) != 0 && !method.IsPublic)
-                return false;
-
-            if ((flags & BindingFlags.NonPublic) != 0 && !method.IsPrivate)
-                return false;
-            
-            return true;
-        }
-#endif
 
         public FieldInfo[] GetFields(BindingFlags bindingFlags)
         {
 #if PCL
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
-                return _t.GetTypeInfo().DeclaredFields.Where(fi => MatchBindingFlags(fi, bindingFlags)).ToArray();
+				return _typeInfo.DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)).ToArray();
             else
-                return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => MatchBindingFlags(fi, bindingFlags)));
+				return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)));
 #else
             return _t.GetFields(bindingFlags);
 #endif
@@ -296,9 +243,9 @@ namespace Vici.Core
         {
 #if PCL
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
-                return _t.GetTypeInfo().DeclaredProperties.Where(pi => MatchBindingFlags(pi, bindingFlags)).ToArray();
+				return _typeInfo.DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags)).ToArray();
             else
-                return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredProperties.Where(pi => MatchBindingFlags(pi, bindingFlags)));
+				return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags)));
 #else
             return _t.GetProperties(bindingFlags);
 #endif
@@ -306,20 +253,21 @@ namespace Vici.Core
 
         public Type[] GetInterfaces()
         {
-#if PCL
-            return _t.GetTypeInfo().ImplementedInterfaces.ToArray();
-#else
-            return _t.GetInterfaces();
-#endif
+            return _typeInfo.ImplementedInterfaces.ToArray();
         }
+
+		public FieldOrPropertyInfo[] GetFieldsAndProperties(BindingFlags bindingFlags)
+		{
+			MemberInfo[] members;
+
+			if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
+				members = _typeInfo.DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)).Union<MemberInfo>(_typeInfo.DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags))).ToArray();
+			else
+				members = WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)).Union<MemberInfo>(t.GetTypeInfo().DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags))));
+
+			return members.Select(m => new FieldOrPropertyInfo(m)).ToArray();
+		}
     }
 
-    public static class TypeInspectorExtension
-    {
-        public static TypeInspector Inspector(this Type type)
-        {
-            return new TypeInspector(type);
-        }
-    }
 
 }

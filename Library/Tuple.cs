@@ -28,6 +28,7 @@ using System;
 
 namespace Vici.Core
 {
+	/*
     public class Tuple<T1, T2>
     {
         public Tuple()
@@ -61,5 +62,5 @@ namespace Vici.Core
         public T2 Value2;
         public T3 Value3;
     }
-
+*/
 }

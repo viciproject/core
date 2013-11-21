@@ -27,7 +27,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Vici.Parser
+namespace Vici.Core
 {
     public delegate object Getter();
     public delegate T Getter<T>();
@@ -48,6 +48,10 @@ namespace Vici.Parser
         public FieldOrProperty(Type type, string name, bool includePrivate)
         {
             MemberInfo[] members;
+
+			//members = from member in type.GetTypeInfo().DeclaredMembers where member.
+
+
 
             if (includePrivate)
                 members = type.GetMember(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic);

@@ -14,6 +14,8 @@
     <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,7 +39,6 @@
     <Folder Include="Logger\Providers\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeHelper.cs" />
     <Compile Include="BinaryHelper.cs" />
     <Compile Include="Cache\SmartCache.cs" />
     <Compile Include="CoreExtensions.cs" />
@@ -45,8 +46,6 @@
     <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigObjectAttribute.cs" />
     <Compile Include="EasyConfig\ConfigManager.cs" />
-    <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
-    <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
     <Compile Include="EasyConfig\IConfigObject.cs" />
     <Compile Include="EasyConfig\IConfigurationProvider.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
@@ -219,10 +218,13 @@
     <Compile Include="SmartConverter\IStringConverter.cs" />
     <Compile Include="SmartConverter\ObjectConverter.cs" />
     <Compile Include="SmartConverter\StringConverter.cs" />
-    <Compile Include="StringHelper.cs" />
-    <Compile Include="Tuple.cs" />
     <Compile Include="TypedWeakReference.cs" />
-    <Compile Include="TypeInspector.cs" />
+    <Compile Include="EasyDictionary.cs" />
+    <Compile Include="Reflection\FieldOrPropertyInfo.cs" />
+    <Compile Include="Reflection\TypeInspector.cs" />
+    <Compile Include="Reflection\ReflectionExtensions.cs" />
+    <Compile Include="Reflection\AutoMapper.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

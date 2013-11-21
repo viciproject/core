@@ -28,9 +28,9 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace Vici.Core
+namespace Vici.Core.BinaryExtensions
 {
-    public static class BinaryHelper
+	public static class BinaryExtensions
     {
         public static string ToHex(this byte[] bytes, bool upperCase)
         {
