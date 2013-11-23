@@ -29,9 +29,9 @@ using System.Linq;
 
 namespace Vici.Core.Json
 {
-    public static class Json
+    public partial class JsonParser
     {
-        public static object Parse(string json)
+        public static JsonObject Parse(string json)
         {
             return new JsonParser().Parse(json);
         }

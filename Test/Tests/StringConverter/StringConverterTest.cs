@@ -1,10 +1,9 @@
 using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class StringConverterTest
     {
         public enum TestEnum
@@ -18,16 +17,16 @@ namespace Vici.Core.Test
         {
         }
 
-        [TestMethod]
+        [Test]
         public void TestTypes()
         {
             Type[] types = new [] { typeof(int), typeof(string), typeof(bool), typeof(TestEnum), typeof(double), typeof(EmptyEnum) };
 
             foreach (Type t in types)
-                Assert.IsInstanceOfType("123".To(t), t);
+                Assert.IsInstanceOf(t,"123".To(t));
         }
 
-        [TestMethod]
+        [Test]
         public void ToInt()
         {
             Assert.AreEqual(123,"123".To<int>());
@@ -37,49 +36,49 @@ namespace Vici.Core.Test
             Assert.AreEqual(0, "0".To(typeof(int)));
         }
 
-        [TestMethod]
+        [Test]
         public void ToIntFail()
         {
             Assert.AreEqual(0, "123A".To<int>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableInt()
         {
             Assert.AreEqual(123, "123".To<int?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableIntFail()
         {
             Assert.IsNull("123A".To<int?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToIntEmpty()
         {
             Assert.AreEqual(0, "".To<int>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableIntEmpty()
         {
             Assert.IsNull("".To<int?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToIntNull()
         {
             Assert.AreEqual(0, ((string)null).To<int>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableIntNull()
         {
             Assert.IsNull(((string)null).To<int?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToEnum()
         {
             Assert.AreEqual(TestEnum.One, "1".To<TestEnum>());
@@ -87,7 +86,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(TestEnum.Ten, "10".To<TestEnum>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToEnumNamed()
         {
             Assert.AreEqual(TestEnum.One, "One".To<TestEnum>());
@@ -95,20 +94,20 @@ namespace Vici.Core.Test
             Assert.AreEqual(TestEnum.Ten, "Ten".To<TestEnum>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToEnumFail()
         {
             Assert.AreEqual((TestEnum)0, "123".To<TestEnum>());
             Assert.AreEqual((TestEnum)0, "123".To(typeof(TestEnum)));
         }
 
-        [TestMethod]
+        [Test]
         public void ToEnumNamedFail()
         {
             Assert.AreEqual((TestEnum) 0, "Three".To<TestEnum>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableEnum()
         {
             Assert.AreEqual(TestEnum.One, "1".To<TestEnum?>());
@@ -116,31 +115,31 @@ namespace Vici.Core.Test
             Assert.AreEqual(TestEnum.Ten, "10".To<TestEnum?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableEnumFail()
         {
             Assert.IsNull("123".To<TestEnum?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToEnumEmpty()
         {
             Assert.AreEqual((TestEnum)0, "".To<TestEnum>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableEnumEmpty()
         {
             Assert.IsNull("".To<TestEnum?>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToEnumNull()
         {
             Assert.AreEqual((TestEnum)0, ((string)null).To<TestEnum>());
         }
 
-        [TestMethod]
+        [Test]
         public void ToNullableEnumNull()
         {
             Assert.IsNull(((string)null).To<TestEnum?>());

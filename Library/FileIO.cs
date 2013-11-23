@@ -26,22 +26,28 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Vici.Core
 {
-    public static class FieldOrPropertyInfoExtensions
+    public static class FileIO
     {
-        public static FieldOrPropertyInfo[] GetFieldsAndProperties(this Type type, BindingFlags bindingFlags)
+        public class FileIODelegates
         {
-            List<MemberInfo> members = new List<MemberInfo>();
-
-            members.AddRange(type.Inspector().GetFields(bindingFlags));
-            members.AddRange(type.Inspector().GetProperties(bindingFlags));
-
-            return members.Select(m => new FieldOrPropertyInfo(m)).ToArray();
+            public Func<string,string> ReadAllText;
+            public Func<string, string> BuildFullPath;
         }
-        
+
+        public static FileIODelegates Delegates = new FileIODelegates()
+#if PCL
+        ;
+#else
+        {
+            ReadAllText = path => File.ReadAllText(path),
+            BuildFullPath = path => Path.GetFullPath(path)
+        };
+#endif
+
     }
 }

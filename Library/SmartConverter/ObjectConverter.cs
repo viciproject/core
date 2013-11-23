@@ -44,9 +44,6 @@ namespace Vici.Core
             if (value == null)
 				return defaultReturnValue;
 
-			if (value is string)
-				return StringConverter.Convert((string) value, targetType);
-
 			targetType = targetType.Inspector().RealType;
 			Type sourceType = value.GetType();
 
@@ -56,8 +53,10 @@ namespace Vici.Core
 			var implicitOperator = targetType.Inspector().GetMethod("op_Implicit", new [] {sourceType});
 
             if (implicitOperator != null)
-                return implicitOperator.Invoke(null, new object[] {value});
-            
+                return implicitOperator.Invoke(null, new [] {value});
+
+            if (value is string)
+                return StringConverter.Convert((string)value, targetType);
 
 			if (targetType == typeof(string))
             {
@@ -106,7 +105,7 @@ namespace Vici.Core
 				Type targetArrayType = targetType.GetElementType();
 				Array sourceArray = value as Array;
 
-				Array array = Array.CreateInstance(targetArrayType, new int[1] { sourceArray.Length }, new int[1] { 0 });
+				Array array = Array.CreateInstance(targetArrayType, new [] { sourceArray.Length }, new [] { 0 });
 
 				for (int i = 0; i < sourceArray.Length; i++)
 				{

@@ -35,25 +35,35 @@ namespace Vici.Core.Json
 {
     public class JsonParser
     {
+        public static JsonObject Parse(string json)
+        {
+            return new JsonParser()._Parse(json);
+        }
+
+        public static T Parse<T>(string json) where T : class,new()
+        {
+            return new JsonParser()._Parse<T>(json);
+        }
+
         private Token[] _tokens;
         private int _currentToken;
 
-        public T Parse<T>(string json) where T:class, new()
+        private T _Parse<T>(string json) where T:class, new()
         {
             Tokenize(json);
 
             _currentToken = 0;
 
-            return (T) ParseObject(typeof(T));
+            return ParseObject(typeof(T)).As<T>();
         }
 
-        public object Parse(string json)
+        private JsonObject _Parse(string json)
         {
             Tokenize(json);
 
             _currentToken = 0;
 
-            return ParseObject(typeof (object));
+            return ParseValue();
         }
 
         private void Tokenize(string json)
@@ -77,7 +87,7 @@ namespace Vici.Core.Json
             _currentToken++;
         }
 
-        private object ParseObject(Type objectType)
+        private JsonObject ParseObject(Type objectType = null)
         {
             if (CurrentToken().TokenMatcher is NullTokenMatcher)
             {
@@ -92,9 +102,9 @@ namespace Vici.Core.Json
             object obj;
             bool isDictionary = false;
 
-            if (objectType == typeof(object))
+            if (objectType == null)
             {
-                obj = new Dictionary<string, object>();
+                obj = new Dictionary<string, JsonObject>();
 
                 isDictionary = true;
             }
@@ -126,7 +136,7 @@ namespace Vici.Core.Json
                     {
                         Type fieldType = (property != null) ? property.PropertyType : field.FieldType;
 
-                        object fieldvalue = ParseValue(fieldType);
+                        object fieldvalue = ParseValue(fieldType).As(fieldType);
 
                         if (property != null)
                             property.SetValue(obj, fieldvalue, null);
@@ -140,7 +150,7 @@ namespace Vici.Core.Json
                 }
                 else
                 {
-                    ((Dictionary<string, object>) obj)[propName] = ParseValue(typeof (object));
+                    ((Dictionary<string, JsonObject>) obj)[propName] = ParseValue();
                 }
 
                 if (!(CurrentToken().TokenMatcher is CommaTokenMatcher))
@@ -154,19 +164,22 @@ namespace Vici.Core.Json
 
             NextToken();
 
-            return obj;
+            return new JsonObject(obj);
         }
 
         private static bool IsArray(Type type)
         {
-            return type.Inspector().ImplementsOrInherits<IList>() 
+            return type != null && (
+                type.Inspector().ImplementsOrInherits<IList>() 
                     ||
-                   type.Inspector().ImplementsOrInherits(typeof (IList<>));
+                   type.Inspector().ImplementsOrInherits(typeof (IList<>)));
         }
 
-        private object ParseValue(Type type)
+        private JsonObject ParseValue(Type type = null)
         {
-            if (type == typeof(object))
+            bool isArray = false;
+
+            if (type == null)
             {
                 if (CurrentToken().TokenMatcher is StringTokenMatcher)
                     type = typeof(string);
@@ -177,12 +190,19 @@ namespace Vici.Core.Json
                 else if (CurrentToken().TokenMatcher is TrueTokenMatcher || CurrentToken().TokenMatcher is FalseTokenMatcher)
                     type = typeof(bool);
                 else if (CurrentToken().TokenMatcher is ArrayStartTokenMatcher)
-                    type = typeof(object[]);
-                else if (CurrentToken().TokenMatcher is ObjectStartTokenMatcher || CurrentToken().TokenMatcher is NullTokenMatcher)
-                    type = typeof (object);
+                    isArray = true;
+                else if (CurrentToken().TokenMatcher is ObjectStartTokenMatcher ||
+                         CurrentToken().TokenMatcher is NullTokenMatcher)
+                {}
                 else 
                     throw new Exception("Unexpected token " + CurrentToken());
             }
+
+            if (isArray || IsArray(type))
+                return ParseArray(type);
+
+            if (type == null)
+                return ParseObject();
 
             if (type == typeof(string))
                 return ParseString();
@@ -193,19 +213,16 @@ namespace Vici.Core.Json
 
                 NextToken();
 
-                return value;
+                return new JsonObject(value);
             }
 
             if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
                 return ParseNumber(type);
-            
-            if (IsArray(type))
-                return ParseArray(type);
-            
+                        
             return ParseObject(type);
         }
 
-        private object ParseNumber(Type type)
+        private JsonObject ParseNumber(Type type)
         {
             if (!(CurrentToken().TokenMatcher is IntegerTokenMatcher) && !(CurrentToken().TokenMatcher is FloatTokenMatcher))
                 throw new Exception("Number expected");
@@ -223,12 +240,12 @@ namespace Vici.Core.Json
 
             _currentToken++;
 
-            return Convert.ChangeType(n, type, null);
+            return new JsonObject(Convert.ChangeType(n, type, null));
         }
 
         
 
-        private object ParseString()
+        private JsonObject ParseString()
         {
             if (!(CurrentToken().TokenMatcher is StringTokenMatcher))
                 throw new Exception("Expected string");
@@ -239,31 +256,32 @@ namespace Vici.Core.Json
 
             _currentToken++;
 
-            return s;
+            return new JsonObject(s);
         }
 
-        private object ParseArray(Type type)
+        private JsonObject ParseArray(Type type)
         {
             Type elementType = null;
 
-            if (type.IsArray)
-            {
+            if (type != null && type.IsArray)
                 elementType = type.GetElementType();
-            }
             
             if (!(CurrentToken().TokenMatcher is ArrayStartTokenMatcher))
                 throw new Exception("Expected [");
 
             _currentToken++;
 
-            List<object> list = new List<object>();
+            var list = new List<object>();
 
             for(;;)
             {
                 if (CurrentToken().TokenMatcher is ArrayEndTokenMatcher)
                     break;
 
-                list.Add(ParseValue(elementType));
+                if (elementType == null)
+                    list.Add(ParseValue());
+                else
+                    list.Add(ParseValue().As(elementType));
 
                 if (!(CurrentToken().TokenMatcher is CommaTokenMatcher))
                     break;
@@ -276,12 +294,12 @@ namespace Vici.Core.Json
 
             _currentToken++;
 
-            Array array = Array.CreateInstance(elementType, list.Count);
+            Array array = Array.CreateInstance(elementType ?? typeof(JsonObject), list.Count);
 
             for (int i = 0; i < array.Length; i++ )
                 array.SetValue(list[i],i);
 
-            return array;
+            return new JsonObject(array);
         }
     }
 }

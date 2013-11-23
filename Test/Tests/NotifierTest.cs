@@ -27,13 +27,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Notifications;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class NotifierTest
     {
         private string _notificationResult;
@@ -54,7 +53,7 @@ namespace Vici.Core.Test
             return notifier;
         }
 
-        [TestMethod]
+        [Test]
         public void TestTypedUnnamed()
         {
             Notifier notifier = CreateNotifierWithTypedSubscriptions();
@@ -70,7 +69,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("E", _notificationResult);
        }
 
-        [TestMethod]
+        [Test]
         public void TestTypedNamed()
         {
             Notifier notifier = CreateNotifierWithTypedSubscriptions();
@@ -93,7 +92,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestPassive()
         {
             Notifier notifier = new Notifier();

@@ -134,20 +134,12 @@ namespace Vici.Core
 
         public Attribute[] GetCustomAttributes(Type type, bool inherit)
         {
-#if PCL
-            return _memberInfo.GetCustomAttributes(type, inherit).ToArray();
-#else
-            return (Attribute[]) _memberInfo.GetCustomAttributes(type, inherit);
-#endif
+            return _memberInfo.Inspector().GetAttributes(type, inherit);
         }
 
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
-#if PCL
-            return _memberInfo.GetCustomAttributes<T>(inherit).ToArray();
-#else
-            return (T[]) _memberInfo.GetCustomAttributes(typeof(T), inherit);
-#endif
+            return _memberInfo.Inspector().GetAttributes<T>(inherit);
         }
 
         public bool IsDefined(Type type, bool b)

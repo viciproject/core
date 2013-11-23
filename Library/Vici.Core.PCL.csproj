@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="BinaryHelper.cs" />
     <Compile Include="Cache\SmartCache.cs" />
+    <Compile Include="FileIO.cs" />
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigIgnoreAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />
@@ -49,8 +50,10 @@
     <Compile Include="EasyConfig\IConfigObject.cs" />
     <Compile Include="EasyConfig\IConfigurationProvider.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
-    <Compile Include="Json\Json.cs" />
-    <Compile Include="Json\JsonParser.cs" />
+    <Compile Include="Json\JsonObject.cs" />
+    <Compile Include="Json\JsonParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\Tokenizer\JSONTokenizer.cs" />
     <Compile Include="Json\Tokenizer\Tokens\ArrayEndTokenMatcher.cs" />
@@ -207,6 +210,10 @@
     <Compile Include="Parser\Tokenizer\TokenMatcher.cs" />
     <Compile Include="Parser\Tokenizer\TokenPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\Inspectors\AssemblyInspector.cs" />
+    <Compile Include="Reflection\Inspectors\MemberInspector.cs" />
+    <Compile Include="Reflection\Inspectors\PropertyInspector.cs" />
+    <Compile Include="Reflection\Inspectors\TypeInspector.cs" />
     <Compile Include="Reflection\LazyBinder.cs" />
     <Compile Include="Scheduler\CyclicScheduler.cs" />
     <Compile Include="Scheduler\MonthlyScheduler.cs" />
@@ -221,7 +228,6 @@
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="EasyDictionary.cs" />
     <Compile Include="Reflection\FieldOrPropertyInfo.cs" />
-    <Compile Include="Reflection\TypeInspector.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="Reflection\AutoMapper.cs" />
     <Compile Include="StringExtensions.cs" />

@@ -23,13 +23,13 @@
 //=============================================================================
 
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using NUnit.Framework;
 using Vici.Core.Json;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class JSONParserFixture
     {
         private const string _json1 = @"
@@ -110,12 +110,10 @@ namespace Vici.Core.Test
             public string[] children;
         }
 
-        [TestMethod]
+        [Test]
         public void SimpleTypedObject()
         {
-            JsonParser jsonParser = new JsonParser();
-
-            Person person = jsonParser.Parse<Person>(_json);
+            Person person = JsonParser.Parse<Person>(_json);
 
             Assert.AreEqual("John Doe",person.name);
             Assert.AreEqual(4500.20m,person.salary);
@@ -124,61 +122,58 @@ namespace Vici.Core.Test
             Assert.AreEqual("Jessica", person.children[1]);
         }
 
-        [TestMethod]
+        [Test]
         public void ComplexDictionary()
         {
-            JsonParser jsonParser = new JsonParser();
+            JsonObject jsonObject = JsonParser.Parse(_json3);
 
-            object obj = jsonParser.Parse(_json3);
+            Assert.IsTrue(jsonObject.IsObject);
+            Assert.IsTrue(jsonObject["menu"].IsObject);
 
-            Assert.IsInstanceOfType(obj,typeof(Dictionary<string,object>));
+            Assert.AreEqual(2, jsonObject["menu"].Keys.Length);
 
-            Dictionary<string, object> dic = (Dictionary<string, object>) obj;
-
-            Assert.AreEqual(1, dic.Count);
-
-            Assert.IsInstanceOfType(dic["menu"], typeof(Dictionary<string, object>));
-
-            Assert.AreEqual(2, ((Dictionary<string, object>)dic["menu"]).Count);
-
+            Assert.AreEqual("SVG Viewer",jsonObject["menu.header"].As<string>());
         }
 
-        [TestMethod]
+        [Test]
         public void EmptyArray()
         {
-            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = JsonParser.Parse(@"{ ""array"" : [] }")["array"];
 
-            object items = ((Dictionary<string,object>) parser.Parse(@"{ ""array"" : [] }"))["array"];
-
-            Assert.IsInstanceOfType(items,typeof(object[]));
-            Assert.AreEqual(0,((object[])items).Length);
+            Assert.IsTrue(jsonObject.IsArray);
+            Assert.AreEqual(0,jsonObject.AsArray<long>().Length);
         }
 
-        [TestMethod]
+        [Test]
         public void TestEscapes()
         {
-            JsonParser parser = new JsonParser();
+            JsonObject obj = JsonParser.Parse(@"{ ""obj"" : ""\n"" }");
 
-            object item = ((Dictionary<string, object>)parser.Parse(@"{ ""obj"" : ""\n"" }"))["obj"];
+            obj = obj["obj"];
 
-            Assert.IsInstanceOfType(item,typeof(string));
-            Assert.AreEqual("\n", item);
+            string s = JsonParser.Parse(@"{ ""obj"" : ""\n"" }")["obj"].As<string>();
 
-            item = ((Dictionary<string, object>)parser.Parse(@"{ ""obj"" : ""\t"" }"))["obj"];
+            Assert.AreEqual("\n", s);
 
-            Assert.IsInstanceOfType(item,typeof(string));
-            Assert.AreEqual("\t", item);
+            s = JsonParser.Parse(@"{ ""obj"" : ""\t"" }")["obj"].As<string>();
 
-            item = ((Dictionary<string, object>)parser.Parse(@"{ ""obj"" : ""\\"" }"))["obj"];
+            Assert.AreEqual("\t", s);
 
-            Assert.IsInstanceOfType(item,typeof(string));
-            Assert.AreEqual(@"\", item);
+            s = JsonParser.Parse(@"{ ""obj"" : ""\\"" }")["obj"].As<string>();
 
-            item = ((Dictionary<string, object>)parser.Parse(@"{ ""obj"" : ""\u00aa"" }"))["obj"];
+            Assert.AreEqual(@"\", s);
 
-            Assert.IsInstanceOfType(item,typeof(string));
-            Assert.AreEqual("\u00aa", item);
+            s = JsonParser.Parse(@"{ ""obj"" : ""\u00aa"" }")["obj"].As<string>();
 
+            Assert.AreEqual("\u00aa", s);
+        }
+
+        [Test]
+        public void SimpleValues()
+        {
+            JsonObject jsonObject = JsonParser.Parse("\"x\"");
+
+            Assert.AreEqual("x",jsonObject.As<string>());
         }
     }
 }

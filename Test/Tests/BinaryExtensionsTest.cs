@@ -24,18 +24,16 @@
 //=============================================================================
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using Vici.Core.BinaryExtensions;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class BinaryExtensionsTest
     {
-        [TestMethod]
+        [Test]
         public void ToHex()
         {
             byte[] bytes = new byte[] {0x12, 0xAB, 0xF1};
@@ -45,7 +43,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("12ABF1", bytes.ToHex(true));
         }
 
-        [TestMethod]
+        [Test]
         public void BinarySerializerTest()
         {
             string x = "ABC";

@@ -85,11 +85,7 @@ namespace Vici.Core.Parser
 			if (methodObject is Delegate[])
 			{
 				Delegate[] delegates = (Delegate[]) methodObject;
-#if PCL
-				MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.GetMethodInfo());
-#else
-                MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.Method);
-#endif
+                MethodBase[] methods = delegates.ConvertAll<Delegate, MethodBase>(d => d.GetMethodInfo());
 
                 MethodBase method = LazyBinder.SelectBestMethod(methods, parameterTypes, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
@@ -104,11 +100,7 @@ namespace Vici.Core.Parser
             if (methodObject is Delegate)
             {
                 Delegate method = (Delegate) methodObject;
-#if PCL
                 MethodInfo methodInfo = method.GetMethodInfo();
-#else
-                MethodInfo methodInfo = method.Method;
-#endif
 
                 object value = methodInfo.Invoke(method.Target, parameterValues);
 

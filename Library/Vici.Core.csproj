@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vici.Core</RootNamespace>
     <AssemblyName>Vici.Core</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,6 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,6 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,17 +66,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeHelper.cs" />
     <Compile Include="Base64Serializer.cs" />
     <Compile Include="BinaryHelper.cs" />
     <Compile Include="BinarySerializer.cs" />
     <Compile Include="CoreExtensions.cs" />
-    <Compile Include="EasyConfig\FieldOrPropertyInfo.cs" />
-    <Compile Include="EasyConfig\FieldOrPropertyInfoExtensions.cs" />
     <Compile Include="EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
     <Compile Include="EasyDictionary.cs" />
+    <Compile Include="FileIO.cs" />
+    <Compile Include="Json\JsonObject.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
-    <Compile Include="Json\Json.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
@@ -87,7 +88,14 @@
     <Compile Include="Parser\ExpressionParser\Expression\SequenceExpression.cs" />
     <Compile Include="Parser\TemplateParser\Nodes\ExpressionTemplateNode.cs" />
     <Compile Include="Parser\TemplateParser\Nodes\ForEachTemplateNode.cs" />
+    <Compile Include="Reflection\AutoMapper.cs" />
+    <Compile Include="Reflection\FieldOrPropertyInfo.cs" />
     <Compile Include="Reflection\LazyBinder.cs" />
+    <Compile Include="Reflection\Inspectors\MemberInspector.cs" />
+    <Compile Include="Reflection\Inspectors\PropertyInspector.cs" />
+    <Compile Include="Reflection\ReflectionExtensions.cs" />
+    <Compile Include="Reflection\Inspectors\TypeInspector.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="TypedWeakReference.cs" />
     <Compile Include="Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
@@ -103,7 +111,6 @@
     <Compile Include="Scheduler\Scheduler.cs" />
     <Compile Include="Scheduler\TimeOfDayScheduler.cs" />
     <Compile Include="SmartConverter\EnumConverter.cs" />
-    <Compile Include="Tuple.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigIgnoreAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigKeyAttribute.cs" />
     <Compile Include="EasyConfig\Attributes\ConfigObjectAttribute.cs" />
@@ -254,10 +261,8 @@
     <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="SmartConverter\IStringConverter.cs" />
     <Compile Include="SmartConverter\ObjectConverter.cs" />
-    <Compile Include="TypeHelper.cs" />
-    <Compile Include="StringHelper.cs" />
+    <Compile Include="Reflection\Inspectors\AssemblyInspector.cs" />
     <Compile Include="SmartConverter\StringConverter.cs" />
-    <Compile Include="TypeInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

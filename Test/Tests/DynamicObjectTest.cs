@@ -25,16 +25,15 @@
 #endregion
 
 using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Parser;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class DynamicObjectTest
     {
-        [TestMethod]
+        [Test]
         public void TestPropertyOfLinkedObject()
         {
             var obj = new {Test = "XXX"};
@@ -47,7 +46,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("XXX", viewData["Test"]);
             Assert.IsTrue(viewData.TryGetValue("Test", out value, out type));
 
-            Assert.IsInstanceOfType(value, typeof(string));
+            Assert.IsInstanceOf<string>(value);
             Assert.AreEqual(typeof(string), type);
             Assert.AreEqual("XXX",value);
 
@@ -55,7 +54,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestPropertyOfMultipleLinkedObject()
         {
             var obj1 = new { Test = "XXX" };
@@ -70,13 +69,13 @@ namespace Vici.Core.Test
             Assert.AreEqual(15.5m, viewData["Value"]);
             Assert.IsTrue(viewData.TryGetValue("Test", out value, out type));
 
-            Assert.IsInstanceOfType(value, typeof (string));
+            Assert.IsInstanceOf<string>(value);
             Assert.AreEqual(typeof(string), type);
             Assert.AreEqual("XXX", value);
 
             Assert.IsTrue(viewData.TryGetValue("Value", out value, out type));
 
-            Assert.IsInstanceOfType(value, typeof(decimal));
+            Assert.IsInstanceOf<decimal>(value);
             Assert.AreEqual(typeof(decimal), type);
             Assert.AreEqual(15.5m, value);
 
@@ -85,7 +84,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestPropertyOfDictionaryEntry()
         {
             DynamicObject viewData = new DynamicObject();
@@ -98,7 +97,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("XXX", viewData["Test"]);
             Assert.IsTrue(viewData.TryGetValue("Test", out value, out type));
 
-            Assert.IsInstanceOfType(value, typeof(string));
+            Assert.IsInstanceOf<string>(value);
             Assert.AreEqual(typeof(string), type);
             Assert.AreEqual("XXX", value);
 
@@ -106,7 +105,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestApply()
         {
             var obj1 = new { Test = "XXX" };
@@ -128,13 +127,13 @@ namespace Vici.Core.Test
             Assert.AreEqual(15.5m, viewData["Value"]);
             Assert.IsTrue(viewData.TryGetValue("Test", out value, out type));
 
-            Assert.IsInstanceOfType(value, typeof(string));
+            Assert.IsInstanceOf<string>(value);
             Assert.AreEqual(typeof(string), type);
             Assert.AreEqual("XXX", value);
 
             Assert.IsTrue(viewData.TryGetValue("Value", out value, out type));
 
-            Assert.IsInstanceOfType(value, typeof(decimal));
+            Assert.IsInstanceOf<decimal>(value);
             Assert.AreEqual(typeof(decimal), type);
             Assert.AreEqual(15.5m, value);
 

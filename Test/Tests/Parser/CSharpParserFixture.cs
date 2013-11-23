@@ -24,13 +24,13 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Parser;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class CSharpParserFixture
     {
         private readonly ParserContext _context = new CSharpContext();
@@ -69,7 +69,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestInitialize]
+        [TestFixtureSetUp]
         public void SetupFixture()
         {
             DataClass dataObject = new DataClass();
@@ -99,7 +99,7 @@ namespace Vici.Core.Test
             return i * 5;
         }
 
-        [TestMethod]
+        [Test]
         public void ComplexExpressions()
         {
             Assert.AreEqual(435, _parser.Evaluate<int>("Math.Max(Data.Method2(Data.Int1+10,300),Data.Method1(Data.Int1))+(\"x\" + 5).Length"));
@@ -109,7 +109,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(1000, _parser.Evaluate<int>("Max(Max(100,5),Func(200))"));
         }
 
-        [TestMethod]
+        [Test]
         public void DefaultValueExpression()
         {
             IParserContext context = new FlexContext();
@@ -122,14 +122,14 @@ namespace Vici.Core.Test
             Assert.AreEqual("z", _parser.Evaluate<string>("b ?: \"x\"", context));
         }
 
-        [TestMethod]
+        [Test]
         public void StringExpressions()
         {
             Assert.AreEqual("ab", _parser.Evaluate<string>("string.Concat(\"a\",\"b\")"));
             Assert.AreEqual("ab", _parser.Evaluate<string>("\"a\" + \"b\")"));
         }
 
-        [TestMethod]
+        [Test]
         public void StringComparisons()
         {
             StringComparison saved = _context.StringComparison;
@@ -155,7 +155,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void MemberMethods()
         {
             Assert.AreEqual(2, _parser.Evaluate<int>("Data.Method0()"));
@@ -163,7 +163,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(21, _parser.Evaluate<int>("Data.Method0() + Data.Method1(5) + Data.Method2(5,4)"));
         }
 
-        [TestMethod]
+        [Test]
         public void CharLiterals()
         {
             Assert.AreEqual('x', _parser.Evaluate<char>("'x'"));
@@ -174,13 +174,13 @@ namespace Vici.Core.Test
             Assert.AreEqual('\x4545', _parser.Evaluate<char>("'\\x4545'"));
         }
 
-        [TestMethod]
+        [Test]
         public void TypeCast()
         {
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("(int)5L"),typeof(int) );
+            Assert.IsInstanceOf<int>(_parser.EvaluateToObject("(int)5L"));
         }
 
-        [TestMethod]
+        [Test]
         public void StringLiterals()
         {
             Assert.AreEqual("xyz", _parser.Evaluate<string>("\"xyz\""));
@@ -193,56 +193,56 @@ namespace Vici.Core.Test
             Assert.AreEqual("\x45bff\n", _parser.Evaluate<string>(@"""\x45bff\n"""));
         }
 
-        [TestMethod]
+        [Test]
         public void NumericLiterals()
         {
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1"), typeof(int));
+            Assert.IsInstanceOf<int>(_parser.EvaluateToObject("1"));
             Assert.AreEqual(1, _parser.Evaluate<int>("1"));
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("10000000000"), typeof(long));
+            Assert.IsInstanceOf<long>(_parser.EvaluateToObject("10000000000"));
             Assert.AreEqual(10000000000, _parser.Evaluate<long>("10000000000"));
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1m"), typeof(decimal));
+            Assert.IsInstanceOf<decimal>(_parser.EvaluateToObject("1m"));
             Assert.AreEqual(1m, _parser.Evaluate<decimal>("1m"));
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1L"), typeof(long));
+            Assert.IsInstanceOf<long>(_parser.EvaluateToObject("1L"));
             Assert.AreEqual(1L, _parser.Evaluate<long>("1L"));
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1UL"), typeof(ulong));
+            Assert.IsInstanceOf<ulong>(_parser.EvaluateToObject("1UL"));
             Assert.AreEqual(1UL, _parser.Evaluate<ulong>("1UL"));
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1.0"), typeof(double));
+            Assert.IsInstanceOf<double>(_parser.EvaluateToObject("1.0"));
             Assert.AreEqual(1L, _parser.Evaluate<double>("1.0"));
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1.0f"), typeof(float));
+            Assert.IsInstanceOf<float>(_parser.EvaluateToObject("1.0f"));
             Assert.AreEqual(1L, _parser.Evaluate<float>("1.0f"));
 
         }
 
-        [TestMethod]
+        [Test]
         public void ObjectCreation()
         {
-            Assert.IsInstanceOfType(_parser.Evaluate<object>("new DataClass(5)"), typeof(DataClass));
+            Assert.IsInstanceOf<DataClass>(_parser.Evaluate<object>("new DataClass(5)"));
 
             Assert.AreEqual(5, _parser.Evaluate<int>("(new DataClass(5)).Int1"));
             Assert.AreEqual(5, _parser.Evaluate<int>("new DataClass(5).Int1"));
             Assert.AreEqual(5, _parser.Evaluate<int>("Math.Max(new DataClass(3+2).Int1,3)"));
         }
 
-        [TestMethod]
+        [Test]
         public void Delegates()
         {
             Assert.AreEqual(10, _parser.Evaluate<int>("Func(2)"));
             Assert.AreEqual(5, _parser.Evaluate<int>("Max(4,5)"));
         }
 
-        [TestMethod]
+        [Test]
         public void Typeof()
         {
             Assert.AreEqual(typeof(int), _parser.Evaluate<Type>("typeof(int)"));
         }
 
-        [TestMethod]
+        [Test]
         public void OperatorPrecedence()
         {
             Assert.AreEqual(2, _parser.Evaluate<int>("(5-4)*2"));
@@ -251,7 +251,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(18, _parser.Evaluate<int>("(5+4)*2"));
         }
 
-        [TestMethod]
+        [Test]
         public void UnaryNot()
         {
             Assert.AreEqual(false, _parser.Evaluate<bool>("!(1==1)"));
@@ -259,7 +259,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(true, _parser.Evaluate<bool>("!!true"));
         }
 
-        [TestMethod]
+        [Test]
         public void UnaryMinus()
         {
             Assert.AreEqual(-2, _parser.Evaluate<int>("-2"));
@@ -267,7 +267,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(-1, _parser.Evaluate<int>("-(3-2)"));
         }
 
-        [TestMethod]
+        [Test]
         public void BitwiseComplement()
         {
             Assert.AreEqual(~2, _parser.Evaluate<int>("~2"));
@@ -275,29 +275,29 @@ namespace Vici.Core.Test
             Assert.AreEqual(~(3 - 2), _parser.Evaluate<int>("~(3 - 2)"));
         }
 
-        [TestMethod]
+        [Test]
         public void StaticFields()
         {
             Assert.AreEqual(500, _parser.Evaluate<int>("DataClass.Static1"));
             Assert.AreEqual(501, _parser.Evaluate<int>("DataClass.Static2"));
         }
 
-        [TestMethod]
+        [Test]
         public void NullableLifting()
         {
             Assert.AreEqual(15, _parser.Evaluate<int?>("Value10 + NullableValue5"));
-            Assert.IsInstanceOfType(_parser.Evaluate<int?>("Value10 + NullableValue5"), typeof(int?));
+            Assert.IsInstanceOf<int>(_parser.Evaluate<int?>("Value10 + NullableValue5"));
             Assert.AreEqual(null, _parser.Evaluate<int?>("Value10 + NullableValueNull"));
 
         }
 
-        [TestMethod]
+        [Test]
         public void Indexing()
         {
             Assert.AreEqual(30, _parser.Evaluate<int>("Data[Func(5),5]"));
         }
 
-        [TestMethod]
+        [Test]
         public void ArrayIndexing()
         {
             Assert.AreEqual(8, _parser.Evaluate<int>("MyArray[3]"));
@@ -308,7 +308,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void Ternary()
         {
 
@@ -333,7 +333,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void Comparisons()
         {
             Assert.IsTrue(_parser.Evaluate<bool>("1==1"));
@@ -350,14 +350,14 @@ namespace Vici.Core.Test
             Assert.IsTrue(_parser.Evaluate<bool>("ShortValue == 4"));
         }
 
-        [TestMethod]
+        [Test]
         public void AsOperator()
         {
             Assert.AreEqual("x", _parser.Evaluate<string>("\"x\" as string"));
             Assert.AreEqual(null, _parser.Evaluate<string>("5 as string"));
         }
 
-        [TestMethod]
+        [Test]
         public void IsOperator()
         {
             Assert.IsTrue(_parser.Evaluate<bool>("\"x\" is string"));
@@ -365,14 +365,14 @@ namespace Vici.Core.Test
             Assert.IsFalse(_parser.Evaluate<bool>("null is string"));
         }
 
-        [TestMethod]
+        [Test]
         public void NullValueOperator()
         {
             Assert.AreEqual(10, _parser.Evaluate<int>("NullableValueNull ?? 10"));
             Assert.AreEqual(5, _parser.Evaluate<int>("NullableValue5 ?? 10"));
         }
 
-        [TestMethod]
+        [Test]
         public void Assignment()
         {
             _context.AssignmentPermissions = AssignmentPermissions.NewVariable;
@@ -394,7 +394,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         //[ExpectedException(typeof(IllegalAssignmentException))]
         public void PropertyAssignmentNotAllowed()
         {
@@ -414,7 +414,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void PropertyAssignment()
         {
             _context.AssignmentPermissions = AssignmentPermissions.Property;
@@ -452,7 +452,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void CustomImplicitConversions()
         {
             XElement xEl = new XElement();
@@ -462,7 +462,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("attr[Test]", _parser.Evaluate<string>("xEl.Attribute(\"Test\")"));
         }
 
-        [TestMethod]
+        [Test]
         public void CustomOperators()
         {
             _context.Set("date1", DateTime.Now);
@@ -475,7 +475,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void ExpressionTree()
         {
             IParserContext context = new ParserContext();
@@ -497,7 +497,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(16L, expr.Evaluate().Value);
         }
 
-        [TestMethod]
+        [Test]
         public void NumRange()
         {
 
@@ -513,11 +513,11 @@ namespace Vici.Core.Test
 
             _context.Set("sum",sum);
 
-            Assert.IsInstanceOfType(_parser.EvaluateToObject("1...3"), typeof(IEnumerable<int>));
+            Assert.IsInstanceOf < IEnumerable<int>>(_parser.EvaluateToObject("1...3"));
             Assert.AreEqual(6,_parser.Evaluate<int>("sum(1 ... 3)"));
         }
 
-        [TestMethod]
+        [Test]
         public void DynObject()
         {
             DynamicObject dynObj = new DynamicObject();
@@ -545,7 +545,7 @@ namespace Vici.Core.Test
             return context;
         }
 
-        [TestMethod]
+        [Test]
         //[ExpectedException(typeof(NullReferenceException))]
         public void NotFalsyNull()
         {
@@ -562,7 +562,7 @@ namespace Vici.Core.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         //[ExpectedException(typeof(ArgumentException))]
         public void NotFalsyEmptyString()
         {
@@ -579,7 +579,7 @@ namespace Vici.Core.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         //[ExpectedException(typeof(ArgumentException))]
         public void NotFalsyString()
         {
@@ -597,7 +597,7 @@ namespace Vici.Core.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void FalsyEmptyString()
         {
             ParserContext context = SetupFalsyContext(ParserContextBehavior.EmptyStringIsFalse);
@@ -605,7 +605,7 @@ namespace Vici.Core.Test
             Assert.IsFalse(_parser.Evaluate<bool>("!!EmptyString",context));
         }
 
-        [TestMethod]
+        [Test]
         public void FalsyString()
         {
             ParserContext context = SetupFalsyContext(ParserContextBehavior.NonEmptyStringIsTrue);
@@ -613,7 +613,7 @@ namespace Vici.Core.Test
             Assert.IsTrue(_parser.Evaluate<bool>("!!NonEmptyString", context));
         }
 
-        [TestMethod]
+        [Test]
         public void FalsyNull()
         {
             ParserContext context = SetupFalsyContext(ParserContextBehavior.NullIsFalse);
@@ -621,7 +621,7 @@ namespace Vici.Core.Test
             Assert.IsFalse(_parser.Evaluate<bool>("!!NullValue", context));
         }
 
-        [TestMethod]
+        [Test]
         public void FalsyNotNull()
         {
             ParserContext context = SetupFalsyContext(ParserContextBehavior.NotNullIsTrue);
@@ -629,7 +629,7 @@ namespace Vici.Core.Test
             Assert.IsTrue(_parser.Evaluate<bool>("!!RandomObject", context));
         }
 
-        [TestMethod]
+        [Test]
         public void Sequence()
         {
             CSharpContext context = new CSharpContext();
@@ -655,7 +655,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("102132435465768798", output);
         }
 
-        [TestMethod]
+        [Test]
         public void SequenceWithReturn()
         {
             CSharpContext context = new CSharpContext();
@@ -669,7 +669,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("1", output);
         }
 
-        [TestMethod]
+        [Test]
         public void ForEach()
         {
             CSharpContext context = new CSharpContext();
@@ -690,7 +690,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("112123123", output);
         }
 
-        [TestMethod]
+        [Test]
         public void If()
         {
             CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
@@ -712,7 +712,7 @@ namespace Vici.Core.Test
             output = "";
         }
 
-        [TestMethod]
+        [Test]
         public void IfWithReturn()
         {
             CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
@@ -726,7 +726,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("1", output);
         }
 
-        [TestMethod]
+        [Test]
         public void IfElse()
         {
             CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
@@ -755,7 +755,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void ComplexScript1()
         {
             CSharpContext context = new CSharpContext(ParserContextBehavior.Easy);
@@ -829,7 +829,7 @@ return numSwaps;
             Assert.AreEqual(9, array[8]);
         }
 
-        [TestMethod]
+        [Test]
         public void FunctionDefinition()
         {
             CSharpContext context = new CSharpContext();
@@ -844,7 +844,7 @@ return numSwaps;
             Assert.AreEqual("12",output);
         }
 
-        [TestMethod]
+        [Test]
         public void FunctionDefinition2()
         {
             CSharpContext context = new CSharpContext();
@@ -870,7 +870,7 @@ f(max(2,1));
         }
 
 
-        [TestMethod]
+        [Test]
         public void FunctionDefinition3()
         {
             CSharpContext context = new CSharpContext();

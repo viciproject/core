@@ -38,6 +38,7 @@ namespace Vici.Core
     [Flags]
     public enum BindingFlags
     {
+        FlattenHierarchy = 32,
         Public = 16,
         NonPublic = 32,
         Static = 8,
@@ -125,7 +126,7 @@ namespace Vici.Core
             var compareTypes = new[] { ParameterCompareType.Exact, ParameterCompareType.Assignable, ParameterCompareType.Implicit };
 
             return compareTypes
-					.Select(compareType => methods.FirstOrDefault(m => MatchParameters(parameterTypes, m.GetParameters(), compareType) && m.MatchBindingFlags(bindingFlags) ))
+					.Select(compareType => methods.FirstOrDefault(m => MatchParameters(parameterTypes, m.GetParameters(), compareType) && m.Inspector().MatchBindingFlags(bindingFlags) ))
                 .FirstOrDefault(match => match != null);
         }
 

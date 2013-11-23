@@ -31,13 +31,12 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Config;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class ConfigTest
     {
         class StaticConfig
@@ -84,7 +83,7 @@ namespace Vici.Core.Test
             public string SubProp4 = "test";
         }
 
-        [TestMethod]
+        [Test]
         public void TestStaticClassWithoutKey()
         {
             InstanceConfig config = new InstanceConfig();
@@ -123,7 +122,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(3, StaticConfig.IntValues.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void TestStaticClassWithKey()
         {
             ConfigManager configManager = new ConfigManager();
@@ -137,7 +136,7 @@ namespace Vici.Core.Test
 
     }
 
-        [TestMethod]
+        [Test]
         public void TestInstanceClassWithoutKey()
         {
             InstanceConfig config = new InstanceConfig();
@@ -168,7 +167,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestXmlConfigFile()
         {
             XDocument xDoc = null;
@@ -190,7 +189,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("test", config.SubGroupProp1.SubProp3);
         }
 
-        [TestMethod]
+        [Test]
         public void TestDefaults()
         {
             XDocument xDoc = null;

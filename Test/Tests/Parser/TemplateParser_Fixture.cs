@@ -26,8 +26,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Parser;
 
 namespace Vici.Core.Test
@@ -36,7 +35,7 @@ namespace Vici.Core.Test
 	public class CurlyTemplateParser : TemplateParser<Parser.Config.DoubleCurly> { }
     public class ProMeshTemplateParser : TemplateParser<Parser.Config.ProMesh> {}
 
-    [TestClass]
+    [TestFixture]
     public class TemplateParser_Fixture
     {
         readonly TemplateParser curlyParser = new CurlyTemplateParser();
@@ -63,7 +62,7 @@ namespace Vici.Core.Test
             }
         }
 
-        [TestInitialize]
+        [TestFixtureSetUp]
         public void Setup()
         {
             context.Set("doubleValue", 20.5);
@@ -74,32 +73,32 @@ namespace Vici.Core.Test
             context.AddType("TestClass",typeof(TestClass));
         }
 
-        [TestMethod]
+        [Test]
         public void SmartExpression1()
         {
             Assert.AreEqual("5", velocityParser.Render("$intVar", context));
         }
 
-        [TestMethod]
+        [Test]
         public void SmartExpression2()
         {
             Assert.AreEqual("5 B", velocityParser.Render("$intVar B", context));
         }
 
-        [TestMethod]
+        [Test]
         public void SmartExpression3()
         {
             Assert.AreEqual("X 5 Y", velocityParser.Render("$TestClass.Format(\"X {0} Y\",intVar)", context));
         }
 
-        [TestMethod]
+        [Test]
         public void SmartExpression4()
         {
             Assert.AreEqual("X 5 \"Y", velocityParser.Render("$TestClass.Format(\"X {0} \\\"Y\",intVar)", context));
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestForeachInts_Curly()
         {
             string inputCurly = @"{{foreach x in intList}}{{x}}/{{x*2}}/{{end}}..";
@@ -109,7 +108,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("3/6/4/8/5/10/..", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestForeachInts_ProMesh()
         {
             string input = @"<!--{{foreach x in intList}}-->{{x}}/{{x*2}}/<!--{{end}}-->..";
@@ -119,7 +118,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("3/6/4/8/5/10/..", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestForeachInts_Xml()
         {
             string input = @"<foreach var='x' in='intList'>${x}/${x*2}/</foreach>..";
@@ -129,7 +128,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("3/6/4/8/5/10/..", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestForeachInts_Velocity()
         {
             string input = @"#foreach(x in intList)${x}/${x*2}/#end..";
@@ -145,7 +144,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("3/6/4/8/5/10/..", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestForeachIntsTwice_Velocity()
         {
             string input = @"#foreach(x in intList)${x}/${x*2}/#end.. #foreach(x in intList)${x}/${x*2}/#end";
@@ -155,7 +154,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("3/6/4/8/5/10/.. 3/6/4/8/5/10/", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestForeachIntsTwice_ProMesh()
         {
             string input = @"<!--{{foreach x in intList}}-->{{x}}/{{x*2}}/<!--{{end}}-->.. <!--{{foreach x in intList}}-->{{x}}/{{x*2}}/<!--{{end}}-->";
@@ -165,7 +164,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("3/6/4/8/5/10/.. 3/6/4/8/5/10/", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestDSDFSDFSDF()
         {
             IParserContext vars = new FlexContext();
@@ -184,7 +183,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestIf_Curly()
         {
             IParserContext newContext = context.CreateLocal();
@@ -205,7 +204,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestIf_ProMesh()
         {
             IParserContext newContext = context.CreateLocal();
@@ -240,7 +239,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestEscapes_Xml()
         {
             IParserContext vars = new FlexContext();
@@ -254,7 +253,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("A&gt;B",s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestIf_Xml()
         {
             IParserContext newContext = context.CreateLocal();
@@ -274,7 +273,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("<?xml?>6Y", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestIf2_Xml()
         {
             IParserContext newContext = context.CreateLocal();
@@ -295,7 +294,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("<?xml?>5X", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestForeachObjs_Curly()
         {
             string inputCurly = @"{{foreach x in objList}}{{x.Int1}}/{{x.String1}}/{{end}}";
@@ -305,7 +304,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("1/X1/5/X5/", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNumericRange_Curly()
         {
             string inputCurly = @"{{ foreach x in (1...5) }}{{x}}/{{end}}";
@@ -315,7 +314,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("1/2/3/4/5/", s);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNumericRangeReverse_Curly()
         {
             string inputCurly = @"{{ foreach x in [5...1] }}{{x}}/{{end}}";
@@ -325,7 +324,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("5/4/3/2/1/", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_FormattedExpression_Curly()
         {
             string inputCurly = @"{{doubleValue ` 0.00}}";
@@ -335,7 +334,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("20.50", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_FormattedExpression_ProMesh()
         {
             string input = @"{{doubleValue ` 0.00}}";
@@ -345,7 +344,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("20.50", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Macro1_Curly()
         {
             string inputCurly = @"{{macro TestMacro}}{{x*2}}{{end}}{{call TestMacro @x=5}},{{call TestMacro @x=7}}";
@@ -355,7 +354,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("10,14", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Macro1_ProMesh()
         {
             string input = @"<!--{{macro TestMacro}}-->{{x*2}}<!--{{end}}--><!--{{call TestMacro @x=5}}-->,<!--{{ call TestMacro @x=7 }}-->";
@@ -365,7 +364,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("10,14", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Macro2_Curly()
         {
             string input = @"{{macro TestMacro}}{{x*2}}({{call AnotherMacro @y=x}}){{end}}{{call TestMacro @x=5}},{{call TestMacro @x=7}}{{macro AnotherMacro}}{{y*5}}{{end}}";
@@ -375,7 +374,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("10(25),14(35)", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Empty_Curly()
         {
             string inputCurly = @"";
@@ -385,7 +384,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("", s);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Empty_ProMesh()
         {
             string inputString = @"";

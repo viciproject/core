@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Json;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class JsonSeralizerTestFixture
     {
-        [TestMethod]
+        [Test]
         public void TestArray()
         {
             string json = JsonSerializer.ToJson(new[] { 1, 2, 3 });
@@ -18,7 +16,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("[1,2,3]", json);
         }
 
-        [TestMethod]
+        [Test]
         public void TestList()
         {
             string json = JsonSerializer.ToJson(new List<int>(new[] { 1, 2, 3 }));
@@ -26,32 +24,32 @@ namespace Vici.Core.Test
             Assert.AreEqual("[1,2,3]", json);
         }
 
-        [TestMethod]
+        [Test]
         public void TestInt()
         {
             Assert.AreEqual("123", JsonSerializer.ToJson(123));
         }
 
-        [TestMethod]
+        [Test]
         public void TestSring()
         {
             Assert.AreEqual("\"abc\"", JsonSerializer.ToJson("abc"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestDouble()
         {
             Assert.AreEqual("12.34", JsonSerializer.ToJson(12.34));
         }
 
-        [TestMethod]
+        [Test]
         public void TestBool()
         {
             Assert.AreEqual("true", JsonSerializer.ToJson(true));
             Assert.AreEqual("false", JsonSerializer.ToJson(false));
         }
 
-        [TestMethod]
+        [Test]
         public void TestDictionary()
         {
             Dictionary<string, int> dic = new Dictionary<string, int>();
@@ -70,13 +68,13 @@ namespace Vici.Core.Test
             private string field4 = "C";
         }
 
-        [TestMethod]
+        [Test]
         public void TestObject()
         {
             Assert.AreEqual("{\"field1\":\"A\",\"field2\":123,\"field3\":\"B\"}", JsonSerializer.ToJson(new TestClass()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestDate()
         {
             DateTime date = DateTime.Now;
@@ -105,13 +103,13 @@ namespace Vici.Core.Test
             Assert.AreEqual("\"1970-01-01T00:00:00Z\"", JsonSerializer.ToJson(date, JsonDateFormat.UtcISO));
         }
 
-        [TestMethod]
+        [Test]
         public void TestNull()
         {
             Assert.AreEqual("null", JsonSerializer.ToJson(null));
         }
 
-        [TestMethod]
+        [Test]
         public void TestChar()
         {
             Assert.AreEqual("\"x\"", JsonSerializer.ToJson('x'));
@@ -123,7 +121,7 @@ namespace Vici.Core.Test
             SecondValue
         }
 
-        [TestMethod]
+        [Test]
         public void TestEnum()
         {
             Assert.AreEqual("\"FirstValue\"", JsonSerializer.ToJson(TestEnumeration.FirstValue));
@@ -136,13 +134,13 @@ namespace Vici.Core.Test
             public int[] Field2 = new[] { 1, 2, 3 };
         }
 
-        [TestMethod]
+        [Test]
         public void TestArrayInObject()
         {
             Assert.AreEqual("{\"Field1\":\"abc\",\"Field2\":[1,2,3]}", JsonSerializer.ToJson(new TestClass2()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCircularReferences()
         {
             json_ParentClass obj1 = new json_ParentClass();

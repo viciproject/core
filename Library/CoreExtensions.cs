@@ -36,17 +36,20 @@ namespace Vici.Core
 #if PCL
     public delegate TOutput Converter<TInput, TOutput>(TInput value);
 #endif
+
     public static class CoreExtensions
     {
         public static TOutput[] ConvertAll<TInput, TOutput>(this TInput[] array, Converter<TInput, TOutput> converter) 
         {  
             if (array == null)  
-                throw new ArgumentException();  
-#if PCL
-            return array.Select(item => converter(item)).ToArray();
-#else
-            return Array.ConvertAll(array,converter);
-#endif
+                throw new ArgumentNullException("array");
+
+            var newArray = new TOutput[array.Length];
+
+            for (int i = 0; i < array.Length; i++)
+                newArray[i] = converter(array[i]);
+
+            return newArray;
         } 
 
 #if PCL

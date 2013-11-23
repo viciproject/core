@@ -41,14 +41,10 @@ namespace Vici.Core.Parser.Config
 
             settings.ConformanceLevel = ConformanceLevel.Fragment;
 
-            XmlWriter xmlWriter = XmlWriter.Create(writer, settings);
-
-            xmlWriter.WriteString(text);
-#if PCL
-            xmlWriter.Dispose();
-#else
-            xmlWriter.Close();
-#endif
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+            {
+                xmlWriter.WriteString(text);
+            }
 
             return writer.ToString();
         }

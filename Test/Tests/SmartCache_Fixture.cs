@@ -27,20 +27,19 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Cache;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class SmartCache_Fixture
     {
         private object _exceptionCountLock = new object();
         private int _exceptionCount;
 
 #if !PCL
-        [TestMethod]
+        [Test]
         public void ThreadedTest()
         {
             SmartCache<int> cache = new SmartCache<int>(50);
@@ -86,7 +85,7 @@ namespace Vici.Core.Test
             }
         }
 
-                [TestMethod]
+                [Test]
         public void ThreadedRemoveTest()
         {
             SmartCache<int> cache = new SmartCache<int>(50);
@@ -146,7 +145,7 @@ namespace Vici.Core.Test
 
 #endif
 
-        [TestMethod]
+        [Test]
         public void Test_Expiring()
         {
             MockTimeProvider time = new MockTimeProvider();
@@ -187,7 +186,7 @@ namespace Vici.Core.Test
         }
         
 
-        [TestMethod]
+        [Test]
         public void Test_Remove()
         {
             SmartCache<int> cache = new SmartCache<int>(5);
@@ -248,7 +247,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(4, cache.ItemCount);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Sliding()
         {
             MockTimeProvider time = new MockTimeProvider();
@@ -283,7 +282,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(0,cache.ItemCount);
         }
 
-        [TestMethod]
+        [Test]
         public void Test1()
         {
             SmartCache<int> cache = new SmartCache<int>(5);

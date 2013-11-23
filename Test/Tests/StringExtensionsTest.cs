@@ -25,15 +25,15 @@
 #endregion
 
 using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using Vici.Core.StringExtensions;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class StringExtensionsTest
     {
-        [TestMethod]
+        [Test]
         public void Left()
         {
             Assert.AreEqual("", "ABCDEFGH".Left(0));
@@ -42,7 +42,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("ABCDEFGH", "ABCDEFGH".Left(20));
         }
 
-        [TestMethod]
+        [Test]
         public void Right()
         {
             Assert.AreEqual("", "ABCDEFGH".Right(0));

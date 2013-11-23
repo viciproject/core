@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Vici.Core
 {
@@ -42,8 +42,10 @@ namespace Vici.Core
 		public void FillObject<T>(Func<string,Tuple<object,bool>> valueProvider)
 		{
 			FillObject(typeof(T), valueProvider);
-		}
 
+		    Converter<string, int> x;
+		}
+        
 		public void FillObject(object o, Func<string,Tuple<object,bool>> valueProvider)
 		{
 			Type type = o.GetType();

@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -70,16 +69,15 @@ namespace Vici.Core.Parser
     		get { return _config; }
     	}
 
-#if !PCL
         public CompiledTemplate ParseFile(string fileName)
         {
-            CompiledTemplate template = Parse(File.ReadAllText(fileName));
+            CompiledTemplate template = Parse(FileIO.Delegates.ReadAllText(fileName));
 
             template.FileName = fileName;
 
             return template;
         }
-#endif
+
     	public CompiledTemplate Parse(string inputString)
         {
             try
@@ -244,12 +242,10 @@ namespace Vici.Core.Parser
     		return text;
     	}
 
-#if !PCL
         public string RenderFile(string fileName, IParserContext context)
         {
             return Render(ParseFile(fileName), context);
         }
-#endif
 
     	public string Render(CompiledTemplate compiledTemplate, IParserContext context)
         {

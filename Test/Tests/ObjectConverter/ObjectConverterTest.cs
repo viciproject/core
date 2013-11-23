@@ -25,14 +25,11 @@
 #endregion
 
 using System;
-//using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class ObjectConverterTest
     {
         public enum TestEnum
@@ -101,7 +98,7 @@ namespace Vici.Core.Test
 
         // ReSharper restore InconsistentNaming
 
-        [TestMethod]
+        [Test]
         public void TestTypes()
         {
             Type[] types = new[] { typeof(int), typeof(string), typeof(bool), typeof(TestEnum), typeof(double) };
@@ -109,74 +106,74 @@ namespace Vici.Core.Test
             object o = new object();
 
             foreach (Type t in types)
-                Assert.IsInstanceOfType(o.Convert(t),t);
+                Assert.IsInstanceOf(t,o.Convert(t));
 
             foreach (Type t in types)
                 Assert.AreEqual(t.Inspector().DefaultValue(), ObjectConverter.Convert(null,t));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Int_Null_Dynamic()
         {
             Assert.AreEqual(0, ObjectConverter.Convert(null, typeof(int)));
             Assert.IsNull(ObjectConverter.Convert(null, typeof(int?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Decimal_Null_Dynamic()
         {
             Assert.AreEqual(0m, ObjectConverter.Convert(null, typeof(decimal)));
             Assert.IsNull(ObjectConverter.Convert(null, typeof(decimal?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Char_Null_Dynamic()
         {
             Assert.AreEqual(charDefault, ObjectConverter.Convert(null, typeof(char)));
             Assert.IsNull(ObjectConverter.Convert(null, typeof(char?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Bool_Null_Dynamic()
         {
             Assert.AreEqual(boolDefault, ObjectConverter.Convert(null, typeof(bool)));
             Assert.IsNull(ObjectConverter.Convert(null, typeof(bool?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_String_Null_Dynamic()
         {
             Assert.IsNull(ObjectConverter.Convert(null, typeof(string)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Int_Null_Generic()
         {
             Assert.AreEqual(0, ObjectConverter.Convert<int>(null));
             Assert.IsNull(ObjectConverter.Convert<int?>(null));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Decimal_Null_Generic()
         {
             Assert.AreEqual(0m, ObjectConverter.Convert<decimal>(null));
             Assert.IsNull(ObjectConverter.Convert<decimal?>(null));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Char_Null_Generic()
         {
             Assert.AreEqual(charDefault, ObjectConverter.Convert<char>(null));
             Assert.IsNull(ObjectConverter.Convert<char?>(null));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_String_Null_Generic()
         {
             Assert.IsNull(ObjectConverter.Convert<string>(null));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Int_Enum_Dynamic()
         {
             Assert.AreEqual(TestEnum.One, int1.Convert(typeof(TestEnum)));
@@ -201,7 +198,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(null, int99.Convert(typeof(TestEnum?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Decimal_Enum_Dynamic()
         {
             Assert.AreEqual(TestEnum.One, dec1.Convert(typeof(TestEnum)));
@@ -226,7 +223,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(null, dec99.Convert(typeof(TestEnum?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Int_Bool_Dynamic()
         {
             Assert.AreEqual(true, int1.Convert(typeof(bool)));
@@ -256,7 +253,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(true, intN99.Convert(typeof(bool?)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_Char_String_Dynamic()
         {
             Assert.AreEqual("A", ObjectConverter.Convert(charA,typeof(string)));
@@ -266,7 +263,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(charA, ObjectConverter.Convert("A", typeof(char)));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_NumbersToString()
         {
             Assert.AreEqual("1.2",(1.2m).Convert<string>());
@@ -280,7 +277,7 @@ namespace Vici.Core.Test
             Zero=0,One=1
         }
 
-        [TestMethod]
+        [Test]
         public void MiscTest()
         {
             int intValue = 5;

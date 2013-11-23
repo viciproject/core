@@ -16,7 +16,7 @@ namespace Vici.Core
 			_typeInfo = type.GetTypeInfo();
         }
 
-        private T WalkAndFindSingle<T>(Func<Type,T> f) where T:class 
+        private T WalkAndFindSingle<T>(Func<Type,T> f)
         {
             Type t = _t;
 
@@ -30,12 +30,12 @@ namespace Vici.Core
                 t = t.GetTypeInfo().BaseType;
             }
 
-            return null;
+            return default(T);
         }
 
         private T[] WalkAndFindMultiple<T>(Func<Type, IEnumerable<T>> f) where T : class
         {
-            List<T> array = new List<T>();
+            var list = new List<T>();
 
             Type t = _t;
 
@@ -44,12 +44,12 @@ namespace Vici.Core
                 IEnumerable<T> result = f(t);
 
                 if (result != null)
-                    array.AddRange(result);
+                    list.AddRange(result);
 
                 t = t.GetTypeInfo().BaseType;
             }
 
-            return array.ToArray();
+            return list.ToArray();
         }
 
         public bool IsGenericType
@@ -92,6 +92,11 @@ namespace Vici.Core
 			get { return _typeInfo.IsEnum; }
         }
 
+        public bool IsSubclassOf(Type type)
+        {
+            return WalkAndFindSingle(t => t.GetTypeInfo().BaseType == type);
+        }
+
         public object DefaultValue()
         {
             if (CanBeNull)
@@ -102,11 +107,12 @@ namespace Vici.Core
 
         public MethodInfo GetMethod(string name, Type[] types)
         {
-#if PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredMethods(name).FirstOrDefault(mi => types.SequenceEqual(mi.GetParameters().Select(p => p.ParameterType))));
-#else
-            return _t.GetMethod(name, types);
-#endif
+        }
+
+        public MethodInfo GetMethod(string name, BindingFlags bindingFlags)
+        {
+            return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredMethods(name).FirstOrDefault(mi => mi.Inspector().MatchBindingFlags(bindingFlags)));
         }
 
         public bool HasAttribute<T>(bool inherit) where T : Attribute
@@ -116,11 +122,7 @@ namespace Vici.Core
 
         public T GetAttribute<T>(bool inherit) where T : Attribute
         {
-#if PCL
             return _typeInfo.GetCustomAttributes<T>(inherit).FirstOrDefault();
-#else
-			return (T) _t.GetCustomAttributes(typeof(T),inherit).FirstOrDefault();
-#endif            
         }
 
         public T[] GetAttributes<T>(bool inherit) where T : Attribute
@@ -135,38 +137,22 @@ namespace Vici.Core
 
         public ConstructorInfo[] GetConstructors()
         {
-#if PCL
             return _typeInfo.DeclaredConstructors.ToArray();
-#else
-            return _t.GetConstructors();
-#endif
         }
 
         public MemberInfo[] GetMember(string propertyName)
         {
-#if PCL
             return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers.Where(m => m.Name == propertyName));
-#else
-            return _t.GetMember(propertyName);
-#endif
         }
 
         public PropertyInfo GetIndexer(Type[] types)
         {
-#if PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.MatchParameters(types, pi.GetIndexParameters())));
-#else            
-            return _t.GetProperty("Item", null, types);
-#endif
         }
 
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
         {
-#if PCL
             return _typeInfo.GetCustomAttributes<T>(inherit).ToArray();
-#else
-            return (T[]) _t.GetCustomAttributes(typeof(T), inherit);
-#endif
         }
 
         public MethodInfo GetPropertyGetter(string propertyName, Type[] parameterTypes)
@@ -176,32 +162,19 @@ namespace Vici.Core
 
         public PropertyInfo GetProperty(string propName)
         {
-#if PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredProperty(propName));
-#else
-            return _t.GetProperty(propName);
-#endif
         }
 
         public FieldInfo GetField(string fieldName)
         {
-#if PCL
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredField(fieldName));
-#else
-            return _t.GetField(fieldName);
-#endif
         }
 
         public bool ImplementsOrInherits(Type type)
         {
             if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetTypeInfo().IsInterface)
             {
-#if PCL
                 return _typeInfo.ImplementedInterfaces.Any(t => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type));
-#else
-                return _t.FindInterfaces((t, criteria) => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type), null).Any();
-#endif
-
             }
 
             return type.GetTypeInfo().IsAssignableFrom(_typeInfo);
@@ -214,41 +187,29 @@ namespace Vici.Core
 
         public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes)
         {
-            return (MethodInfo) WalkAndFindSingle(t => LazyBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes,bindingFlags));
+            return WalkAndFindSingle(t => LazyBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes,bindingFlags));
         }
 
         public Type[] GetGenericArguments()
         {
-#if PCL
             return _t.GenericTypeArguments;
-#else
-            return _t.GetGenericArguments();
-#endif
         }
 
 
         public FieldInfo[] GetFields(BindingFlags bindingFlags)
         {
-#if PCL
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
-				return _typeInfo.DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)).ToArray();
-            else
-				return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)));
-#else
-            return _t.GetFields(bindingFlags);
-#endif
+				return _typeInfo.DeclaredFields.Where(fi => fi.Inspector().MatchBindingFlags(bindingFlags)).ToArray();
+
+            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.Inspector().MatchBindingFlags(bindingFlags)));
         }
 
         public PropertyInfo[] GetProperties(BindingFlags bindingFlags)
         {
-#if PCL
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
-				return _typeInfo.DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags)).ToArray();
-            else
-				return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags)));
-#else
-            return _t.GetProperties(bindingFlags);
-#endif
+                return _typeInfo.DeclaredProperties.Where(pi => pi.Inspector().MatchBindingFlags(bindingFlags)).ToArray();
+
+            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredProperties.Where(pi => pi.Inspector().MatchBindingFlags(bindingFlags)));
         }
 
         public Type[] GetInterfaces()
@@ -261,9 +222,9 @@ namespace Vici.Core
 			MemberInfo[] members;
 
 			if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
-				members = _typeInfo.DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)).Union<MemberInfo>(_typeInfo.DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags))).ToArray();
+                members = _typeInfo.DeclaredFields.Where(fi => fi.Inspector().MatchBindingFlags(bindingFlags)).Union<MemberInfo>(_typeInfo.DeclaredProperties.Where(pi => pi.Inspector().MatchBindingFlags(bindingFlags))).ToArray();
 			else
-				members = WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.MatchBindingFlags(bindingFlags)).Union<MemberInfo>(t.GetTypeInfo().DeclaredProperties.Where(pi => pi.MatchBindingFlags(bindingFlags))));
+                members = WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.Inspector().MatchBindingFlags(bindingFlags)).Union<MemberInfo>(t.GetTypeInfo().DeclaredProperties.Where(pi => pi.Inspector().MatchBindingFlags(bindingFlags))));
 
 			return members.Select(m => new FieldOrPropertyInfo(m)).ToArray();
 		}

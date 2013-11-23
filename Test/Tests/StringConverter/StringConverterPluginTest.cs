@@ -1,10 +1,9 @@
 using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class StringConverterPluginTest
     {
         private class Custom1
@@ -72,7 +71,7 @@ namespace Vici.Core.Test
             }
         }
 
-        [TestInitialize]
+        [TestFixtureSetUp]
         public void Setup()
         {
             StringConverter.UnregisterAllStringConverters();
@@ -81,31 +80,31 @@ namespace Vici.Core.Test
             StringConverter.RegisterStringConverter(new CustomStringConverter2());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCustomOk()
         {
             Assert.AreEqual("A", "A".To<Custom1>().Content);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCustomFail()
         {
             Assert.IsNull("NOCONVERT".To<Custom1>());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCustomTypedOk()
         {
             Assert.AreEqual("A", "A".To<Custom2>().Content);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCustomTypedFail()
         {
             Assert.IsNull("NOCONVERT".To<Custom2>());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCustomUnknown()
         {
             Assert.IsNull("A".To<Custom3>());

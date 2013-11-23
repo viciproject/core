@@ -27,18 +27,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Scheduling;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class SchedulerTest
     {
         MockTimeProvider _time = new MockTimeProvider();
 
-        [TestMethod]
+        [Test]
         public void TestContinuous()
         {
             Scheduler scheduler = new CyclicScheduler(null, TimeSpan.FromMinutes(30));
@@ -63,7 +62,7 @@ namespace Vici.Core.Test
             Assert.IsFalse(scheduler.ShouldRun());
         }
 
-        [TestMethod]
+        [Test]
         public void TestContinuous2()
         {
             Scheduler scheduler1 = new CyclicScheduler(null, TimeSpan.FromMinutes(30));
@@ -107,7 +106,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestMonthly()
         {
             Scheduler scheduler = new MonthlyScheduler("MONTHLY", new TimeSpan(12, 0, 0), 5, 10);
@@ -137,7 +136,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestDaily()
         {
             Scheduler scheduler = new TimeOfDayScheduler("DAILY", new TimeSpan(12, 0, 0));
@@ -168,7 +167,7 @@ namespace Vici.Core.Test
         }
 
 #if !PCL
-        [TestMethod]
+        [Test]
         public void TestFileHistoryStore()
         {
             string fileName = Path.Combine(Path.GetTempPath(), "__TEST__FILEHISTORY_STORE.TMP");
@@ -196,7 +195,7 @@ namespace Vici.Core.Test
         }
 #endif
 
-        [TestMethod]
+        [Test]
         public void TestDefaultHistoryStore()
         {
             string id1 = Guid.NewGuid().ToString("N");

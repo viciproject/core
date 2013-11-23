@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class TypeExtensionsTest
     {
-        [TestMethod]
+        [Test]
         public void IsNullable()
         {
             Assert.IsFalse(typeof(object).Inspector().IsNullable);
@@ -18,7 +17,7 @@ namespace Vici.Core.Test
             Assert.IsFalse(typeof(DateTime).Inspector().IsNullable);
         }
 
-        [TestMethod]
+        [Test]
         public void CanBeNull()
         {
             Assert.IsTrue(typeof(object).Inspector().CanBeNull);
@@ -28,7 +27,7 @@ namespace Vici.Core.Test
             Assert.IsFalse(typeof(DateTime).Inspector().CanBeNull);
         }
 
-        [TestMethod]
+        [Test]
         public void DefaultValue()
         {
             Assert.IsNull(typeof(object).Inspector().DefaultValue());
@@ -38,7 +37,7 @@ namespace Vici.Core.Test
             Assert.AreEqual(new DateTime(), typeof(DateTime).Inspector().DefaultValue());
         }
 
-        [TestMethod]
+        [Test]
         public void GetRealType()
         {
             Assert.AreEqual(typeof(object), typeof(object).Inspector().RealType);
@@ -62,10 +61,10 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void GetAttribute()
         {
-            Assert.IsInstanceOfType(typeof(TestClass1).Inspector().GetAttribute<Test1Attribute>(false), typeof(Test1Attribute));
+            Assert.IsInstanceOf<Test1Attribute>(typeof(TestClass1).Inspector().GetAttribute<Test1Attribute>(false));
             Assert.IsNull(typeof(TestClass2).Inspector().GetAttribute<Test1Attribute>(false));
         }
     }

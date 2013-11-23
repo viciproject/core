@@ -25,16 +25,15 @@
 #endregion
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Vici.Core.Parser;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace Vici.Core.Test
 {
-    [TestClass]
+    [TestFixture]
     public class Tokenizer_Fixture
     {
-        [TestMethod]
+        [Test]
         public void TestStringLiteral()
         {
             Tokenizer tokenizer = new Tokenizer();
@@ -56,7 +55,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("\"test\\\"2\"", tokens[4].Text);
         }
 
-        [TestMethod]
+        [Test]
         public void NumericLiterals()
         {
             Tokenizer tokenizer = new Tokenizer();
@@ -86,7 +85,7 @@ namespace Vici.Core.Test
             Assert.AreEqual("10l", tokens[2].Text);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFallback()
         {
             ITokenMatcher matcher1 = new CharMatcher('(');
@@ -107,7 +106,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestAnySequence()
         {
             ITokenMatcher matcher = new CompositeMatcher(
@@ -135,7 +134,7 @@ namespace Vici.Core.Test
 
         }
 
-        [TestMethod]
+        [Test]
         //[ExpectedException(typeof(UnknownTokenException))]
         public void BadToken()
         {
@@ -155,7 +154,7 @@ namespace Vici.Core.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void BadTokenPosition()
         {
             Tokenizer tokenizer = new Tokenizer();
@@ -188,7 +187,7 @@ namespace Vici.Core.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void StartsAndEndsWithToken()
         {
             Tokenizer tokenizer = new Tokenizer();
