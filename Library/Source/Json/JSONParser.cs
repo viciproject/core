@@ -115,6 +115,9 @@ namespace Vici.Core.Json
 
             for (; ; )
             {
+                if ((CurrentToken().TokenMatcher is ObjectEndTokenMatcher))
+                    break;
+
                 if (!(CurrentToken().TokenMatcher is StringTokenMatcher))
                     throw new Exception("Expected property name");
 

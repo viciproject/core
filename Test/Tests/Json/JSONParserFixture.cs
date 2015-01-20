@@ -175,5 +175,14 @@ namespace Vici.Core.Test
 
             Assert.AreEqual("x",jsonObject.As<string>());
         }
+
+        [Test]
+        public void EmptyObject()
+        {
+            JsonObject jsonObject = JsonParser.Parse("{}");
+
+            Assert.IsTrue(jsonObject.IsObject && jsonObject.Keys.Length == 0);
+        }
+
     }
 }

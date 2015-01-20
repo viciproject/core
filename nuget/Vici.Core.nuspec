@@ -3,9 +3,9 @@
   <metadata>
     <id>vici.core</id>
     <title>Vici Core</title>
-    <version>2.1.0</version>
+    <version>2.0.1</version>
     <authors>Philippe Leybaert</authors>
-	<owners>Philippe Leybaert</owners>
+    <owners>Philippe Leybaert</owners>
     <description>General purpose library for expression parsing, template rendering, type conversion, configuration management, ...</description>
     <language>en-US</language>
     <projectUrl>http://viciproject.com/</projectUrl>

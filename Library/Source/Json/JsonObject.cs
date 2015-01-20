@@ -109,6 +109,14 @@ namespace Vici.Core.Json
             return null;
         }
 
-
+        public override string ToString()
+        {
+            if (IsArray)
+                return "[" + AsArray().Length + "]";
+            else if (IsObject)
+                return "{}";
+            else
+                return _value.ToString();
+        }
     }
 }

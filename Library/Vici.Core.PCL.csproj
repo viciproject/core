@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="Source\BinaryHelper.cs" />
     <Compile Include="Source\Cache\SmartCache.cs" />
     <Compile Include="Source\CoreExtensions.cs" />
