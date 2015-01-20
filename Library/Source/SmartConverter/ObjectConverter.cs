@@ -94,10 +94,19 @@ namespace Vici.Core
 					return defaultReturnValue;
                 }
 
-				return Enum.IsDefined(targetType, value) ? 
-                            value 
-                            : 
-							defaultReturnValue;
+                // Enum.IsDefined is the quickest check, but
+                // produces false negatives on enums defined with [Flags],
+                // i.e. enums with bits that can be combined
+                if (Enum.IsDefined(targetType, value))
+                    return value;
+                else
+                {
+                    // see http://stackoverflow.com/questions/4950001/enum-isdefined-with-flagged-enums
+                    decimal d;
+                    if (!decimal.TryParse(value.ToString(), out d))
+                        return value;
+                }
+                return defaultReturnValue;            
             }
 
 			if (targetType.Inspector().IsAssignableFrom(value.GetType()))
