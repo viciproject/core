@@ -32,7 +32,7 @@ namespace Vici.Core
 {
     public class FieldOrPropertyInfo
     {
-        private MemberInfo _memberInfo;
+        private readonly MemberInfo _memberInfo;
         public Type FieldType;
 
         public FieldOrPropertyInfo(MemberInfo memberInfo)
@@ -68,42 +68,42 @@ namespace Vici.Core
 
 		public Action<object,object> Setter()
 		{
-			return delegate(object target, object value) { SetValue(target,value); };
+			return SetValue;
 		}
 
 		public Action<object> Setter(object target)
 		{
-			return delegate(object value) { SetValue(target,value); };
+			return value => SetValue(target, value);
 		}
 
 		public Action<object,T> Setter<T>()
 		{
-			return delegate(object target, T value) { SetValue(target,value); };
+			return (target, value) => SetValue(target, value);
 		}
 
 		public Action<T> Setter<T>(object target)
 		{
-			return delegate(T value) { SetValue(target,value); };
+			return value => SetValue(target, value);
 		}
 
 		public Func<object,object> Getter()
 		{
-			return delegate(object target) { return GetValue(target); };
+			return GetValue;
 		}
 
 		public Func<object,T> Getter<T>()
 		{
-			return delegate(object target) { return (T) GetValue(target); };
+			return target => (T) GetValue(target);
 		}
 
 		public Func<object> Getter(object target)
 		{
-			return delegate() { return GetValue(target); };
+			return () => GetValue(target);
 		}
 
 		public Func<T> Getter<T>(object target)
 		{
-			return delegate() { return (T) GetValue(target); };
+			return () => (T) GetValue(target);
 		}
 
 		public bool IsPrivate

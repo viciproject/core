@@ -21,6 +21,8 @@ namespace Vici.Core.Json
         public bool IsValue { get { return !IsObject && !IsArray; }}
         public bool IsEmpty { get { return _empty; }}
 
+        internal object Value { get { return _value; } }
+
         public object As(Type type)
         {
             return _value.Convert(type);
@@ -112,11 +114,12 @@ namespace Vici.Core.Json
         public override string ToString()
         {
             if (IsArray)
-                return "[" + AsArray().Length + "]";
-            else if (IsObject)
+                return "[" + AsArray().Length + " items]";
+            
+            if (IsObject)
                 return "{}";
-            else
-                return _value.ToString();
+            
+            return _value.ToString();
         }
     }
 }

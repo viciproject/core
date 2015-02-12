@@ -225,6 +225,13 @@
     <Compile Include="Source\Scheduler\ScheduleHistory\IScheduleHistoryStore.cs" />
     <Compile Include="Source\Scheduler\Scheduler.cs" />
     <Compile Include="Source\Scheduler\TimeOfDayScheduler.cs" />
+    <Compile Include="Source\SimpleDataStore\DataStore.cs" />
+    <Compile Include="Source\SimpleDataStore\IDataStore.cs" />
+    <Compile Include="Source\SimpleDataStore\IDataStoreObject.cs" />
+    <Compile Include="Source\SimpleDataStore\Json\IJsonDataStoreObject.cs" />
+    <Compile Include="Source\SimpleDataStore\Json\JsonDataStore.cs" />
+    <Compile Include="Source\SimpleDataStore\Xml\IXmlDataStoreObject.cs" />
+    <Compile Include="Source\SimpleDataStore\Xml\XmlDataStore.cs" />
     <Compile Include="Source\SmartConverter\EnumConverter.cs" />
     <Compile Include="Source\SmartConverter\IStringConverter.cs" />
     <Compile Include="Source\SmartConverter\ObjectConverter.cs" />

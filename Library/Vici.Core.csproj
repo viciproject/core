@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vici.Core</RootNamespace>
     <AssemblyName>Vici.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -96,6 +96,13 @@
     <Compile Include="Source\Reflection\ReflectionExtensions.cs" />
     <Compile Include="Source\Reflection\Inspectors\TypeInspector.cs" />
     <Compile Include="Source\SafeDictionary.cs" />
+    <Compile Include="Source\SimpleDataStore\DataStore.cs" />
+    <Compile Include="Source\SimpleDataStore\IDataStore.cs" />
+    <Compile Include="Source\SimpleDataStore\IDataStoreObject.cs" />
+    <Compile Include="Source\SimpleDataStore\Json\IJsonDataStoreObject.cs" />
+    <Compile Include="Source\SimpleDataStore\Xml\IXmlDataStoreObject.cs" />
+    <Compile Include="Source\SimpleDataStore\Json\JsonDataStore.cs" />
+    <Compile Include="Source\SimpleDataStore\Xml\XmlDataStore.cs" />
     <Compile Include="Source\StringExtensions.cs" />
     <Compile Include="Source\TypedWeakReference.cs" />
     <Compile Include="Source\Parser\Context\ParserContextBehavior.cs" />

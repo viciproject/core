@@ -32,9 +32,9 @@ namespace Vici.Core.BinaryExtensions
 {
 	public static class BinaryExtensions
     {
-        public static string ToHex(this byte[] bytes, bool upperCase)
+        public static string ToHex(this byte[] bytes, bool upperCase = false)
         {
-            StringBuilder result = new StringBuilder(bytes.Length*2);
+            var result = new StringBuilder(bytes.Length*2);
 
             for (int i = 0; i < bytes.Length; i++)
                 result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
@@ -42,14 +42,9 @@ namespace Vici.Core.BinaryExtensions
             return result.ToString();
         }
 
-        public static string ToHex(this byte[] bytes)
-        {
-            return ToHex(bytes, false);
-        }
-
         public static byte[] XorWith(this byte[] bytes, byte[] xor)
         {
-            byte[] result = new byte[bytes.Length];
+            var result = new byte[bytes.Length];
 
             for (int i = 0; i < bytes.Length; i++)
                 if (i < xor.Length)

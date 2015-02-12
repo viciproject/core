@@ -33,19 +33,41 @@ namespace Vici.Core
 {
     public static class FileIO
     {
+        public delegate string ReadAllText(string path);
+        public delegate void WriteAllText(string path, string s);
+        public delegate bool FileExists(string path);
+        public delegate Stream OpenReadStream(string path, bool exclusive);
+        public delegate Stream OpenWriteStream(string path, bool exclusive, bool create);
+
         public class FileIODelegates
         {
-            public Func<string,string> ReadAllText;
+            public ReadAllText ReadAllText;
+            public WriteAllText WriteAllText;
             public Func<string, string> BuildFullPath;
+            public FileExists FileExists;
+            public OpenReadStream OpenReadStream;
+            public OpenWriteStream OpenWriteStream;
         }
 
         public static FileIODelegates Delegates = new FileIODelegates()
 #if PCL
-        ;
+        {
+            ReadAllText = path => null,
+            WriteAllText = (path, s) => { },
+            BuildFullPath = path => path,
+            FileExists = path => false,
+            OpenReadStream = (path,exclusive) => Stream.Null,
+            OpenWriteStream = (path,exclusive,create) => Stream.Null
+        };
 #else
         {
             ReadAllText = path => File.ReadAllText(path),
-            BuildFullPath = path => Path.GetFullPath(path)
+            WriteAllText = (path,s) => File.WriteAllText(path,s),
+            BuildFullPath = path => Path.GetFullPath(path),
+            FileExists = path => File.Exists(path),
+            OpenReadStream = (path, exclusive) => File.Open(path,FileMode.Open,FileAccess.Read,exclusive ? FileShare.None : FileShare.Read),
+            OpenWriteStream = (path, exclusive, create) => File.Open(path, create ? FileMode.Create : FileMode.Open, FileAccess.ReadWrite, exclusive ? FileShare.None : FileShare.Read),
+
         };
 #endif
 

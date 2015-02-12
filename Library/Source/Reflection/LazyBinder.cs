@@ -147,13 +147,9 @@ namespace Vici.Core
             object[] p = ConvertParameters(parameters, method.GetParameters());
 
             if (method is ConstructorInfo)
-            {
                 return ((ConstructorInfo) method).Invoke(p);
-            }
-            else
-            {
-                return method.Invoke(null, p);
-            }
+
+            return method.Invoke(null, p);
         }
 
 

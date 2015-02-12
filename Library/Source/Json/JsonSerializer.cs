@@ -69,6 +69,8 @@ namespace Vici.Core.Json
                 WriteDictionary((IDictionary)obj);
             else if (obj is ICollection)
                 WriteArray((IEnumerable)obj);
+            else if (obj is JsonObject)
+                WriteJsonObject(obj as JsonObject);
             else
                 WriteObject(obj);
         }
@@ -106,15 +108,41 @@ namespace Vici.Core.Json
             
         }
 
+        private void WriteJsonObject(JsonObject jsonObject)
+        {
+            if (jsonObject == null)
+                return;
+
+            if (jsonObject.IsArray)
+                WriteArray(jsonObject.AsArray());
+            else if (jsonObject.IsValue)
+                WriteValue(jsonObject.Value);
+            else if (jsonObject.IsObject)
+            {
+                bool sep = false;
+
+                _output.Append('{');
+
+                foreach (var field in jsonObject.Keys)
+                {
+                    if (sep)
+                        _output.Append(',');
+
+                    WritePair(field, jsonObject[field]);
+
+                    sep = true;
+                }
+
+                _output.Append('}');
+            }
+        }
+
         private void WriteObject(object obj)
         {
-            foreach (var o in _circularStack)
+            if (_circularStack.Any(o => o == obj))
             {
-                if (o == obj)
-                {
-                    WriteValue(null);
-                    return;
-                }
+                WriteValue(null);
+                return;
             }
 
             _circularStack.Push(obj);
@@ -123,25 +151,25 @@ namespace Vici.Core.Json
 
             bool pendingSeparator = false;
 
-            foreach (FieldInfo field in obj.GetType().Inspector().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var fieldInfo in obj.GetType().Inspector().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (pendingSeparator)
                     _output.Append(',');
 
-                WritePair(field.Name, field.GetValue(obj));
+                WritePair(fieldInfo.Name, fieldInfo.GetValue(obj));
 
                 pendingSeparator = true;
             }
 
-            foreach (PropertyInfo property in obj.GetType().Inspector().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var propertyInfo in obj.GetType().Inspector().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (!property.CanRead)
+                if (!propertyInfo.CanRead)
                     continue;
 
                 if (pendingSeparator)
                     _output.Append(',');
 
-                WritePair(property.Name, property.GetValue(obj, null));
+                WritePair(propertyInfo.Name, propertyInfo.GetValue(obj, null));
 
                 pendingSeparator = true;
             }

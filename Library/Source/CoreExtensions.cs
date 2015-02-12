@@ -34,7 +34,7 @@ using Vici.Core.Parser;
 namespace Vici.Core
 {
 #if PCL
-    public delegate TOutput Converter<TInput, TOutput>(TInput value);
+    public delegate TOutput Converter<in TInput, out TOutput>(TInput value);
 #endif
 
     public static class CoreExtensions
