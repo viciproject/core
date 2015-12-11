@@ -29,7 +29,7 @@ namespace Vici.Core.Parser
 {
     public class SequenceExpression : Expression
     {
-        private Expression[] _expressions;
+        private readonly Expression[] _expressions;
 
         public SequenceExpression(TokenPosition tokenPosition, Expression[] expressions) : base(tokenPosition)
         {
@@ -59,9 +59,11 @@ namespace Vici.Core.Parser
             return Exp.Value(TokenPosition, null, typeof (object));
         }
 
+#if DEBUG
         public override string ToString()
         {
             return string.Join(";", _expressions.Select(e => e.ToString()).ToArray());
         }
+#endif
     }
 }

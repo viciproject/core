@@ -31,13 +31,13 @@ namespace Vici.Core.Parser
 {
     public class IndexExpression : Expression
     {
-        private readonly Expression _target;
-        private readonly Expression[] _parameters;
+        public Expression Target { get; private set; }
+        public Expression[] Parameters { get; private set; }
 
         public IndexExpression(TokenPosition position, Expression target, Expression[] parameters) : base(position)
         {
-            _target = target;
-            _parameters = parameters;
+            Target = target;
+            Parameters = parameters;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
@@ -47,12 +47,12 @@ namespace Vici.Core.Parser
 
         public ValueExpression Evaluate(IParserContext context, bool assign, object newValue)
         {
-            ValueExpression targetValue = _target.Evaluate(context);
+            ValueExpression targetValue = Target.Evaluate(context);
 
             Type targetType = targetValue.Type;
             object targetObject = targetValue.Value;
 
-            ValueExpression[] parameters = EvaluateExpressionArray(_parameters, context);
+            ValueExpression[] parameters = EvaluateExpressionArray(Parameters, context);
             Type[] parameterTypes = parameters.ConvertAll(expr => expr.Type);
             object[] parameterValues = parameters.ConvertAll(expr => expr.Value);
 
@@ -117,12 +117,14 @@ namespace Vici.Core.Parser
             return Evaluate(context, true, newValue);
         }
 
+#if DEBUG
         public override string ToString()
         {
-            string[] parameters = _parameters.ConvertAll(expr => expr.ToString());
+            string[] parameters = Parameters.ConvertAll(expr => expr.ToString());
 
-            return "(" + _target + "[" + String.Join(",", parameters) + "])";
+            return "(" + Target + "[" + String.Join(",", parameters) + "])";
         }
+#endif
     }
 
 

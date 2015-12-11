@@ -5,7 +5,7 @@ namespace Vici.Core
 {
     public class SafeDictionary<TK, TV> : IDictionary<TK, TV>
     {
-        private Dictionary<TK, TV> _dic;
+        private readonly Dictionary<TK, TV> _dic;
 
         private IDictionary<TK,TV> AsInterface() { return _dic; } 
 
@@ -113,10 +113,13 @@ namespace Vici.Core
             }
         }
 
-        public ICollection<TK> Keys {
+        public ICollection<TK> Keys 
+        {
             get { return _dic.Keys; }
         }
-        public ICollection<TV> Values {
+
+        public ICollection<TV> Values 
+        {
             get { return _dic.Values; }
         }
 

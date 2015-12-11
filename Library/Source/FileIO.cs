@@ -49,6 +49,8 @@ namespace Vici.Core
             public OpenWriteStream OpenWriteStream;
         }
 
+        //public static ReadAllText _ReadAllText = path => null;
+
         public static FileIODelegates Delegates = new FileIODelegates()
 #if PCL
         {

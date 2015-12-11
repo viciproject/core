@@ -26,18 +26,15 @@ using System;
 
 namespace Vici.Core.Parser
 {
-    public class ReturnExpression : Expression
+    public class ReturnExpression : UnaryExpression
     {
-        private Expression _expression;
-
-        public ReturnExpression(TokenPosition tokenPosition, Expression expression) : base(tokenPosition)
+        public ReturnExpression(TokenPosition tokenPosition, Expression expression) : base(tokenPosition, expression)
         {
-            _expression = expression;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            var value = _expression.Evaluate(context);
+            var value = Value.Evaluate(context);
 
             return new ReturnValueExpression(TokenPosition,value.Value,value.Type);
         }

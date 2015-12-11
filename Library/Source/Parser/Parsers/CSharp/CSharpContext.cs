@@ -74,13 +74,33 @@ namespace Vici.Core.Parser
             AddKeywords();
         }
 
+        public CSharpContext(IDictionary<string,object> dic) : base(dic)
+        {
+            AddKeywords();
+        }
+
+        public CSharpContext(IDictionary<string, object> dic, ParserContextBehavior behavior) : base(dic, behavior)
+        {
+            AddKeywords();
+        }
+
+        public CSharpContext(object rootObject, IDictionary<string, object> dic) : base(rootObject, dic)
+        {
+            AddKeywords();
+        }
+
+        public CSharpContext(object rootObject, IDictionary<string, object> dic, ParserContextBehavior behavior) : base(rootObject, dic, behavior)
+        {
+            AddKeywords();
+        }
+
         public CSharpContext(ParserContext parentContext) : base(parentContext)
         {
         }
 
-        public override IParserContext CreateLocal()
+        public override IParserContext CreateLocal(object rootObject = null)
         {
-            return new CSharpContext(this);
+            return new CSharpContext(this) {RootObject = rootObject};
         }
     }
 }

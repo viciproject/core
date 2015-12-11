@@ -39,7 +39,10 @@ namespace Vici.Core
 
         public static object Convert(this object value, Type targetType)
         {
-			object defaultReturnValue = targetType.Inspector().DefaultValue();
+            var originalTargetType = targetType;
+            var targetTypeInspector = targetType.Inspector();
+
+            object defaultReturnValue = targetTypeInspector.DefaultValue();
 
             if (value == null)
 				return defaultReturnValue;
@@ -47,19 +50,21 @@ namespace Vici.Core
             if (targetType == typeof (object))
                 return value;
 
-			targetType = targetType.Inspector().RealType;
+			targetType = targetTypeInspector.RealType;
+            targetTypeInspector = targetType.Inspector();
+
 			Type sourceType = value.GetType();
 
 			if (sourceType == targetType)
                 return value;
 
-			var implicitOperator = targetType.Inspector().GetMethod("op_Implicit", new [] {sourceType});
+			var implicitOperator = targetTypeInspector.GetMethod("op_Implicit", new [] {sourceType});
 
             if (implicitOperator != null)
                 return implicitOperator.Invoke(null, new [] {value});
 
             if (value is string)
-                return StringConverter.Convert((string)value, targetType);
+                return StringConverter.Convert((string)value, originalTargetType);
 
 			if (targetType == typeof(string))
             {
@@ -81,7 +86,7 @@ namespace Vici.Core
 			if (targetType == typeof (byte[]) && value is Guid)
                 return ((Guid) value).ToByteArray();
 
-			if (targetType.Inspector().IsEnum)
+			if (targetTypeInspector.IsEnum)
             {
                 try
                 {
@@ -109,7 +114,7 @@ namespace Vici.Core
                 return defaultReturnValue;            
             }
 
-			if (targetType.Inspector().IsAssignableFrom(value.GetType()))
+			if (targetTypeInspector.IsAssignableFrom(value.GetType()))
                 return value;
 
 			if (targetType.IsArray && sourceType.IsArray)
@@ -126,6 +131,21 @@ namespace Vici.Core
 
 				return array;
 			}
+
+            if (targetType == typeof (DateTime))
+            {
+                try
+                {
+                    double seconds = System.Convert.ToDouble(value);
+
+                    return new DateTime(1970, 1, 1).AddSeconds(seconds);
+                }
+                catch
+                {
+                    return defaultReturnValue;
+                }
+                
+            }
 
 
             try

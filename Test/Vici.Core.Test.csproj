@@ -78,11 +78,13 @@
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />
     <Compile Include="Tests\NotifierTest.cs" />
+    <Compile Include="Tests\ObjectMappedTest.cs" />
     <Compile Include="Tests\Parser\CSharpParserFixture.cs" />
     <Compile Include="Tests\Parser\TemplateParser_Fixture.cs" />
     <Compile Include="Tests\SafeDictionaryTest.cs" />
     <Compile Include="Tests\SchedulerTest.cs" />
     <Compile Include="Tests\SmartCache_Fixture.cs" />
+    <Compile Include="Tests\StringConverter\ObjectConverterTest.cs" />
     <Compile Include="Tests\StringConverter\StringConverterPluginTest.cs" />
     <Compile Include="Tests\StringConverter\StringConverterTest.cs" />
     <Compile Include="Tests\StringExtensionsTest.cs" />

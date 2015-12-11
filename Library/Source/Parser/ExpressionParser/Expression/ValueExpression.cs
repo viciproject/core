@@ -30,28 +30,17 @@ namespace Vici.Core.Parser
 {
     public class ValueExpression : Expression , IValueWithType
     {
-        private Type _type;
-        private object _value;
+        public Type Type { get; private set; }
+        public object Value { get; set; }
 
-        public ValueExpression(TokenPosition position, object value, Type type) : base(position)
+        public ValueExpression(TokenPosition position, object value, Type type)
+            : base(position)
         {
             Value = value;
             Type = type;
 
             if (Type == typeof(object) && Value != null)
                 Type = Value.GetType();
-        }
-
-        public Type Type
-        {
-            get { return _type; }
-            private set { _type = value; }
-        }
-
-        public object Value
-        {
-            get { return _value; }
-            set { _value = value; }
         }
 
         public override ValueExpression Evaluate(IParserContext context)

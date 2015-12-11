@@ -144,6 +144,5 @@ namespace Vici.Core.Test
         {
             Assert.IsNull(((string)null).To<TestEnum?>());
         }
-
     }
 }

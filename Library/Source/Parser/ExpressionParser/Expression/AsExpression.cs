@@ -29,26 +29,24 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class AsExpression : Expression
+    public class AsExpression : BinaryExpression
     {
-        private readonly Expression _objectExpression;
-        private readonly Expression _typeExpression;
+        public Expression ObjectExpression { get { return base.Left; } }
+        public Expression TypeExpression { get { return base.Right; } }
 
-        public AsExpression(TokenPosition position, Expression objectExpression, Expression typeExpression) : base(position)
+        public AsExpression(TokenPosition position, Expression objectExpression, Expression typeExpression) : base(position,objectExpression,typeExpression)
         {
-            _objectExpression = objectExpression;
-            _typeExpression = typeExpression;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ClassName className = _typeExpression.Evaluate(context).Value as ClassName;
+            ClassName className = TypeExpression.Evaluate(context).Value as ClassName;
 
             if (className == null)
-                throw new IllegalOperandsException("as operator requires type. "  + _typeExpression + " is not a type",this);
+                throw new IllegalOperandsException("as operator requires type. "  + TypeExpression + " is not a type",this);
 
             Type checkType = className.Type;
-            ValueExpression objectValue = _objectExpression.Evaluate(context);
+            ValueExpression objectValue = ObjectExpression.Evaluate(context);
             Type objectType = objectValue.Type;
 
             if (objectValue.Value == null)

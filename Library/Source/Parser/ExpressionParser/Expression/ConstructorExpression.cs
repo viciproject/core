@@ -31,30 +31,32 @@ namespace Vici.Core.Parser
 {
     public class ConstructorExpression : Expression
     {
-        private readonly VariableExpression _className;
-        private readonly Expression[] _parameters;
+        public VariableExpression ClassName { get; private set; }
+        public Expression[] Parameters { get; private set; }
 
         public ConstructorExpression(TokenPosition position, VariableExpression className, Expression[] parameters) : base(position)
         {
-            _className = className;
-            _parameters = parameters;
+            ClassName = className;
+            Parameters = parameters;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ClassName className = _className.Evaluate(context).Value as ClassName;
+            ClassName className = ClassName.Evaluate(context).Value as ClassName;
 
             if (className == null)
-                throw new TypeInitializationException(_className.VarName,null);
+                throw new TypeInitializationException(ClassName.VarName,null);
 
             return Exp.Value(TokenPosition, className.Type.Inspector().GetConstructors());
         }
 
+#if DEBUG
         public override string ToString()
         {
-            string[] parameters = _parameters.ConvertAll(expr => expr.ToString());
+            string[] parameters = Parameters.ConvertAll(expr => expr.ToString());
 
-            return "(new " + _className + "(" + String.Join(",", parameters) + "))";
+            return "(new " + ClassName + "(" + String.Join(",", parameters) + "))";
         }
+#endif    
     }
 }

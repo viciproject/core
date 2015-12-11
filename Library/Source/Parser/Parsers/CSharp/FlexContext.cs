@@ -25,6 +25,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Vici.Core.Parser
@@ -32,6 +34,14 @@ namespace Vici.Core.Parser
     public class FlexContext : CSharpContext
     {
         public FlexContext() : base(ParserContextBehavior.Easy)
+        {
+        }
+
+        public FlexContext(IDictionary<string, object> dic) : base(dic, ParserContextBehavior.Easy)
+        {
+        }
+
+        public FlexContext(object rootObject, IDictionary<string, object> dic) : base(rootObject, dic, ParserContextBehavior.Easy)
         {
         }
 
@@ -43,9 +53,9 @@ namespace Vici.Core.Parser
         {
         }
 
-        public override IParserContext CreateLocal()
+        public override IParserContext CreateLocal(object rootObject = null)
         {
-            return new FlexContext(this);
+            return new FlexContext(this) {RootObject = rootObject};
         }
 
     }

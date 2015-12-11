@@ -35,7 +35,7 @@ namespace Vici.Core.Config
 {
     public class ConfigurationProviderXmlConfig : IConfigurationProvider
     {
-        private Dictionary<string, string> _settings = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _settings = new Dictionary<string, string>();
 
         public ConfigurationProviderXmlConfig(XDocument xDoc)
         {

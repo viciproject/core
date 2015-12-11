@@ -241,6 +241,11 @@ namespace Vici.Core.Parser
         static readonly Dictionary<string,OperatorMethod[]> _operatorMethods = new Dictionary<string, OperatorMethod[]>();
         static readonly Dictionary<string,string> _operatorOverloadNames = new Dictionary<string, string>();
 
+        public string Operator
+        {
+            get { return _operator; }
+        }
+
         public override ValueExpression Evaluate(IParserContext context)
         {
             ValueExpression[] values = new[] { Left.Evaluate(context), Right.Evaluate(context) };
@@ -342,9 +347,11 @@ namespace Vici.Core.Parser
             return null;
         }
 
+#if DEBUG
         public override string ToString()
         {
             return "(" + Left + " " + _operator + " " + Right + ")";
         }
+#endif
     }
 }

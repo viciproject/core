@@ -71,6 +71,10 @@
     <Compile Include="Source\BinarySerializer.cs" />
     <Compile Include="Source\CoreExtensions.cs" />
     <Compile Include="Source\EasyConfig\Providers\ConfigurationProviderXmlConfig.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Expression\Abstract\Exp.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Expression\UnaryExpression.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Expression\ValueOrNullExpression.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Parser\ExpressionVisitor.cs" />
     <Compile Include="Source\SafeStringDictionary.cs" />
     <Compile Include="Source\FileIO.cs" />
     <Compile Include="Source\Json\JsonObject.cs" />
@@ -88,7 +92,7 @@
     <Compile Include="Source\Parser\ExpressionParser\Expression\SequenceExpression.cs" />
     <Compile Include="Source\Parser\TemplateParser\Nodes\ExpressionTemplateNode.cs" />
     <Compile Include="Source\Parser\TemplateParser\Nodes\ForEachTemplateNode.cs" />
-    <Compile Include="Source\Reflection\AutoMapper.cs" />
+    <Compile Include="Source\Reflection\ObjectMapper.cs" />
     <Compile Include="Source\Reflection\FieldOrPropertyInfo.cs" />
     <Compile Include="Source\Reflection\LazyBinder.cs" />
     <Compile Include="Source\Reflection\Inspectors\MemberInspector.cs" />
@@ -96,15 +100,7 @@
     <Compile Include="Source\Reflection\ReflectionExtensions.cs" />
     <Compile Include="Source\Reflection\Inspectors\TypeInspector.cs" />
     <Compile Include="Source\SafeDictionary.cs" />
-    <Compile Include="Source\SimpleDataStore\DataStore.cs" />
-    <Compile Include="Source\SimpleDataStore\IDataStore.cs" />
-    <Compile Include="Source\SimpleDataStore\IDataStoreObject.cs" />
-    <Compile Include="Source\SimpleDataStore\Json\IJsonDataStoreObject.cs" />
-    <Compile Include="Source\SimpleDataStore\Xml\IXmlDataStoreObject.cs" />
-    <Compile Include="Source\SimpleDataStore\Json\JsonDataStore.cs" />
-    <Compile Include="Source\SimpleDataStore\Xml\XmlDataStore.cs" />
     <Compile Include="Source\StringExtensions.cs" />
-    <Compile Include="Source\TypedWeakReference.cs" />
     <Compile Include="Source\Parser\Context\ParserContextBehavior.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\ContainerClasses\IMethodDefinition.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\DefaultValueExpression.cs" />
@@ -289,7 +285,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

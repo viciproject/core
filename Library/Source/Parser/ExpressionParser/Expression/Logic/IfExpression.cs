@@ -54,9 +54,11 @@ namespace Vici.Core.Parser
             return Exp.NullValue(TokenPosition);
         }
 
+#if DEBUG
         public override string ToString()
         {
             return "if(" + Condition + ") " + TrueExpression + " else " + FalseExpression + ")";
         }
+#endif
     }
 }

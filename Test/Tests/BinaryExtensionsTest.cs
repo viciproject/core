@@ -26,7 +26,7 @@
 
 using System.Linq;
 using NUnit.Framework;
-using Vici.Core.BinaryExtensions;
+using Vici.Core;
 
 namespace Vici.Core.Test
 {

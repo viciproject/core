@@ -30,45 +30,33 @@ namespace Vici.Core.Parser
 {
     public struct TokenPosition
     {
-        private int _line;
-        private int _column;
-
         public static TokenPosition Unknown = new TokenPosition(1, 1);
 
-        public TokenPosition(int lineNum, int column)
+        public int Line { get; set; }
+        public int Column { get; set; }
+
+        public TokenPosition(int lineNum, int column) : this()
         {
-            _line = lineNum;
-            _column = column;
+            Line = lineNum;
+            Column = column;
         }
 
-        public TokenPosition(TokenPosition parent, TokenPosition current)
+        public TokenPosition(TokenPosition parent, TokenPosition current) : this()
         {
-            _line = parent.Line + current.Line - 1;
+            Line = parent.Line + current.Line - 1;
 
-            _column = current.Column;
+            Column = current.Column;
 
             if (current.Line <= 1)
-                _column = parent.Column + current.Column - 1;
+                Column = parent.Column + current.Column - 1;
         }
 
         public void ChangeBase(TokenPosition basePosition)
         {
-            if (_line <= 1)
-                _column = basePosition.Column + _column - 1;
+            if (Line <= 1)
+                Column = basePosition.Column + Column - 1;
 
-            _line = basePosition.Line + _line - 1;
-        }
-
-        public int Line
-        {
-            get { return _line; }
-            set { _line = value; }
-        }
-
-        public int Column
-        {
-            get { return _column; }
-            set { _column = value; }
+            Line = basePosition.Line + Line - 1;
         }
 
         public static TokenPosition[] GetPositionsFromString(string s)
@@ -105,9 +93,11 @@ namespace Vici.Core.Parser
             return positions;
         }
 
+#if DEBUG
         public override string ToString()
         {
             return "(L " + Line + " , C " + Column + ")";
         }
+#endif
     }
 }

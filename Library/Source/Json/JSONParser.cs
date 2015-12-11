@@ -28,7 +28,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using Vici.Core.Parser;
 
 namespace Vici.Core.Json
@@ -38,6 +40,11 @@ namespace Vici.Core.Json
         public static JsonObject Parse(string json)
         {
             return new JsonParser()._Parse(json);
+        }
+
+        public static JsonObject Parse(Stream stream)
+        {
+            return new JsonParser()._Parse(stream);
         }
 
         public static T Parse<T>(string json) where T : class,new()
@@ -64,6 +71,14 @@ namespace Vici.Core.Json
             _currentToken = 0;
 
             return ParseValue();
+        }
+
+        private JsonObject _Parse(Stream stream)
+        {
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return _Parse(reader.ReadToEnd());
+            }
         }
 
         private void Tokenize(string json)
@@ -93,7 +108,7 @@ namespace Vici.Core.Json
             {
                 NextToken();
 
-                return null;
+                return new JsonObject();
             }
 
             if (!(CurrentToken().TokenMatcher is ObjectStartTokenMatcher))

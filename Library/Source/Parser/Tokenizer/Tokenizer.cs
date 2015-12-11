@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Vici.Core.Parser
@@ -101,7 +102,7 @@ namespace Vici.Core.Parser
                 successfulTokens.Clear();
 
                 //TODO: parallel processing in .NET 4.0
-                foreach (TokenMatcher tokenMatcher in tokenMatchers)
+                foreach (var tokenMatcher in tokenMatchers)
                 {
                     TokenizerState state = tokenMatcher.Feed(c, s, textIndex);
 
@@ -113,14 +114,13 @@ namespace Vici.Core.Parser
 
                 if (successfulTokens.Count > 0)
                 {
-                    successMatch = new SuccessfulMatch();
-
-                    successMatch.StartIndex = firstValidIndex;
-                    successMatch.Length = textIndex - firstValidIndex;
-
-                    successMatch.Token = successfulTokens[0].TranslateToken(s.Substring(firstValidIndex, textIndex - firstValidIndex));
-
-                    successMatch.Matches = new List<TokenMatcher>(successfulTokens);
+                    successMatch = new SuccessfulMatch
+                    {
+                        StartIndex = firstValidIndex, 
+                        Length = textIndex - firstValidIndex, 
+                        Token = successfulTokens[0].TranslateToken(s.Substring(firstValidIndex, textIndex - firstValidIndex)), 
+                        Matches = new List<TokenMatcher>(successfulTokens)
+                    };
                 }
 
                 if (foundToken)
@@ -197,11 +197,7 @@ namespace Vici.Core.Parser
 
             successfulTokens.Clear();
 
-            foreach (TokenMatcher tokenMatcher in tokenMatchers)
-            {
-                if (tokenMatcher.Feed('\0', s, s.Length) == TokenizerState.Success)
-                    successfulTokens.Add(tokenMatcher);
-            }
+            successfulTokens.AddRange(tokenMatchers.Where(tokenMatcher => tokenMatcher.Feed('\0', s, s.Length) == TokenizerState.Success));
 
             if (_allowFillerTokens && filler.Length > 0)
             {
@@ -231,18 +227,17 @@ namespace Vici.Core.Parser
 
         private void Reset(TokenMatcher[] matchers)
         {
-            foreach (TokenMatcher td in matchers)
-                td.Reset();
+            foreach (var tokenMatcher in matchers)
+                tokenMatcher.Reset();
         }
 
         public virtual T CreateToken(ITokenMatcher tokenMatcher, string token)
         {
-            T t = new T();
-
-            t.Text = token;
-            t.TokenMatcher = tokenMatcher;
-
-            return t;
+            return new T
+            {
+                Text = token, 
+                TokenMatcher = tokenMatcher
+            };
         }
 
     }

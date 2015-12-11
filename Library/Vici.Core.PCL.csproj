@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F3DF58D7-69AD-49F6-838F-6BDF02D3886A}</ProjectGuid>
@@ -11,7 +11,7 @@
     <RootNamespace>Vici.Core.PCL</RootNamespace>
     <AssemblyName>Vici.Core.PCL</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProductVersion>12.0.0</ProductVersion>
@@ -91,6 +91,7 @@
     <Compile Include="Source\Parser\ExpressionParser\Exceptions\LiteralException.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Exceptions\ParserException.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Exceptions\UnknownPropertyException.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Expression\Abstract\Exp.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\Abstract\Expression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\Abstract\ExpressionWithContext.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\AddExpression.cs" />
@@ -132,10 +133,13 @@
     <Compile Include="Source\Parser\ExpressionParser\Expression\SubtractExpression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\TypeCastExpression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\TypeOfExpression.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Expression\UnaryExpression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\UnaryMinusExpression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\ValueExpression.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Expression\ValueOrNullExpression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Expression\VariableExpression.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Parser\ExpressionParser.cs" />
+    <Compile Include="Source\Parser\ExpressionParser\Parser\ExpressionVisitor.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Parser\IValueWithType.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Parser\OperatorAssociativity.cs" />
     <Compile Include="Source\Parser\ExpressionParser\Parser\RPNExpression.cs" />
@@ -209,13 +213,13 @@
     <Compile Include="Source\Parser\Tokenizer\TokenizerState.cs" />
     <Compile Include="Source\Parser\Tokenizer\TokenMatcher.cs" />
     <Compile Include="Source\Parser\Tokenizer\TokenPosition.cs" />
-    <Compile Include="Source\Reflection\AutoMapper.cs" />
     <Compile Include="Source\Reflection\FieldOrPropertyInfo.cs" />
     <Compile Include="Source\Reflection\Inspectors\AssemblyInspector.cs" />
     <Compile Include="Source\Reflection\Inspectors\MemberInspector.cs" />
     <Compile Include="Source\Reflection\Inspectors\PropertyInspector.cs" />
     <Compile Include="Source\Reflection\Inspectors\TypeInspector.cs" />
     <Compile Include="Source\Reflection\LazyBinder.cs" />
+    <Compile Include="Source\Reflection\ObjectMapper.cs" />
     <Compile Include="Source\Reflection\ReflectionExtensions.cs" />
     <Compile Include="Source\SafeDictionary.cs" />
     <Compile Include="Source\SafeStringDictionary.cs" />
@@ -225,19 +229,11 @@
     <Compile Include="Source\Scheduler\ScheduleHistory\IScheduleHistoryStore.cs" />
     <Compile Include="Source\Scheduler\Scheduler.cs" />
     <Compile Include="Source\Scheduler\TimeOfDayScheduler.cs" />
-    <Compile Include="Source\SimpleDataStore\DataStore.cs" />
-    <Compile Include="Source\SimpleDataStore\IDataStore.cs" />
-    <Compile Include="Source\SimpleDataStore\IDataStoreObject.cs" />
-    <Compile Include="Source\SimpleDataStore\Json\IJsonDataStoreObject.cs" />
-    <Compile Include="Source\SimpleDataStore\Json\JsonDataStore.cs" />
-    <Compile Include="Source\SimpleDataStore\Xml\IXmlDataStoreObject.cs" />
-    <Compile Include="Source\SimpleDataStore\Xml\XmlDataStore.cs" />
     <Compile Include="Source\SmartConverter\EnumConverter.cs" />
     <Compile Include="Source\SmartConverter\IStringConverter.cs" />
     <Compile Include="Source\SmartConverter\ObjectConverter.cs" />
     <Compile Include="Source\SmartConverter\StringConverter.cs" />
     <Compile Include="Source\StringExtensions.cs" />
-    <Compile Include="Source\TypedWeakReference.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -42,6 +42,7 @@ namespace Vici.Core.Parser
             AddTokenMatcher(new StringMatcher("||"), TokenType.Operator, 9, CSharpEvaluator.ShortcutOperator);
             AddTokenMatcher(new StringMatcher("??"), TokenType.Operator, 8, CSharpEvaluator.Coalesce);
             AddTokenMatcher(new StringMatcher("?:"), TokenType.Operator, 8, CSharpEvaluator.DefaultValueOperator);
+            AddTokenMatcher(new StringMatcher("::"), TokenType.Operator, 8, CSharpEvaluator.ValueOrNullOperator);
             AddTernaryTokenMatcher(new CharMatcher('?'), new CharMatcher(':'), 7, OperatorAssociativity.Right, CSharpEvaluator.Ternary);
             AddTokenMatcher(new AnyOfStringMatcher("==","!="), TokenType.Operator, 14,CSharpEvaluator.Operator);
             AddTokenMatcher(new CharMatcher('.'), TokenType.Operator, 20,CSharpEvaluator.DotOperator);

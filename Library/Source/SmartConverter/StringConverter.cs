@@ -65,7 +65,7 @@ namespace Vici.Core
         private static List<IStringConverter> _stringConverters;
 
         private static readonly object _staticLock = new object();
-        private static string[] _dateFormats = new[] {"yyyyMMdd", "yyyy-MM-dd", "yyyy.MM.dd", "yyyy/MM/dd"};
+        private static string[] _dateFormats = new[] { "yyyyMMdd", "yyyy-MM-dd", "yyyy.MM.dd", "yyyy/MM/dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-ddTHH:mm:ss" };
 
         public static void UnregisterAllStringConverters()
         {
@@ -157,11 +157,8 @@ namespace Vici.Core
                 return targetType.Inspector().DefaultValue();
 
             if (_stringConverters != null)
-                foreach (IStringConverter converter in _stringConverters)
-                {
-                    if (converter.TryConvert(stringValue, type, out returnValue))
-                        return returnValue;
-                }
+                if (_stringConverters.Any(converter => converter.TryConvert(stringValue, type, out returnValue)))
+                    return returnValue;
 
             if (type == typeof (double) || type == typeof (float))
             {
@@ -204,7 +201,17 @@ namespace Vici.Core
                 DateTime dateTime;
 
                 if (!DateTime.TryParseExact(stringValue, dateFormats ?? _dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.NoCurrentDateDefault, out dateTime))
-                    returnValue = null;
+                {
+                    if (!DateTime.TryParse(stringValue, out dateTime))
+                    {
+                        double? seconds = Convert<double?>(stringValue);
+
+                        if (seconds == null)
+                            returnValue = null;
+                        else
+                            returnValue = new DateTime(1970, 1, 1).AddSeconds(seconds.Value);
+                    }
+                }
                 else
                     returnValue = dateTime;
             }

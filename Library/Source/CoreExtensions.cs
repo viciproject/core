@@ -31,11 +31,14 @@ using System.Linq;
 using System.Reflection;
 using Vici.Core.Parser;
 
+#if PCL
+namespace System {
+    public delegate TOutput Converter<in TInput, out TOutput>(TInput value);
+}
+#endif
+
 namespace Vici.Core
 {
-#if PCL
-    public delegate TOutput Converter<in TInput, out TOutput>(TInput value);
-#endif
 
     public static class CoreExtensions
     {
@@ -52,13 +55,11 @@ namespace Vici.Core
             return newArray;
         } 
 
-#if PCL
         public static void ForEach<T>(this IEnumerable<T> list, Action<T> action)
         {
             foreach (var item in list)
                 action(item);
         }
-#endif
     }
 
 }

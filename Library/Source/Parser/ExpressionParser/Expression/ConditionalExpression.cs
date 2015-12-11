@@ -30,31 +30,32 @@ namespace Vici.Core.Parser
 {
     public class ConditionalExpression : Expression
     {
-        private readonly Expression _condition;
-        private readonly Expression _trueValue;
-        private readonly Expression _falseValue;
+        public Expression Condition { get; private set; }
+        public Expression TrueValue { get; private set; }
+        public Expression FalseValue { get; private set; }
 
         public ConditionalExpression(TokenPosition position, Expression condition, Expression trueValue, Expression falseValue) : base(position)
         {
-            _condition = condition;
-            _trueValue = trueValue;
-            _falseValue = falseValue;
+            Condition = condition;
+            TrueValue = trueValue;
+            FalseValue = falseValue;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            bool result = context.ToBoolean(_condition.Evaluate(context).Value);
+            bool result = context.ToBoolean(Condition.Evaluate(context).Value);
 
             if (result)
-                return _trueValue.Evaluate(context);
+                return TrueValue.Evaluate(context);
             else
-                return _falseValue.Evaluate(context);
+                return FalseValue.Evaluate(context);
         }
 
+#if DEBUG
         public override string ToString()
         {
-            return "(" + _condition + " ? " + _trueValue + " : " + _falseValue + ")";
-            
+            return "(" + Condition + " ? " + TrueValue + " : " + FalseValue + ")";
         }
+#endif
     }
 }

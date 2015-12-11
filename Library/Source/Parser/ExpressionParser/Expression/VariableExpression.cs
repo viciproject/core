@@ -38,6 +38,10 @@ namespace Vici.Core.Parser
             _varName = varName;
         }
 
+        public VariableExpression(string varName) : this(TokenPosition.Unknown, varName)
+        {
+        }
+
         public string VarName
         {
             get { return _varName; }

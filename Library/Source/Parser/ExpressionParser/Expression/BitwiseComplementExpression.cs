@@ -29,18 +29,15 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class BitwiseComplementExpression : Expression
+    public class BitwiseComplementExpression : UnaryExpression
     {
-        private readonly Expression _value;
-
-        public BitwiseComplementExpression(TokenPosition position, Expression value) : base(position)
+        public BitwiseComplementExpression(TokenPosition position, Expression value) : base(position, value)
         {
-            _value = value;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ValueExpression value = _value.Evaluate(context);
+            ValueExpression value = Value.Evaluate(context);
 
             if (value.Type == typeof(int))
                 return Exp.Value(TokenPosition, ~(int)value.Value);

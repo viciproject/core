@@ -29,21 +29,26 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class IsExpression : Expression
+    public class IsExpression : BinaryExpression
     {
-        private readonly Expression _objectExpression;
-        private readonly Expression _typeExpression;
-
-        public IsExpression(TokenPosition position, Expression objectExpression, Expression typeExpression) : base(position)
+        public IsExpression(TokenPosition position, Expression objectExpression, Expression typeExpression) : base(position, objectExpression, typeExpression)
         {
-            _objectExpression = objectExpression;
-            _typeExpression = typeExpression;
+        }
+
+        public Expression ObjectExpression
+        {
+            get { return Left; }
+        }
+
+        public Expression TypeExpression
+        {
+            get { return Right; }
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ClassName className = _typeExpression.Evaluate(context).Value as ClassName;
-            ValueExpression objectValue = _objectExpression.Evaluate(context);
+            ClassName className = TypeExpression.Evaluate(context).Value as ClassName;
+            ValueExpression objectValue = ObjectExpression.Evaluate(context);
             Type objectType = objectValue.Type;
 
             if (objectValue.Value == null)
@@ -52,7 +57,7 @@ namespace Vici.Core.Parser
             objectType = objectType.Inspector().RealType;
 
             if (className == null)
-                throw new ExpressionEvaluationException("is operator requires a type. " + _typeExpression + " is not a type", this);
+                throw new ExpressionEvaluationException("is operator requires a type. " + TypeExpression + " is not a type", this);
             
             Type checkType = className.Type;
 
@@ -64,9 +69,11 @@ namespace Vici.Core.Parser
             return Exp.Value(TokenPosition, checkType == objectType);
         }
 
+#if DEBUG
         public override string ToString()
         {
-            return "(" + _objectExpression + " is " + _typeExpression + ")";
+            return "(" + ObjectExpression + " is " + TypeExpression + ")";
         }
+#endif
     }
 }

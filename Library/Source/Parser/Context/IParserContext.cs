@@ -38,7 +38,7 @@ namespace Vici.Core.Parser
 
         bool ToBoolean(object value);
 
-        IParserContext CreateLocal();
+        IParserContext CreateLocal(object rootObject = null);
 
         void SetLocal(string varName, object value, Type type);
         void SetLocal<T>(string varName, T value);

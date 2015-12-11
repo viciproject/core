@@ -216,6 +216,11 @@ namespace Vici.Core.Parser
             return new DefaultValueExpression(position, terms[0], terms[1]);
         }
 
+        public static Expression ValueOrNullOperator(string token, TokenPosition position, Expression[] terms)
+        {
+            return new ValueOrNullExpression(position, terms[0], terms[1]);
+        }
+
         public static Expression ShortcutOperator(string token, TokenPosition position, Expression[] terms)
         {
             if (token == "&&")

@@ -44,9 +44,11 @@ namespace Vici.Core.Parser
             return Exp.Value(TokenPosition, new Converter<ClassName, Type>(GetTypeOfClassName));
         }
 
+#if DEBUG
         public override string ToString()
         {
             return "typeof";
         }
+#endif
     }
 }

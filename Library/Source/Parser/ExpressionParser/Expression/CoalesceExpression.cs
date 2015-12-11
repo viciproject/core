@@ -28,30 +28,30 @@ using System;
 
 namespace Vici.Core.Parser
 {
-    public class CoalesceExpression : Expression
+    public class CoalesceExpression : BinaryExpression
     {
-        private readonly Expression _value;
-        private readonly Expression _valueIfNull;
-
-        public CoalesceExpression(TokenPosition position, Expression value, Expression valueIfNull) : base(position)
+        public CoalesceExpression(TokenPosition position, Expression value, Expression valueIfNull) : base(position, value, valueIfNull)
         {
-            _value = value;
-            _valueIfNull = valueIfNull;
         }
+
+        public Expression Value { get { return Left; } }
+        public Expression ValueIfNull { get { return Right; } }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ValueExpression result = _value.Evaluate(context);
+            ValueExpression result = Value.Evaluate(context);
 
             if (result.Value == null)
-                return _valueIfNull.Evaluate(context);
+                return ValueIfNull.Evaluate(context);
 
             return result;
         }
 
+#if DEBUG
         public override string ToString()
         {
-            return "(" + _value + " ?? " + _valueIfNull + ")";
+            return "(" + Value + " ?? " + ValueIfNull + ")";
         }
+#endif
     }
 }

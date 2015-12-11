@@ -5,22 +5,22 @@ using System.Reflection;
 
 namespace Vici.Core
 {
-	public class AutoMapper
+	public class ObjectMapper
 	{
 		public bool IncludePrivate { get; set; }
 		public bool IncludeInherited { get; set; }
 		public IEqualityComparer<string> Comparer { private get; set; }
 
-		public AutoMapper(bool includePrivate = false, bool includeInherited = false, bool ignoreCase = false)
+		public ObjectMapper(bool includePrivate = false, bool includeInherited = false, bool ignoreCase = false)
 		{
 			IncludePrivate = includePrivate;
 			IncludeInherited = includeInherited;
 			IgnoreCase = ignoreCase;
 		}
 
-		public static AutoMapper Mapper(bool includePrivate = false, bool includeInherited = false, bool ignoreCase = false)
+		public static ObjectMapper Mapper(bool includePrivate = false, bool includeInherited = false, bool ignoreCase = false)
 		{
-			return new AutoMapper {
+			return new ObjectMapper {
 				IncludePrivate = includePrivate,
 				IncludeInherited = includeInherited,
 				IgnoreCase = ignoreCase
@@ -43,16 +43,25 @@ namespace Vici.Core
 		{
 			FillObject(typeof(T), valueProvider);
 		}
-        
-		public void FillObject(object o, Func<string,Tuple<object,bool>> valueProvider)
-		{
-			Type type = o.GetType();
 
-			if (o is Type)
-			{
-				type = (Type)o;
-				o = null;
-			}
+        public void FillObject(Type t, Func<string, Tuple<object, bool>> valueProvider)
+        {
+            FillObject((object)t, valueProvider);
+        }
+
+        public T CreateObject<T>(Func<string, Tuple<object, bool>> valueProvider) where T : new()
+        {
+            return (T)FillObject(new T(), valueProvider);
+        }
+
+        public T FillObject<T>(T o, Func<string, Tuple<object, bool>> valueProvider)
+        {
+            return (T) FillObject((object)o, valueProvider);
+        }
+
+		public object FillObject(object o, Func<string,Tuple<object,bool>> valueProvider)
+		{
+            var type = ResolveObjectType(ref o);
 
 			var fields = GetFields(type, o == null);
 
@@ -67,10 +76,12 @@ namespace Vici.Core
 
 				if (result.Item2)
 				{
-					field.SetValue(o, result.Item1);
+					field.SetValue(o, result.Item1.Convert(field.FieldType));
 					mappedNames.Add(field.Name);
 				}
 			}
+
+		    return o;
 		}
 
 
@@ -79,17 +90,42 @@ namespace Vici.Core
 			FillObject(typeof(T), values.Select(kvp => Tuple.Create(kvp.Key,kvp.Value)));
 		}
 
-		public void FillObject(object o, Dictionary<string,object> values)
-		{
-			FillObject(o, name => values.ContainsKey(name) ? Tuple.Create((object)null,false) : Tuple.Create(values[name],true));
-		}
+        public void FillObject(Type t, Dictionary<string, object> values)
+        {
+            FillObject((object)t, values.Select(kvp => Tuple.Create(kvp.Key, kvp.Value)));
+        }
 
-		public void FillObject<T>(IEnumerable<Tuple<string,object>> values)
-		{
-			FillObject(typeof(T), values);
-		}
+        private object FillObject(object o, Dictionary<string, object> values)
+        {
+            return FillObject(o, values.Select(kvp => Tuple.Create(kvp.Key, kvp.Value)));
+        }
 
-		public void FillObject(object o, IEnumerable<Tuple<string,object>> values)
+        public T CreateObject<T>(Dictionary<string, object> values) where T:new()
+        {
+            return FillObject(new T(), values);
+        }
+
+        public T FillObject<T>(T o, Dictionary<string, object> values)
+        {
+            return (T) FillObject((object)o, values);
+        }
+
+        public void FillObject<T>(IEnumerable<Tuple<string, object>> values)
+        {
+            FillObject(typeof(T), values);
+        }
+
+        public T CreateObject<T>(IEnumerable<Tuple<string, object>> values) where T:new()
+        {
+            return FillObject(new T(), values);
+        }
+
+	    public T FillObject<T>(T o, IEnumerable<Tuple<string, object>> values)
+	    {
+	        return (T) FillObject((object) o, values);
+	    }
+
+		public object FillObject(object o, IEnumerable<Tuple<string,object>> values)
 		{
 			var type = ResolveObjectType(ref o);
 
@@ -106,6 +142,8 @@ namespace Vici.Core
 						break;
 					}
 			}
+
+		    return o;
 		}
 
 		//---- Private helpers

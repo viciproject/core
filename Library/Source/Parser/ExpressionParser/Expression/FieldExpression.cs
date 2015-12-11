@@ -32,13 +32,13 @@ namespace Vici.Core.Parser
 {
     public class FieldExpression : Expression
     {
-        private readonly Expression _target;
-        private readonly string _member;
+        public Expression Target { get; private set; }
+        public string Member { get; private set; }
 
         public FieldExpression(TokenPosition position, Expression target, string member) : base(position)
         {
-            _target = target;
-            _member = member;
+            Target = target;
+            Member = member;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
@@ -48,7 +48,7 @@ namespace Vici.Core.Parser
 
 		private ValueExpression Evaluate(IParserContext context, bool assign, object newValue)
     	{
-    		ValueExpression targetValue = _target.Evaluate(context);
+    		ValueExpression targetValue = Target.Evaluate(context);
     		object targetObject;
     		Type targetType;
 
@@ -71,11 +71,11 @@ namespace Vici.Core.Parser
                 object value;
                 Type type;
 
-                if (((IDynamicObject)targetObject).TryGetValue(_member, out value, out type))
+                if (((IDynamicObject)targetObject).TryGetValue(Member, out value, out type))
                     return new ValueExpression(TokenPosition, value,type);
             }
 
-		    MemberInfo[] members = FindMemberInHierarchy(targetType, _member);// targetType.GetMember(_member);
+		    MemberInfo[] members = FindMemberInHierarchy(targetType, Member);// targetType.GetMember(_member);
 
     		if (members.Length == 0)
     		{
@@ -83,18 +83,18 @@ namespace Vici.Core.Parser
 
                 if (indexerPropInfo != null)
                 {
-                    return new ValueExpression(TokenPosition, indexerPropInfo.GetValue(targetObject, new object[] { _member }), indexerPropInfo.PropertyType);
+                    return new ValueExpression(TokenPosition, indexerPropInfo.GetValue(targetObject, new object[] { Member }), indexerPropInfo.PropertyType);
                 }
 
-    			throw new UnknownPropertyException("Unknown property " + _member + " for object " + _target + " (type " + targetType.Name + ")", this);
+    			throw new UnknownPropertyException("Unknown property " + Member + " for object " + Target + " (type " + targetType.Name + ")", this);
     		}
 
     		if (members.Length >= 1 && members[0] is MethodInfo)
     		{
     			if (targetObject == null)
-                    return Exp.Value(TokenPosition, new StaticMethod(targetType, _member));
+                    return Exp.Value(TokenPosition, new StaticMethod(targetType, Member));
     			else
-                    return Exp.Value(TokenPosition, new InstanceMethod(targetType, _member, targetObject));
+                    return Exp.Value(TokenPosition, new InstanceMethod(targetType, Member, targetObject));
     		}
 
     		MemberInfo member = members[0];
@@ -123,7 +123,7 @@ namespace Vici.Core.Parser
 			if (member is PropertyInfo)
     			return new ValueExpression(TokenPosition, ((PropertyInfo)member).GetValue(targetObject, null), ((PropertyInfo)member).PropertyType);
 
-    		throw new ExpressionEvaluationException(_member + " is not a field or property", this);
+    		throw new ExpressionEvaluationException(Member + " is not a field or property", this);
     	}
 
         private static MemberInfo[] FindMemberInHierarchy(Type type, string name)
@@ -143,11 +143,12 @@ namespace Vici.Core.Parser
             return new MemberInfo[0];
         }
 
+#if DEBUG
     	public override string ToString()
         {
-            return "(" + _target + "." + _member + ")";
+            return "(" + Target + "." + Member + ")";
         }
-
+#endif
 
     	public ValueExpression Assign(IParserContext context, object value)
     	{

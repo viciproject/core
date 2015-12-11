@@ -124,11 +124,13 @@ namespace Vici.Core.Parser
             throw new ExpressionEvaluationException(MethodExpression + " is not a function", this);
         }
 
+#if DEBUG
         public override string ToString()
         {
             string[] parameters = Parameters.ConvertAll(expr => expr.ToString());
 
             return "(" + MethodExpression + "(" + String.Join(",", parameters) + "))";
         }
+#endif
     }
 }

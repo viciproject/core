@@ -29,21 +29,26 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class RangeExpression : Expression
+    public class RangeExpression : BinaryExpression
     {
-        private readonly Expression _from;
-        private readonly Expression _to;
-
-        public RangeExpression(TokenPosition tokenPosition, Expression from, Expression to) : base(tokenPosition)
+        public RangeExpression(TokenPosition tokenPosition, Expression from, Expression to) : base(tokenPosition, from, to)
         {
-            _from = from;
-            _to = to;
+        }
+
+        public Expression From
+        {
+            get { return Left; }
+        }
+
+        public Expression To
+        {
+            get { return Right; }
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ValueExpression from = _from.Evaluate(context);
-            ValueExpression to = _to.Evaluate(context);
+            ValueExpression from = From.Evaluate(context);
+            ValueExpression to = To.Evaluate(context);
 
             if (from.Type != typeof(int) && from.Type != typeof(long))
                 throw new ExpressionEvaluationException("Expression " + from + " does not evaluate to int or long", from);
@@ -57,7 +62,7 @@ namespace Vici.Core.Parser
                 return Exp.Value(TokenPosition, Range((int)Convert.ChangeType(from.Value, typeof(int), null), (int)Convert.ChangeType(to.Value, typeof(int), null)));
         }
 
-        public static IEnumerable<int> Range(int from, int to)
+        private static IEnumerable<int> Range(int from, int to)
         {
             if (from == to)
                 yield return from;
@@ -69,7 +74,7 @@ namespace Vici.Core.Parser
                     yield return i;
         }
 
-        public static IEnumerable<long> Range(long from, long to)
+        private static IEnumerable<long> Range(long from, long to)
         {
             if (from == to)
                 yield return from;

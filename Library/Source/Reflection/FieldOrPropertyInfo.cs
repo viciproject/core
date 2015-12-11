@@ -39,7 +39,12 @@ namespace Vici.Core
         {
             _memberInfo = memberInfo;
 
-            FieldType = (_memberInfo is FieldInfo) ? ((FieldInfo)_memberInfo).FieldType : ((PropertyInfo)_memberInfo).PropertyType;
+            FieldType = ((_memberInfo is FieldInfo) ? ((FieldInfo)_memberInfo).FieldType : ((PropertyInfo)_memberInfo).PropertyType);//.Inspector().RealType;
+        }
+
+        public MemberInspector Inspector()
+        {
+            return new MemberInspector(_memberInfo);
         }
 
         public string Name
@@ -63,8 +68,9 @@ namespace Vici.Core
 		public bool IsField { get { return _memberInfo is FieldInfo; } }
 		public bool IsProperty { get { return _memberInfo is PropertyInfo; } }
 
-		private FieldInfo AsField { get { return _memberInfo as FieldInfo; } }
-		private PropertyInfo AsProperty { get { return _memberInfo as PropertyInfo; } }
+		public FieldInfo AsField { get { return _memberInfo as FieldInfo; } }
+		public PropertyInfo AsProperty { get { return _memberInfo as PropertyInfo; } }
+        public MemberInfo AsMember { get { return _memberInfo; } }
 
 		public Action<object,object> Setter()
 		{

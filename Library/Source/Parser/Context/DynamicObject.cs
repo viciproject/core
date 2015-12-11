@@ -59,15 +59,17 @@ namespace Vici.Core.Parser
 
         public void Apply(object obj)
         {
-            if (obj is DynamicObject)
-                Apply((DynamicObject)obj);
+            var dynamicObject = obj as DynamicObject;
+
+            if (dynamicObject != null)
+                Apply(dynamicObject);
             else
                 _objects.AddLast(obj);
         }
 
         public void Apply(params object[] objects)
         {
-            foreach (object obj in objects)
+            foreach (var obj in objects)
                 Apply(obj);
         }
 
@@ -114,9 +116,9 @@ namespace Vici.Core.Parser
 
             if (members.Length > 1) // CoolStorage, ActiveRecord and Dynamic Proxy frameworks sometimes return > 1 member
             {
-                foreach (MemberInfo mi in members)
-                    if (mi.DeclaringType == type)
-                        member = mi;
+                foreach (var memberInfo in members)
+                    if (memberInfo.DeclaringType == type)
+                        member = memberInfo;
             }
 
             if (member is PropertyInfo || member is FieldInfo)

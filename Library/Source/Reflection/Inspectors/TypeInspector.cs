@@ -57,6 +57,11 @@ namespace Vici.Core
 			get { return _typeInfo.IsGenericType; }
         }
 
+        public bool IsGenericTypeDefinition
+        {
+            get { return _typeInfo.IsGenericTypeDefinition; }
+        }
+
         public bool IsNullable
         {
             get { return (IsGenericType && _t.GetGenericTypeDefinition() == typeof (Nullable<>)); }
@@ -211,6 +216,15 @@ namespace Vici.Core
 
             return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredProperties.Where(pi => pi.Inspector().MatchBindingFlags(bindingFlags)));
         }
+
+        public MethodInfo[] GetMethods(BindingFlags bindingFlags)
+        {
+            if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
+                return _typeInfo.DeclaredMethods.Where(mi => mi.Inspector().MatchBindingFlags(bindingFlags)).ToArray();
+
+            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMethods.Where(mi => mi.Inspector().MatchBindingFlags(bindingFlags)));
+        }
+
 
         public Type[] GetInterfaces()
         {

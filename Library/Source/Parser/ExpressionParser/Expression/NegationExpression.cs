@@ -29,18 +29,15 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class NegationExpression : Expression
+    public class NegationExpression : UnaryExpression
     {
-        private readonly Expression _value;
-
-        public NegationExpression(TokenPosition position, Expression value) : base(position)
+        public NegationExpression(TokenPosition position, Expression value) : base(position, value)
         {
-            _value = value;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ValueExpression value = _value.Evaluate(context);
+            ValueExpression value = Value.Evaluate(context);
 
             if (context == null)
                 return Exp.Value(TokenPosition, !((bool)value.Value));
@@ -48,9 +45,11 @@ namespace Vici.Core.Parser
                 return Exp.Value(TokenPosition, !context.ToBoolean(value.Value));
         }
 
+#if DEBUG
         public override string ToString()
         {
-            return "(!" + _value + ")";
+            return "(!" + Value + ")";
         }
+#endif
     }
 }

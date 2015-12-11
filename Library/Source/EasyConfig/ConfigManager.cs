@@ -216,15 +216,7 @@ namespace Vici.Core.Config
 
         public object GetValue(string key, Type type)
         {
-            foreach (var provider in _configProviders)
-            {
-                string value = provider.GetValue(key, _environment);
-
-                if (value != null)
-                    return value.To(type);
-            }
-
-            return null;
+            return (from provider in _configProviders select provider.GetValue(key, _environment) into value where value != null select value.To(type)).FirstOrDefault();
         }
 
         public IEnumerable<KeyValuePair<string,string>> GetValues(string key)

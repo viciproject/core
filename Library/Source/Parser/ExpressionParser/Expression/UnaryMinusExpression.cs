@@ -29,18 +29,15 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class UnaryMinusExpression : Expression
+    public class UnaryMinusExpression : UnaryExpression
     {
-        private readonly Expression _value;
-
-        public UnaryMinusExpression(TokenPosition position, Expression value) : base(position)
+        public UnaryMinusExpression(TokenPosition position, Expression value) : base(position, value)
         {
-            _value = value;
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ValueExpression value = _value.Evaluate(context);
+            ValueExpression value = Value.Evaluate(context);
 
             if (value.Type == typeof(decimal))
                 return Exp.Value(TokenPosition, -(decimal)value.Value);
@@ -60,12 +57,14 @@ namespace Vici.Core.Parser
             if (value.Type == typeof(long))
                 return Exp.Value(TokenPosition, -(long)value.Value);
 
-            throw new IllegalOperandsException("Unary minus is not supported for " + _value, this);
+            throw new IllegalOperandsException("Unary minus is not supported for " + Value, this);
         }
 
+#if DEBUG
         public override string ToString()
         {
-            return "(-" + _value + ")";
+            return "(-" + Value + ")";
         }
+#endif
     }
 }

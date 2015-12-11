@@ -46,9 +46,11 @@ namespace Vici.Core.Parser
             return Exp.Value(TokenPosition, context.ToBoolean(right));
         }
 
+#if DEBUG
         public override string ToString()
         {
             return "(" + Left + " && " + Right + ")";
         }
+#endif
     }
 }

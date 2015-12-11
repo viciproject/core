@@ -29,30 +29,37 @@ using System.Collections.Generic;
 
 namespace Vici.Core.Parser
 {
-    public class TypeCastExpression : Expression
+    public class TypeCastExpression : BinaryExpression
     {
-        private readonly VariableExpression _typeExpression;
-        private readonly Expression _targetExpression;
-
-        public TypeCastExpression(TokenPosition position, VariableExpression typeExpression, Expression targetExpression) : base(position)
+        public TypeCastExpression(TokenPosition position, VariableExpression typeExpression, Expression targetExpression) : base(position, typeExpression, targetExpression)
         {
-            _typeExpression = typeExpression;
-            _targetExpression = targetExpression;
+        }
+
+        public Expression TypeExpression
+        {
+            get { return Left; }
+        }
+
+        public Expression TargetExpression
+        {
+            get { return Right; }
         }
 
         public override ValueExpression Evaluate(IParserContext context)
         {
-            ClassName className = _typeExpression.Evaluate(context).Value as ClassName;
+            ClassName className = TypeExpression.Evaluate(context).Value as ClassName;
 
             if (className == null)
-                throw new ExpressionEvaluationException("type cast requires a type. " + _typeExpression + " is not a type", this);
+                throw new ExpressionEvaluationException("type cast requires a type. " + TypeExpression + " is not a type", this);
 
-            return Exp.Value(TokenPosition, Convert.ChangeType(_targetExpression.Evaluate(context).Value, className.Type, null), className.Type);
+            return Exp.Value(TokenPosition, Convert.ChangeType(TargetExpression.Evaluate(context).Value, className.Type, null), className.Type);
         }
 
+#if DEBUG
         public override string ToString()
         {
-            return "((" + _typeExpression + ")" + _targetExpression + ")";
+            return "((" + TypeExpression + ")" + TargetExpression + ")";
         }
+#endif
     }
 }

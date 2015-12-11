@@ -36,7 +36,7 @@ namespace Vici.Core.Parser
     {
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, Type> _types;
-        private readonly object _rootObject;
+        private object _rootObject;
 
         private readonly IParserContext _parentContext;
 
@@ -72,8 +72,33 @@ namespace Vici.Core.Parser
             _rootObject = rootObject;
         }
 
-        public ParserContext(object rootObject) : this(rootObject, ParserContextBehavior.Default)
+        public ParserContext(object rootObject) : this()
         {
+            _rootObject = rootObject;
+        }
+
+        public ParserContext(IDictionary<string, object> dic) : this()
+        {
+            AddDictionary(dic);
+        }
+
+        public ParserContext(IDictionary<string, object> dic, ParserContextBehavior behavior) : this(behavior)
+        {
+            AddDictionary(dic);
+        }
+
+        public ParserContext(object rootObject, IDictionary<string, object> dic) : this()
+        {
+            _rootObject = rootObject;
+
+            AddDictionary(dic);
+        }
+
+        public ParserContext(object rootObject, IDictionary<string, object> dic, ParserContextBehavior behavior) : this(behavior)
+        {
+            _rootObject = rootObject;
+
+            AddDictionary(dic);
         }
 
         protected ParserContext(ParserContext parentContext) : this(parentContext.Behavior)
@@ -85,68 +110,28 @@ namespace Vici.Core.Parser
             _formatProvider = parentContext._formatProvider;
         }
 
-        public virtual IParserContext CreateLocal()
+        public void AddDictionary(IDictionary<string, object> dic)
         {
-            return new ParserContext(this);
+            if (dic == null)
+                return;
+
+            foreach (var entry in dic)
+            {
+                _variables[entry.Key] = entry.Value;
+                _types[entry.Key] = entry.Value == null ? typeof(object) : entry.GetType();
+            }
+        }
+
+
+        public virtual IParserContext CreateLocal(object rootObject = null)
+        {
+            return new ParserContext(this) { RootObject = rootObject };
         }
 
         private bool TestBehavior(ParserContextBehavior behavior)
         {
             return ((Behavior & behavior) == behavior);
         }
-
-//        public bool ReturnNullWhenNullReference
-//        {
-//            get { return _returnNullWhenNullReference; }
-//            set { _returnNullWhenNullReference = value; }
-//        }
-//
-//        public bool NullIsFalse
-//        {
-//            get { return _nullIsFalse; }
-//            set { _nullIsFalse = value; }
-//        }
-//
-//        public bool NotNullIsTrue
-//        {
-//            get { return _notNullIsTrue; }
-//            set { _notNullIsTrue = value; }
-//        }
-//
-//        public bool EmptyStringIsFalse
-//        {
-//            get { return _emptyStringIsFalse; }
-//            set { _emptyStringIsFalse = value; }
-//        }
-//
-//        public bool NonEmptyStringIsTrue
-//        {
-//            get { return _nonEmptyStringIsTrue; }
-//            set { _nonEmptyStringIsTrue = value; }
-//        }
-
-//        public bool CaseSensitiveVariables
-//        {
-//            get { return _caseSensitiveVariables; }
-//            set
-//            {
-//                if (value != _caseSensitiveVariables)
-//                {
-//                    if (value)
-//                    {
-//                        _variables = new Dictionary<string, object>();
-//                        _types = new Dictionary<string, Type>();
-//                    }
-//                    else
-//                    {
-//                        _variables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-//                        _types = new Dictionary<string, Type>(StringComparer.InvariantCultureIgnoreCase);
-//                        
-//                    }
-//                    _caseSensitiveVariables = value;
-//                }
-//            }
-//        }
 
         public AssignmentPermissions AssignmentPermissions
         {
@@ -160,18 +145,6 @@ namespace Vici.Core.Parser
             set { _stringComparison = value; }
         }
 
-//        public bool EmptyCollectionIsFalse
-//        {
-//            get { return _emptyCollectionIsFalse; }
-//            set { _emptyCollectionIsFalse = value; }
-//        }
-//
-//        public bool NotZeroIsTrue
-//        {
-//            get { return _notZeroIsTrue; }
-//            set { _notZeroIsTrue = value; }
-//        }
-//
         public IFormatProvider FormatProvider
         {
             get { return _formatProvider; }
@@ -198,8 +171,8 @@ namespace Vici.Core.Parser
         {
             if (_parentContext != null && _parentContext.Exists(name))
                 _parentContext.Set(name, data, type);
-
-            SetLocal(name, data, type);
+            else
+                SetLocal(name, data, type);
         }
 
         public void Set<T>(string name, T data)
@@ -236,6 +209,8 @@ namespace Vici.Core.Parser
         {
             Set(name, ContextFactory.CreateFunction(methodInfo, targetObject));
         }
+
+        public object RootObject { get { return _rootObject; } set { _rootObject = value; } }
 
         public virtual bool Exists(string varName)
         {

@@ -1,12 +1,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Vici.Core.Json;
 
 namespace Vici.Core
 {
     public class MemberInspector
     {
-        private MemberInfo _memberInfo;
+        private readonly MemberInfo _memberInfo;
 
         public MemberInspector(MemberInfo memberInfo)
         {
@@ -105,6 +106,26 @@ namespace Vici.Core
                 return false;
 
             return true;
+        }
+
+        public object GetValue(object instance)
+        {
+            if (_memberInfo is PropertyInfo)
+                return ((PropertyInfo) _memberInfo).GetValue(instance);
+            if (_memberInfo is FieldInfo)
+                return ((FieldInfo)_memberInfo).GetValue(instance);
+
+            throw new InvalidOperationException();
+        }
+
+        public void SetValue(object instance, object value)
+        {
+            if (_memberInfo is PropertyInfo)
+                ((PropertyInfo)_memberInfo).SetValue(instance, value);
+            else if (_memberInfo is FieldInfo)
+                ((FieldInfo)_memberInfo).SetValue(instance, value);
+            else
+                throw new InvalidOperationException();
         }
 
 

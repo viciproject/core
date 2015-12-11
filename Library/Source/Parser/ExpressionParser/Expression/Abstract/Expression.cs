@@ -24,7 +24,6 @@
 //=============================================================================
 #endregion
 
-using System;
 using System.Collections.Generic;
 
 namespace Vici.Core.Parser
@@ -45,36 +44,21 @@ namespace Vici.Core.Parser
             return expressions.ConvertAll(expr => expr.Evaluate(context));
         }
 
-    	object IExpression.EvaluateToObject(IParserContext context)
+        public object EvaluateToObject(IParserContext context)
     	{
     		return Evaluate(context).Value;
     	}
 
     	IValueWithType IExpression.Evaluate(IParserContext context)
     	{
-    		ValueExpression value = Evaluate(context);
+    		return Evaluate(context);
 
-            return new ValueExpression(TokenPosition, value.Value,value.Type);
+            //return new ValueExpression(TokenPosition, value.Value,value.Type);
     	}
 
     	public T Evaluate<T>(IParserContext context)
     	{
     		return (T) Evaluate(context).Value;
     	}
-    }
-
-    public static class Exp
-    {
-        public static AddExpression Add(TokenPosition position, Expression left, Expression right) { return new AddExpression(position, left, right); }
-        public static SubtractExpression Subtract(TokenPosition position, Expression left, Expression right) { return new SubtractExpression(position, left, right); }
-        public static MultiplyExpression Multiply(TokenPosition position, Expression left, Expression right) { return new MultiplyExpression(position, left, right); }
-        public static DivideExpression Divide(TokenPosition position, Expression left, Expression right) { return new DivideExpression(position, left, right); }
-        public static ValueExpression<T> Value<T>(TokenPosition position, T value) { return new ValueExpression<T>(position, value); }
-        public static ValueExpression Value(TokenPosition position, object value, Type type) { return new ValueExpression(position, value, type); }
-        public static ReturnValueExpression ReturnValue(TokenPosition position, object value, Type type) { return new ReturnValueExpression(position, value, type); }
-        public static BinaryArithmicExpression Op(TokenPosition position, string op, Expression left, Expression right) { return new BinaryArithmicExpression(position, op, left, right); }
-        public static AndAlsoExpression AndAlso(TokenPosition position, Expression left, Expression right) { return new AndAlsoExpression(position, left, right); }
-        public static OrElseExpression OrElse(TokenPosition position, Expression left, Expression right) { return new OrElseExpression(position, left, right); }
-        public static ValueExpression NullValue(TokenPosition position) { return Value(position, null, typeof(object)); }
     }
 }

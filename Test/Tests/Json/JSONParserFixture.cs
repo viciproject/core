@@ -132,7 +132,16 @@ namespace Vici.Core.Test
 
             Assert.AreEqual(2, jsonObject["menu"].Keys.Length);
 
-            Assert.AreEqual("SVG Viewer",jsonObject["menu.header"].As<string>());
+            Assert.AreEqual("SVG Viewer", jsonObject["menu.header"].As<string>());
+            Assert.AreEqual("SVG Viewer", jsonObject["menu"]["header"].As<string>());
+
+            Assert.AreEqual(22, jsonObject["menu"]["items"].AsArray().Length);
+            Assert.AreEqual(22, jsonObject["menu.items"].AsArray().Length);
+
+            Assert.AreEqual(22,jsonObject["menu.items"].Count());
+
+            Assert.AreEqual("OpenNew", jsonObject["menu"]["items"][1]["id"].As<string>());
+            Assert.IsTrue(jsonObject["menu"]["items"][2].IsNull);
         }
 
         [Test]
